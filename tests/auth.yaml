@@ -1,0 +1,55 @@
+units:
+  - describe: register
+    api: register
+    name: registerJohn
+    req:
+      body:
+        user:
+          email: john@jacob.com
+          password: johnnyjacob
+          username: johnjacob
+    res:
+      body:
+        user:
+          email: !@query $$$req.body.user.email
+          username: !@query $$$req.body.user.username
+          token: !@exist
+  - describe: login
+    api: login
+    name: loginJohn
+    req:
+      body:
+        user:
+          email: !$query $$registerJohn.req.body.user.email
+          password: !$query $$registerJohn.req.body.user.password
+    res:
+      body:
+        user:
+          email: !@exist
+          username: !@exist
+          token: !@exist
+  - describe: current user
+    api: getUser
+    req:
+      headers:
+        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+    res:
+      body:
+        user:
+          email: !@exist
+          username: !@exist
+          token: !@exist
+  - describe: update user
+    api: updateUser
+    req:
+      headers:
+        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+      body:
+        user:
+          email: john@jacob.com
+    res:
+      body:
+        user:
+          email: !@exist
+          username: !@exist
+          token: !@exist

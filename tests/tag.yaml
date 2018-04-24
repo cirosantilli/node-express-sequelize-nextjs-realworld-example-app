@@ -1,0 +1,8 @@
+dependencies:
+  - ./article.yaml
+units:
+  - describe: all tags
+    api: listTags
+    res:
+      body:
+        tags: ['dragons', 'training']

@@ -1,0 +1,43 @@
+dependencies:
+  - ./auth.yaml
+units:
+  - describe: get profile
+    api: getProfile
+    req:
+      headers:
+        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+      params:
+        id: !$query $auth.loginJohn.res.body.user.username
+    res:
+      body:
+        profile:
+          username: !@query $$$req.params.id
+          image: !@exist
+          following: false
+  - describe: follow profile
+    api: followProfile
+    req:
+      headers:
+        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+      params:
+        id: !$query $auth.loginJohn.res.body.user.username
+      body:
+        user:
+          email: john@jacob.com
+    res:
+      body:
+        profile:
+          username: !@query $$$req.params.id
+          image: !@exist
+          following: true
+  - describe: unfollow profile
+    api: unfollowProfile
+    req:
+      headers:
+        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+      params:
+        id: !$query $auth.loginJohn.res.body.user.username
+    res:
+      body:
+        profile: !@object
+          following: false
