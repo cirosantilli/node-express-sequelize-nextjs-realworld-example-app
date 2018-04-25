@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "test": "htte -c ./tests/.htte.yaml",
+    "test": "htte -c ./tests/config.yaml",
     "stop": "lsof -ti :3000 | xargs kill"
   },
   "repository": {
