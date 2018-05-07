@@ -5,7 +5,7 @@ units:
     api: getProfile
     req:
       headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+        Authorization: !$concat ['Token', ' ', !$query $auth.registerTom.res.body.user.token]
       params:
         id: !$query $auth.loginJohn.res.body.user.username
     res:
@@ -18,7 +18,7 @@ units:
     api: followProfile
     req:
       headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+        Authorization: !$concat ['Token', ' ', !$query $auth.registerTom.res.body.user.token]
       params:
         id: !$query $auth.loginJohn.res.body.user.username
       body:
@@ -34,10 +34,26 @@ units:
     api: unfollowProfile
     req:
       headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+        Authorization: !$concat ['Token', ' ', !$query $auth.registerTom.res.body.user.token]
       params:
         id: !$query $auth.loginJohn.res.body.user.username
     res:
       body:
         profile: !@object
           following: false
+  - describe: follow profile agagin
+    api: followProfile
+    req:
+      headers:
+        Authorization: !$concat ['Token', ' ', !$query $auth.registerTom.res.body.user.token]
+      params:
+        id: !$query $auth.loginJohn.res.body.user.username
+      body:
+        user:
+          email: john@jacob.com
+    res:
+      body:
+        profile:
+          username: !@query $$$req.params.id
+          image: !@exist
+          following: true

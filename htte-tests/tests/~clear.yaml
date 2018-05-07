@@ -1,0 +1,13 @@
+dependencies:
+  - ./auth.yaml
+  - ./article.yaml
+units:
+  - describe: remove article
+    api: deleteArticle
+    req:
+      headers:
+        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+      params:
+        slug: !$query $article.createArticleTrainDragon.res.body.article.slug
+    res:
+      status: 204

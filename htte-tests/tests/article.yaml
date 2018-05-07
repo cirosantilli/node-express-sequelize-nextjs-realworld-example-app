@@ -1,57 +1,7 @@
 dependencies:
   - ./auth.yaml
+  - ./profile.yaml
 units:
-  - describe: feed
-    api: getFeed
-    req:
-      headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
-    res:
-      body:
-        articles: []
-        articlesCount: 0
-  - describe: all articles
-    api: listArticles
-    req:
-      headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
-    res:
-      body:
-        articles: []
-        articlesCount: 0
-  - describe: articles by author
-    api: listArticles
-    req:
-      headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
-      query:
-        author: !$query $auth.registerJohn.req.body.user.username
-    res:
-      body:
-        articles: []
-        articlesCount: 0
-  - describe: articles favorited by username
-    api: listArticles
-    req:
-      headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
-      query:
-        favorited: jane
-    res:
-      body:
-        articles: []
-        articlesCount: 0
-  - describe: articles by tag
-    api: listArticles
-    req:
-      headers:
-        Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
-      query:
-        tag: dragons
-    res:
-      body:
-        articles: []
-        articlesCount: 0
   - describe: create article
     api: createArticle
     name: createArticleTrainDragon
@@ -142,6 +92,47 @@ units:
         article: !@object
           favorited: false
           favoritesCount: 0
+  - describe: article with auth
+    units:
+      - describe: all articles
+        api: listArticles
+        req:
+          headers:
+            Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+        res:
+          body:
+            articles: !@array
+              0: !@object
+                slug: !@regexp /^how-to-train-your-dragon/
+            articlesCount: !@exist
+      - describe: articles by author
+        api: listArticles
+        req:
+          headers:
+            Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+          query:
+            author: !$query $auth.registerJohn.req.body.user.username
+        res:
+          body: !@object
+            articlesCount: 1
+      - describe: articles favorited by username
+        api: listArticles
+        req:
+          headers:
+            Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+          query:
+            favorited: !$query $auth.registerJohn.res.body.user.username
+        res:
+          body:
+            articles: []
+            articlesCount: 0
+      - describe: articles by tag
+        api: listArticles
+        req:
+          headers:
+            Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
+          query:
+            tag: dragons
   - describe: article without auth
     units:
       - describe: all articles
@@ -149,7 +140,6 @@ units:
         res:
           body:
             articles: !@array
-              length: 1
               0:
                 slug: !@query $$createArticleTrainDragon.res.body.article.slug
                 title: !@query $$createArticleTrainDragon.res.body.article.title
@@ -164,46 +154,37 @@ units:
                   username: !@query $auth.registerJohn.req.body.user.username
                   image: !@exist
                   following: false
-            articlesCount: 1
-      - describe: articleAuths by author
-        api: listArticles
+            articlesCount: !@exist
+  - describe: article feed
+    units:
+      - describe: john feed 
+        api: getFeed
         req:
-          query:
-            author: !$query $auth.registerJohn.req.body.user.username
-        res:
-          body:
-            articles: !@array
-              length: 1
-              0: !@object
-                slug: !@query $$createArticleTrainDragon.res.body.article.slug
-            articlesCount: 1
-      - describe: articleAuths favorited by username
-        api: listArticles
-        req:
-          query:
-            favorited: jane
+          headers:
+            Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
         res:
           body:
             articles: []
             articlesCount: 0
-      - describe: articleAuths by tag
-        api: listArticles
+      - describe: tom feed 
+        api: getFeed
         req:
-          query:
-            tag: dragons
+          headers:
+            Authorization: !$concat ['Token', ' ', !$query $auth.registerTom.res.body.user.token]
         res:
           body:
-            articles: !@array
-              length: 1
-              0: !@object
-                slug: !@query $$createArticleTrainDragon.res.body.article.slug
+            articles: 
+              - slug: !@regexp /^how-to-train-your-dragon/
+                title: !@query $$createArticleTrainDragon.req.body.article.title
+                description: !@query $$createArticleTrainDragon.req.body.article.description
+                body: !@query $$updateArticleTrainDragon.res.body.article.body
+                createdAt: !@exist
+                updatedAt: !@exist
+                tagList: ['dragons', 'training']
+                favorited: false
+                favoritesCount: 0
+                author: !@object
+                  username: !@query $auth.registerJohn.req.body.user.username
+                  image: !@exist
+                  following: false
             articlesCount: 1
-      - describe: single article by slug
-        api: getArticle
-        req:
-          params:
-            slug: !$query $$createArticleTrainDragon.res.body.article.slug
-        res:
-          body:
-            article: !@object
-              slug: !@query $$createArticleTrainDragon.res.body.article.slug

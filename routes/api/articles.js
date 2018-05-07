@@ -136,7 +136,7 @@ router.get('/feed', auth.required, function(req, res, next) {
 
         return res.json({
           articles: articles.map(function(article) {
-            return article.toJSONFor(user)
+            return article.toJSONFor(article.Author)
           }),
           articlesCount: articlesCount
         })
@@ -215,8 +215,8 @@ router.delete('/:article', auth.required, function(req, res, next) {
         return res.sendStatus(401)
       }
 
-      if (req.article.author.id.toString() === req.payload.id.toString()) {
-        return req.article.remove().then(function() {
+      if (req.article.Author.id.toString() === req.payload.id.toString()) {
+        return req.article.destroy().then(function() {
           return res.sendStatus(204)
         })
       } else {

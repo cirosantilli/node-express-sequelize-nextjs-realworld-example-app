@@ -1,13 +1,13 @@
 units:
-  - describe: register
+  - describe: register john
     api: register
     name: registerJohn
     req:
       body:
         user:
-          email: john@jacob.com
+          email: !$concat [john, !$randstr '4:ln', '@jacob.com']
           password: johnnyjacob
-          username: johnjacob
+          username: !$concat [john, !$randstr '4:ln', jacob]
     res:
       body:
         user:
@@ -46,10 +46,19 @@ units:
         Authorization: !$concat ['Token', ' ', !$query $auth.loginJohn.res.body.user.token]
       body:
         user:
-          email: john@jacob.com
+          email: !$concat [johnn, !$randstr 4, '@jacob.com']
     res:
       body:
         user:
           email: !@exist
           username: !@exist
           token: !@exist
+  - describe: register tom
+    api: register
+    name: registerTom
+    req:
+      body:
+        user:
+          email: !$concat [tom, !$randstr '4:ln', '@jacob.com']
+          password: tomnyjacob
+          username: !$concat [tom, !$randstr '4:ln', jacob]
