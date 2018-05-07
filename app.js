@@ -48,13 +48,11 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (!config.isProduction) {
   app.use(function(err, req, res, next) {
-    console.log(err.stack)
-
     res.status(err.status || 500)
 
     res.json({
       errors: {
-        message: err.message,
+        message: err.stack,
         error: err
       }
     })
@@ -78,14 +76,11 @@ if (!module.parent) {
 }
 
 function start(cb) {
-  model.sequelize.sync({ force: !config.isProduction }).then(() => {
-    // finally, let's start our server...
-    const server = app.listen(process.env.PORT || 3000, function() {
-      if (config.verbose) {
-        console.log('Listening on port ' + server.address().port)
-      }
-      cb && cb(server)
-    })
+  const server = app.listen(config.port, function() {
+    if (config.verbose) {
+      console.log('Listening on port ' + config.port)
+    }
+    cb && cb(server)
   })
 }
 
