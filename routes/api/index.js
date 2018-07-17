@@ -1,6 +1,10 @@
 const router = require('express').Router()
 const Sequelize = require('sequelize')
 
+// heroku bootstrap
+router.get('/_heroku', function(req, res) {
+  res.json({message: 'ok'})
+});
 router.use('/', require('./users'))
 router.use('/profiles', require('./profiles'))
 router.use('/articles', require('./articles'))
