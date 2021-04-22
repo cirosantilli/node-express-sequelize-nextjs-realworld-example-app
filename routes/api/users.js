@@ -79,9 +79,13 @@ router.post('/users', function(req, res, next) {
   user
     .save()
     .then(function() {
+      console.error('here');
       return res.json({ user: user.toAuthJSON() })
     })
-    .catch(next)
+    .catch((error) => {
+      console.error(error);
+      next();
+    });
 })
 
 module.exports = router

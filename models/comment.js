@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       id: this.id,
       body: this.body,
       createdAt: this.created_at,
+      updatedAt: this.updated_at,
       author: author.toProfileJSONFor(author, user)
     }
   }

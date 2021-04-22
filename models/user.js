@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             msg: 'Username must start with a letter, have no spaces, and be at less than 40 characters.'
           },
           is: {
-            args: /^[A-Za-z][A-Za-z0-9-]+$/i, // must start with letter and only have letters, numbers, dashes
+            args: /^[A-Za-z][A-Za-z0-9-_]+$/i, // must start with letter and only have letters, numbers, dashes
             msg: 'Username must start with a letter, have no spaces, and be 3 - 40 characters.'
           }
         }
@@ -111,23 +111,22 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   User.prototype.toAuthJSON = function() {
-    let data = {
+    return {
       username: this.username,
       email: this.email,
-      token: this.generateJWT()
-    }
-    if (this.bio) data.bio = this.bio
-    if (this.image) data.image = this.image
-    return data
+      token: this.generateJWT(),
+      bio: this.bio === undefined ? '' : this.bio,
+      image: this.image === undefined ? '' : this.image,
+    };
   }
 
   User.prototype.toProfileJSONFor = function(user) {
     let data = {
       username: this.username,
+      bio: this.bio === undefined ? '' : this.bio,
       image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
       following: user ? user.isFollowing(this.id) : false
     }
-    if (this.bio) data.bio = this.bio
     return data
   }
 
