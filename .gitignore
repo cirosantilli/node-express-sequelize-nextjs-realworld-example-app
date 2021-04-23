@@ -38,6 +38,6 @@ node_modules
 
 .tern-port
 
-data.db
+db.sqlite3
 
 package-lock.json

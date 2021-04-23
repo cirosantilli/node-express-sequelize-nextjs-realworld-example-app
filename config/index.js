@@ -10,7 +10,7 @@ module.exports = {
 }
 
 function prepareSQLite() {
-  let file = path.join(__dirname, '../data.db')
+  let file = path.join(__dirname, '../db.sqlite3')
   if (!fs.existsSync(file)) {
     fs.writeFileSync(file, '')
   }

@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./app.js",
-    "dev": "nodemon ./app.js",
+    "back": "nodemon ./app.js",
+    "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
+    "front": "cd react-redux-realworld-example-app && npm start",
     "test": "htte -c ./htte-tests/htte.yaml"
   },
   "repository": {
@@ -30,7 +32,6 @@
     "request": "2.69.0",
     "sequelize": "^4.37.6",
     "slug": "0.9.1",
-    "sqlite3": "^4.0.0",
     "underscore": "1.8.3"
   },
   "prettier": {
@@ -39,10 +40,12 @@
     "singleQuote": true
   },
   "devDependencies": {
+    "concurrent": "^0.3.2",
     "eslint": "^4.19.1",
     "eslint-plugin-prettier": "^2.6.0",
     "htte": "^0.3.0",
     "nodemon": "^1.11.0",
-    "prettier": "^1.12.1"
+    "prettier": "^1.12.1",
+    "sqlite3": "^4.0.0"
   }
 }

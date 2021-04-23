@@ -79,7 +79,6 @@ router.post('/users', function(req, res, next) {
   user
     .save()
     .then(function() {
-      console.error('here');
       return res.json({ user: user.toAuthJSON() })
     })
     .catch((error) => {
