@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(require('method-override')())
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(path.join(__dirname, 'react-redux-realworld-example-app', 'build')))
 
 app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }))
 
@@ -77,9 +77,7 @@ if (!module.parent) {
 
 function start(cb) {
   const server = app.listen(config.port, function() {
-    if (config.verbose) {
-      console.log('Listening on port ' + config.port)
-    }
+    console.log('Backend listening on: http://localhost:' + config.port)
     cb && cb(server)
   })
 }

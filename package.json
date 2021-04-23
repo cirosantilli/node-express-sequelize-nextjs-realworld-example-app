@@ -5,8 +5,10 @@
   "main": "app.js",
   "scripts": {
     "back": "nodemon ./app.js",
+    "build": "cd react-redux-realworld-example-app && npm run build",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
     "front": "cd react-redux-realworld-example-app && npm start",
+    "heroku-postbuild": "npm run build",
     "preinstall": "cd react-redux-realworld-example-app && npm install",
     "start": "node ./app.js",
     "test": "htte -c ./htte-tests/htte.yaml"
@@ -30,6 +32,7 @@
     "morgan": "1.7.0",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
+    "pg": "^8.6.0",
     "request": "2.69.0",
     "sequelize": "^4.37.6",
     "slug": "0.9.1",

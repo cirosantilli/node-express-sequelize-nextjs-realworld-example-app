@@ -7,9 +7,36 @@ npm install
 npm run dev
 .....
 
-The browser automatically pops up on http://localhost:4101/
+The browser automatically pops the development front-end server at http://localhost:4101/[].
+
+== Local optimized frontend
+
+.....
+npm install
+npm run build
+npm start
+.....
+
+The website can not be seen at: http://localhost:3000/
+
+This setup does not start the front-end development server at http://localhost:4101/[], but rather compiles the front-end files statically, and serves them on the public folder of the backend server.
+
+This is the type of setup that will run in production, with a single server. Running it locally might help debug some front-end deployment issues. But otherwise you will just normally use the <<local-development-with-sqlite>> setup instead for devlopment.
 
 == Heroku deployment
 
 ....
+# Automatically sets DATABASE_URL.
+heroku addons:create heroku-postgresql:hobby-dev
+# Otherwise the react build picks up the .eslint from this directory,
+# which specifies a plugin that is not installed because it is in the
+# devDependencies of this package.json... For the love of God, this is
+# a deployment, not a CI.
+# https://stackoverflow.com/questions/55821078/disable-eslint-that-create-react-app-provides
+heroku config:set DISABLE_ESLINT_PLUGIN=true
+heroku config:set NODE_ENV=production
+# Notably to skip ultra-slow sqlite native build.
+heroku config:set NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
+heroku config:set SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
+git push heroku master
 ....
