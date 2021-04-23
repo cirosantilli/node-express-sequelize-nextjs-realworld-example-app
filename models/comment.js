@@ -1,11 +1,12 @@
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize')
+
+module.exports = (sequelize) => {
   const Comment = sequelize.define(
     'Comment',
     {
       body: DataTypes.STRING
     },
     {
-      timestamps: true,
       underscored: true,
       tableName: 'comments'
     }
@@ -22,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     return {
       id: this.id,
       body: this.body,
-      createdAt: this.created_at,
-      updatedAt: this.updated_at,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
       author: author.toProfileJSONFor(author, user)
     }
   }

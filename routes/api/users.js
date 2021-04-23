@@ -4,7 +4,7 @@ const { User } = require('../../models')
 const auth = require('../auth')
 
 router.get('/user', auth.required, function(req, res, next) {
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
@@ -16,7 +16,7 @@ router.get('/user', auth.required, function(req, res, next) {
 })
 
 router.put('/user', auth.required, function(req, res, next) {
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)

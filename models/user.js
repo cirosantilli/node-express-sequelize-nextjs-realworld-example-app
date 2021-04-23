@@ -2,7 +2,9 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const secret = require('../config').secret
 
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize')
+
+module.exports = (sequelize) => {
   let User = sequelize.define(
     'User',
     {
@@ -78,7 +80,6 @@ module.exports = (sequelize, DataTypes) => {
       salt: DataTypes.STRING
     },
     {
-      timestamps: true,
       underscored: true,
       tableName: 'users',
       indexes: [{ fields: ['username'] }, { fields: ['email'] }]

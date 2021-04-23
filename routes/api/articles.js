@@ -25,7 +25,7 @@ router.param('article', function(req, res, next, slug) {
 })
 
 router.param('comment', function(req, res, next, id) {
-  Comment.findById(id)
+  Comment.findByPk(id)
     .then(function(comment) {
       if (!comment) {
         return res.sendStatus(404)
@@ -84,7 +84,7 @@ router.get('/', auth.optional, function(req, res, next) {
           include: [{ model: User, as: 'Author' }]
         }),
         Article.count({ where: query }),
-        req.payload ? User.findById(req.payload.id) : null
+        req.payload ? User.findByPk(req.payload.id) : null
       ]).then(function(results) {
         let articles = results[0]
         let articlesCount = results[1]
@@ -113,7 +113,7 @@ router.get('/feed', auth.required, function(req, res, next) {
     offset = req.query.offset
   }
 
-  User.findById(req.payload.id).then(function(user) {
+  User.findByPk(req.payload.id).then(function(user) {
     if (!user) {
       return res.sendStatus(401)
     }
@@ -146,14 +146,14 @@ router.get('/feed', auth.required, function(req, res, next) {
 })
 
 router.post('/', auth.required, function(req, res, next) {
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
       }
 
       let article = new Article(req.body.article)
-      article.author_id = user.id
+      article.AuthorId = user.id
 
       return article.save().then(article => {
         return res.json({ article: article.toJSONFor(user, user) })
@@ -164,7 +164,7 @@ router.post('/', auth.required, function(req, res, next) {
 
 // return a article
 router.get('/:article', auth.optional, function(req, res, next) {
-  Promise.all([req.payload ? User.findById(req.payload.id) : null, req.article.getAuthor()])
+  Promise.all([req.payload ? User.findByPk(req.payload.id) : null, req.article.getAuthor()])
     .then(function(results) {
       let [user, author] = results
 
@@ -175,8 +175,8 @@ router.get('/:article', auth.optional, function(req, res, next) {
 
 // update article
 router.put('/:article', auth.required, function(req, res, next) {
-  User.findById(req.payload.id).then(function(user) {
-    if (req.article.author_id.toString() === req.payload.id.toString()) {
+  User.findByPk(req.payload.id).then(function(user) {
+    if (req.article.AuthorId.toString() === req.payload.id.toString()) {
       if (typeof req.body.article.title !== 'undefined') {
         req.article.title = req.body.article.title
       }
@@ -209,7 +209,7 @@ router.put('/:article', auth.required, function(req, res, next) {
 
 // delete article
 router.delete('/:article', auth.required, function(req, res, next) {
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
@@ -230,7 +230,7 @@ router.delete('/:article', auth.required, function(req, res, next) {
 router.post('/:article/favorite', auth.required, function(req, res, next) {
   let articleId = req.article.id
 
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
@@ -251,7 +251,7 @@ router.post('/:article/favorite', auth.required, function(req, res, next) {
 router.delete('/:article/favorite', auth.required, function(req, res, next) {
   let articleId = req.article.id
 
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
@@ -270,7 +270,7 @@ router.delete('/:article/favorite', auth.required, function(req, res, next) {
 
 // return an article's comments
 router.get('/:article/comments', auth.optional, function(req, res, next) {
-  Promise.resolve(req.payload ? User.findById(req.payload.id) : null)
+  Promise.resolve(req.payload ? User.findByPk(req.payload.id) : null)
     .then(function(user) {
       return req.article.getComments({ order: [['created_at', 'DESC']] }).then(function(comments) {
         return res.json({
@@ -285,13 +285,13 @@ router.get('/:article/comments', auth.optional, function(req, res, next) {
 
 // create a new comment
 router.post('/:article/comments', auth.required, function(req, res, next) {
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
       }
       return Comment.create(
-        Object.assign({}, req.body.comment, { article_id: req.article.id, author_id: user.id })
+        Object.assign({}, req.body.comment, { article_id: req.article.id, AuthorId: user.id })
       ).then(function(comment) {
         res.json({ comment: comment.toJSONFor(user, user) })
       })

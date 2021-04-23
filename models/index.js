@@ -6,7 +6,6 @@ const config = require('../config')
 
 // sequelize
 const sequelizeParams = {
-  operatorsAliases: false,
   logging: config.verbose ? console.log : false
 };
 if (config.isProduction) {
@@ -29,9 +28,9 @@ const sequelize = new Sequelize(sequelizeParams);
 
 // db
 const db = {}
-db.Article = sequelize.import('./article')
-db.Comment = sequelize.import('./comment')
-db.User = sequelize.import('./user')
+db.Article = require('./article')(sequelize)
+db.Comment = require('./comment')(sequelize)
+db.User = require('./user')(sequelize)
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate()

@@ -19,7 +19,7 @@ router.param('username', function(req, res, next, username) {
 
 router.get('/:username', auth.optional, function(req, res, next) {
   if (req.payload) {
-    User.findById(req.payload.id).then(function(user) {
+    User.findByPk(req.payload.id).then(function(user) {
       if (!user) {
         return res.json({ profile: req.profile.toProfileJSONFor(false) })
       }
@@ -34,7 +34,7 @@ router.get('/:username', auth.optional, function(req, res, next) {
 router.post('/:username/follow', auth.required, function(req, res, next) {
   let profileId = req.profile.id
 
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
@@ -50,7 +50,7 @@ router.post('/:username/follow', auth.required, function(req, res, next) {
 router.delete('/:username/follow', auth.required, function(req, res, next) {
   let profileId = req.profile.id
 
-  User.findById(req.payload.id)
+  User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)

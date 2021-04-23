@@ -1,7 +1,7 @@
 const slug = require('slug')
-const { Op } = require('sequelize')
+const { DataTypes, Op } = require('sequelize')
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   const Article = sequelize.define(
     'Article',
     {
@@ -37,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      timestamps: true,
       underscored: true,
       tableName: 'articles',
       hooks: {
@@ -77,8 +76,8 @@ module.exports = (sequelize, DataTypes) => {
       title: this.title,
       description: this.description,
       body: this.body,
-      createdAt: this.created_at,
-      updatedAt: this.updated_at,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
       tagList: this.tagList,
       favorited: user ? user.isFavorite(this.id) : false,
       favoritesCount: this.favoritesCount,

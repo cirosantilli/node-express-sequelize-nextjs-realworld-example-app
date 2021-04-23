@@ -34,7 +34,7 @@
     "passport-local": "1.0.0",
     "pg": "^8.6.0",
     "request": "2.69.0",
-    "sequelize": "^4.37.6",
+    "sequelize": "^6.5.1",
     "slug": "0.9.1",
     "underscore": "1.8.3"
   },
