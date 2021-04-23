@@ -4,10 +4,11 @@
   "description": "conduit on node",
   "main": "app.js",
   "scripts": {
-    "start": "node ./app.js",
     "back": "nodemon ./app.js",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
     "front": "cd react-redux-realworld-example-app && npm start",
+    "preinstall": "cd react-redux-realworld-example-app && npm install",
+    "start": "node ./app.js",
     "test": "htte -c ./htte-tests/htte.yaml"
   },
   "repository": {

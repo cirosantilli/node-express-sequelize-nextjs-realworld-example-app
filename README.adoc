@@ -1,13 +1,15 @@
 = Node Express.js Sequelize Example Realworld App
 
-Local development with SQLite:
+== Local development with SQLite
 
 .....
-cd react-redux-realworld-example-app
-npm install
-cd ..
 npm install
 npm run dev
 .....
 
 The browser automatically pops up on http://localhost:4101/
+
+== Heroku deployment
+
+....
+....
