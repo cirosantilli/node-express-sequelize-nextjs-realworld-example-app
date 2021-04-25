@@ -2,7 +2,7 @@
 
 Also includes a single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app statically and serving it from the public folder of the backend.
 
-This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app
+This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app both of which are backend implementations of the awesome https://github.com/gothinkster/realworld
 
 == Local development with SQLite
 

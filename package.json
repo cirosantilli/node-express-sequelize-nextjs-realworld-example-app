@@ -51,5 +51,6 @@
     "nodemon": "^1.11.0",
     "prettier": "^1.12.1",
     "sqlite3": "^4.0.0"
-  }
+  },
+  "cacheDirectories": ["node_modules", "react-redux-realworld-example-app/node_modules"]
 }
