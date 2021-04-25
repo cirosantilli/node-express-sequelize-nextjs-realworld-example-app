@@ -76,7 +76,7 @@ module.exports = (sequelize) => {
           return following.split(',').map(v => Number(v))
         }
       },
-      hash: DataTypes.STRING,
+      hash: DataTypes.STRING(1024),
       salt: DataTypes.STRING
     },
     {
