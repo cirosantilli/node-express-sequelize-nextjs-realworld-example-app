@@ -52,6 +52,8 @@ DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/
 npm start
 ....
 
+then visit the running website at: http://localhost:3000/
+
 == Heroku deployment
 
 Got it running perfectly at as of April 2021 https://cirosantilli-realworld-express.herokuapp.com/ with the following steps:

@@ -37,9 +37,17 @@ app.use(require('./routes'))
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  const err = new Error('Not Found')
+  const err = new Error('error: 404 Not Found')
   err.status = 404
   next(err)
+})
+// If our code throws and exception, print it to the terminal,
+// and return only a minimal error without any information to the client.
+// The default is to return the error body, which might contain app secrets
+// like the database password!!! Insane default!!!
+app.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send('error: 500 Internal Server Error')
 })
 
 /// error handlers
