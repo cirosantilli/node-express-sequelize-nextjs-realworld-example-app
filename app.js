@@ -69,10 +69,19 @@ app.use(function(err, req, res, next) {
       error: {}
     }
   })
-})
+});
 
 if (!module.parent) {
-  start()
+  (async () => {
+    try {
+      await model.sequelize.authenticate();
+      await model.sequelize.sync();
+      start();
+    } catch (e) {
+      console.error(e);
+      process.exit(1)
+    }
+  })()
 }
 
 function start(cb) {

@@ -8,6 +8,7 @@ const config = require('../config')
 const sequelizeParams = {
   logging: config.verbose ? console.log : false
 };
+let sequelize;
 if (config.isProduction) {
   sequelizeParams.dialect = 'postgres';
   sequelizeParams.dialectOptions = {
@@ -19,12 +20,12 @@ if (config.isProduction) {
       rejectUnauthorized: false
     }
   };
-  sequelizeParams.host = process.env.DATABASE_URL;
+  sequelize = new Sequelize(process.env.DATABASE_URL, sequelizeParams);
 } else {
   sequelizeParams.dialect = 'sqlite';
   sequelizeParams.storage = path.join(__dirname, '../db.sqlite3');
+  sequelize = new Sequelize(sequelizeParams);
 }
-const sequelize = new Sequelize(sequelizeParams);
 
 // db
 const db = {}
@@ -38,5 +39,4 @@ Object.keys(db).forEach(modelName => {
 })
 db.sequelize = sequelize
 db.Sequelize = Sequelize
-sequelize.sync()
 module.exports = db
