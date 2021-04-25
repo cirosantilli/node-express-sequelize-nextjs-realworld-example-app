@@ -40,7 +40,6 @@ heroku addons:create heroku-postgresql:hobby-dev
 # a deployment, not a CI.
 # https://stackoverflow.com/questions/55821078/disable-eslint-that-create-react-app-provides
 heroku config:set DISABLE_ESLINT_PLUGIN=true
-heroku config:set NODE_ENV=production
 # Notably to skip ultra-slow sqlite native build.
 heroku config:set NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
 heroku config:set SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
