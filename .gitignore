@@ -39,5 +39,6 @@ node_modules
 .tern-port
 
 db.sqlite3
+/.env
 
 package-lock.json

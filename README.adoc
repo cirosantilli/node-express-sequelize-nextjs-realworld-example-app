@@ -1,4 +1,4 @@
-= Node Express.js Sequelize Example Realworld App
+= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React Example Realworld App
 
 Also includes a single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app statically and serving it from the public folder of the backend.
 
@@ -26,6 +26,31 @@ The website can not be seen at: http://localhost:3000/
 This setup does not start the front-end development server at http://localhost:4101/[], but rather compiles the front-end files statically, and serves them on the public folder of the backend server.
 
 This is the type of setup that will run in production, with a single server. Running it locally might help debug some front-end deployment issues. But otherwise you will just normally use the <<local-development-with-sqlite>> setup instead for devlopment.
+
+=== Local run as identical to deployment as possible
+
+Here we use PostgreSQL instead of SQLite with the prebuilt static frontend.
+
+For when you really need to debug some deployment stuff locally
+
+Setup:
+
+....
+createdb node_express_sequelize_realworld
+psql -c "CREATE ROLE node_express_sequelize_realworld_user with login password 'a'"
+psql -c 'GRANT ALL PRIVILEGES ON DATABASE node_express_sequelize_realworld TO node_express_sequelize_realworld_user'
+echo "SECRET=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)" >> .env
+npm run build
+....
+
+Run:
+
+....
+env $(cat .env | xargs) \
+NODE_ENV=production \
+DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' \
+npm start
+....
 
 == Heroku deployment
 
