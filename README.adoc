@@ -1,5 +1,9 @@
 = Node Express.js Sequelize Example Realworld App
 
+Also includes a single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app statically and serving it from the public folder of the backend.
+
+This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app
+
 == Local development with SQLite
 
 .....
@@ -24,6 +28,8 @@ This setup does not start the front-end development server at http://localhost:4
 This is the type of setup that will run in production, with a single server. Running it locally might help debug some front-end deployment issues. But otherwise you will just normally use the <<local-development-with-sqlite>> setup instead for devlopment.
 
 == Heroku deployment
+
+Got it running perfectly at as of April 2021 https://cirosantilli-realworld-express.herokuapp.com/ with the following steps:
 
 ....
 # Automatically sets DATABASE_URL.
