@@ -10,7 +10,6 @@ const errorhandler = require('errorhandler')
 
 const model = require('./models')
 const config = require('./config')
-// Create global app object
 const app = express()
 
 require('./config/passport')
@@ -23,17 +22,14 @@ if (config.verbose) {
 }
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
 app.use(require('method-override')())
-
-app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }))
-
-app.use(require('./routes'))
 const buildDir = path.join(__dirname, 'react-redux-realworld-example-app', 'build');
 app.use(express.static(buildDir));
-app.get('*', function (request, response) {
+app.get(new RegExp('^(?!' + config.apiPath + '(/|$))'), function (request, response) {
   response.sendFile(path.join(buildDir, 'index.html'));
 });
+app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }))
+app.use(require('./routes'))
 
 // 404 handler.
 app.use(function (req, res, next) {
