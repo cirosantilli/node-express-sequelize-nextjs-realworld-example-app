@@ -25,11 +25,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(require('method-override')())
-app.use(express.static(path.join(__dirname, 'frontend', 'build')))
 
 app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }))
 
 app.use(require('./routes'))
+const buildDir = path.join(__dirname, 'react-redux-realworld-example-app', 'build');
+app.use(express.static(buildDir));
+app.get('*', function (request, response) {
+  response.sendFile(path.join(buildDir, 'index.html'));
+});
 
 // 404 handler.
 app.use(function (req, res, next) {
