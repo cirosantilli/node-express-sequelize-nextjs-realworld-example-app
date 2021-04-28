@@ -8,7 +8,6 @@
     "build": "cd react-redux-realworld-example-app && npm run build",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
     "front": "cd react-redux-realworld-example-app && npm start",
-    "heroku-postbuild": "npm run build",
     "preinstall": "cd react-redux-realworld-example-app && npm install",
     "start": "node --unhandled-rejections=strict ./app.js"
   },
@@ -49,5 +48,8 @@
     "prettier": "^1.12.1",
     "sqlite3": "^4.0.0"
   },
-  "cacheDirectories": ["node_modules", "react-redux-realworld-example-app/node_modules"]
+  "cacheDirectories": [
+    "node_modules",
+    "react-redux-realworld-example-app/node_modules"
+  ]
 }
