@@ -10,8 +10,7 @@
     "front": "cd react-redux-realworld-example-app && npm start",
     "heroku-postbuild": "npm run build",
     "preinstall": "cd react-redux-realworld-example-app && npm install",
-    "start": "node --unhandled-rejections=strict ./app.js",
-    "test": "htte -c ./htte-tests/htte.yaml"
+    "start": "node --unhandled-rejections=strict ./app.js"
   },
   "repository": {
     "type": "git",
@@ -46,7 +45,6 @@
     "concurrent": "^0.3.2",
     "eslint": "^4.19.1",
     "eslint-plugin-prettier": "^2.6.0",
-    "htte": "^0.3.0",
     "nodemon": "^1.11.0",
     "prettier": "^1.12.1",
     "sqlite3": "^4.0.0"
