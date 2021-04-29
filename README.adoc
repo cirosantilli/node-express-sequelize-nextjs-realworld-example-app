@@ -27,7 +27,7 @@ The website can now be seen at: http://localhost:3000
 
 This setup does not start the front-end development server at http://localhost:4101[], but rather compiles the front-end files statically, and serves them on the public folder of the backend server.
 
-This is the type of setup that will run in production, with a single server. Running it locally might help debug some front-end deployment issues. But otherwise you will just normally use the <<local-development-with-sqlite>> setup instead for devlopment.
+This is the type of setup that will run in production, with a single server. Running it locally might help debug some front-end deployment issues. But otherwise you will just normally use the <<local-run-as-identical-to-deployment-as-possible>> setup instead for development.
 
 === Local run as identical to deployment as possible
 
