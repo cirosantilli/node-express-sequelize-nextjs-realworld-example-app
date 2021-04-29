@@ -1,6 +1,8 @@
 = Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React Example Realworld App
 
-Also includes a single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app statically and serving it from the public folder of the backend.
+Includes a working single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app frontend statically and serving it from the public folder of the backend.
+
+CSS bundling to use https://demo.productionready.io/main.css from the SCSS source is also setup, but blocked on: https://github.com/gothinkster/conduit-bootstrap-template/issues/5#issuecomment-829104220
 
 This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app both of which are backend implementations of the awesome https://github.com/gothinkster/realworld
 
