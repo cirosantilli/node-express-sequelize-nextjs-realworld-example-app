@@ -26,7 +26,7 @@ app.use(require('method-override')())
 const buildDir = path.join(__dirname, 'react-redux-realworld-example-app', 'build');
 app.use(express.static(buildDir));
 app.get(new RegExp('^(?!' + config.apiPath + '(/|$))'), function (req, res) {
-  response.sendFile(path.join(buildDir, 'index.html'));
+  res.sendFile(path.join(buildDir, 'index.html'));
 });
 app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }))
 app.use(require('./routes'))
