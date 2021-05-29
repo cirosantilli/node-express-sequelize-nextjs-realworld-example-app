@@ -9,7 +9,8 @@
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
     "front": "cd react-redux-realworld-example-app && npm start",
     "preinstall": "cd react-redux-realworld-example-app && npm install",
-    "start": "node --unhandled-rejections=strict ./app.js"
+    "start": "node --unhandled-rejections=strict ./app.js",
+    "test-api": "./realworld/api/run-api-tests.sh"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "concurrently": "6.2.0",
     "eslint": "^4.19.1",
     "eslint-plugin-prettier": "^2.6.0",
+    "newman": "^3.5.2",
     "nodemon": "^1.11.0",
     "prettier": "^1.12.1",
     "sqlite3": "^4.0.0"

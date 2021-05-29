@@ -6,6 +6,10 @@ CSS bundling to use https://demo.productionready.io/main.css from the SCSS sourc
 
 This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app both of which are backend implementations of the awesome https://github.com/gothinkster/realworld
 
+The `react-redux-realworld-example-app` is stored at link:react-redux-realworld-example-app[] as a submodule, and some small modifications have been made to it from the upstream, they are tracked at: https://github.com/cirosantilli/react-redux-realworld-example-app
+
+Website behaviour is intended to match the front and backend upstreams as closely as possible, minus except possible obvious bugs.
+
 == Local development with SQLite
 
 .....
@@ -25,9 +29,17 @@ npm start
 
 The website can now be seen at: http://localhost:3000
 
-This setup does not start the front-end development server at http://localhost:4101[], but rather compiles the front-end files statically, and serves them on the public folder of the backend server.
+This setup does not start the front-end development server at http://localhost:4101[], but rather compiles the front-end files statically, and serves them on the public folder of the backend server, giving performance representative performance characteristics of the frontend.
 
-This is the type of setup that will run in production, with a single server. Running it locally might help debug some front-end deployment issues. But otherwise you will just normally use the <<local-run-as-identical-to-deployment-as-possible>> setup instead for development.
+This setup is much closer to the final type of setup that will run in production, and it runs a single server.
+
+Running it locally might help debug some front-end deployment issues.
+
+But otherwise you will just normally use the <<local-run-as-identical-to-deployment-as-possible>> setup instead for development, because this setup lacks important debug features such as:
+
+* hot code reloading
+
+This setup still runs on `NODE_ENV=development`, which implies that sqlite is used, so no further database setup is needed for PostgreSQL. This also means however that you might experience different performance characteristics or behaviour not ironed out by Sequelize between SQLite vs PotsgreSQL.
 
 === Local run as identical to deployment as possible
 
@@ -74,3 +86,24 @@ heroku config:set NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
 heroku config:set SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
 git push heroku master
 ....
+
+== Testing
+
+=== API tests
+
+These tests are part of https://github.com/gothinkster/realworld which we track here as a submodule.
+
+They test the JSON REST API without the frontend:
+
+....
+npm run back
+npm run test-api
+....
+
+== Benchmarks
+
+Methodology: time after click event https://stackoverflow.com/questions/67750849/how-to-filter-by-event-type-in-chrome-devtools-profile-tab-e-g-to-see-mouse-cli/67750850#67750850 up until new page renders, not considering any images on the new page, just text. All benchmarks on Lenovo ThinkPad P51.
+
+* click from global feed to article
+** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, Chromium 91, `npm run dev`: 0.2s
+** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, Chromium 91, `npm run start`: 0.4s
