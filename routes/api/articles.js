@@ -8,7 +8,7 @@ const { Article, User, Comment } = require('../../models')
 router.param('article', function(req, res, next, slug) {
   Article.findOne({
     where: { slug: slug },
-    include: [{ model: User, as: 'Author' }]
+    include: [{ model: User, as: 'author' }]
   })
     .then(function(article) {
       if (!article) {
@@ -23,7 +23,7 @@ router.param('article', function(req, res, next, slug) {
 router.param('comment', function(req, res, next, id) {
   Comment.findOne({
     where: { id: id },
-    include: [{ model: User, as: 'Author' }],
+    include: [{ model: User, as: 'author' }],
   })
     .then(function(comment) {
       if (!comment) {
@@ -76,7 +76,7 @@ router.get('/', auth.optional, function(req, res, next) {
           order: [['created_at', 'DESC']],
           limit: Number(limit),
           offset: Number(offset),
-          include: [{ model: User, as: 'Author' }]
+          include: [{ model: User, as: 'author' }]
         }),
         Article.count({ where: query }),
         req.payload ? User.findByPk(req.payload.id) : null
@@ -118,11 +118,11 @@ router.get('/feed', auth.required, function(req, res, next) {
         where: { author_id: { [Op.in]: user.following } },
         offset: Number(offset),
         limit: Number(limit),
-        include: [{ model: User, as: 'Author' }]
+        include: [{ model: User, as: 'author' }]
       }),
       Article.count({
         where: { author_id: { [Op.in]: user.following } },
-        include: [{ model: User, as: 'Author' }]
+        include: [{ model: User, as: 'author' }]
       })
     ])
       .then(function(results) {
@@ -131,7 +131,7 @@ router.get('/feed', auth.required, function(req, res, next) {
 
         return res.json({
           articles: articles.map(function(article) {
-            return article.toJSONFor(article.Author)
+            return article.toJSONFor(article.author)
           }),
           articlesCount: articlesCount
         })
@@ -150,7 +150,7 @@ router.post('/', auth.required, function(req, res, next) {
       let article = new Article(req.body.article)
       article.AuthorId = user.id
       return article.save().then(article => {
-        article.Author = user
+        article.author = user
         return res.json({ article: article.toJSONFor(user) })
       })
     })
@@ -209,7 +209,7 @@ router.delete('/:article', auth.required, function(req, res, next) {
         return res.sendStatus(401)
       }
 
-      if (req.article.Author.id.toString() === req.payload.id.toString()) {
+      if (req.article.author.id.toString() === req.payload.id.toString()) {
         return req.article.destroy().then(function() {
           return res.sendStatus(204)
         })
@@ -268,7 +268,7 @@ router.get('/:article/comments', auth.optional, function(req, res, next) {
     .then(function(user) {
       return req.article.getComments({
         order: [['created_at', 'DESC']],
-        include: [{ model: User, as: 'Author' }],
+        include: [{ model: User, as: 'author' }],
       }).then(function(comments) {
         return res.json({
           comments: comments.map(function(comment) {
@@ -290,7 +290,7 @@ router.post('/:article/comments', auth.required, function(req, res, next) {
       return Comment.create(
         Object.assign({}, req.body.comment, { ArticleId: req.article.id, AuthorId: user.id })
       ).then(function(comment) {
-        comment.Author = user
+        comment.author = user
         res.json({ comment: comment.toJSONFor(user) })
       })
     })

@@ -14,7 +14,7 @@ module.exports = (sequelize) => {
 
   Comment.associate = function() {
     Comment.belongsTo(sequelize.models.User, {
-      as: 'Author',
+      as: 'author',
       foreignKey: {
         allowNull: false
       },
@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
       body: this.body,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      author: this.Author.toProfileJSONFor(user)
+      author: this.author.toProfileJSONFor(user)
     }
   }
   return Comment

@@ -51,7 +51,7 @@ module.exports = (sequelize) => {
 
   Article.associate = function() {
     Article.belongsTo(sequelize.models.User, {
-      as: 'Author',
+      as: 'author',
       foreignKey: {
         allowNull: false
       }
@@ -80,7 +80,7 @@ module.exports = (sequelize) => {
       tagList: this.tagList,
       favorited: user ? user.isFavorite(this.id) : false,
       favoritesCount: this.favoritesCount,
-      author: this.Author.toProfileJSONFor(user)
+      author: this.author.toProfileJSONFor(user)
     }
   }
   return Article
