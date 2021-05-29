@@ -100,6 +100,8 @@ npm run back
 npm run test-api
 ....
 
+That method uses Postman, but we feel that it is not a very good way to do the testing, as it uses JSON formats everywhere with embedded JavaScript, presumably to be edited in some dedicated editor like Jupyter does. It would be much better to just have a pure JavaScript setup instead.
+
 == Benchmarks
 
 Methodology: time after click event https://stackoverflow.com/questions/67750849/how-to-filter-by-event-type-in-chrome-devtools-profile-tab-e-g-to-see-mouse-cli/67750850#67750850 up until new page renders, not considering any images on the new page, just text. All benchmarks on Lenovo ThinkPad P51.

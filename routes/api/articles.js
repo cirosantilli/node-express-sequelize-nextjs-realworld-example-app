@@ -14,28 +14,23 @@ router.param('article', function(req, res, next, slug) {
       if (!article) {
         return res.sendStatus(404)
       }
-
       req.article = article
-
-      next()
-
-      return null
+      return next()
     })
     .catch(next)
 })
 
 router.param('comment', function(req, res, next, id) {
-  Comment.findByPk(id)
+  Comment.findOne({
+    where: { id: id },
+    include: [{ model: User, as: 'Author' }],
+  })
     .then(function(comment) {
       if (!comment) {
         return res.sendStatus(404)
       }
-
       req.comment = comment
-
-      next()
-
-      return null
+      return next()
     })
     .catch(next)
 })
@@ -92,7 +87,7 @@ router.get('/', auth.optional, function(req, res, next) {
 
         return res.json({
           articles: articles.map(function(article) {
-            return article.toJSONFor(article.Author, user)
+            return article.toJSONFor(user)
           }),
           articlesCount: articlesCount
         })
@@ -154,9 +149,9 @@ router.post('/', auth.required, function(req, res, next) {
 
       let article = new Article(req.body.article)
       article.AuthorId = user.id
-
       return article.save().then(article => {
-        return res.json({ article: article.toJSONFor(user, user) })
+        article.Author = user
+        return res.json({ article: article.toJSONFor(user) })
       })
     })
     .catch(next)
@@ -167,8 +162,7 @@ router.get('/:article', auth.optional, function(req, res, next) {
   Promise.all([req.payload ? User.findByPk(req.payload.id) : null, req.article.getAuthor()])
     .then(function(results) {
       let [user, author] = results
-
-      return res.json({ article: req.article.toJSONFor(author, user) })
+      return res.json({ article: req.article.toJSONFor(user) })
     })
     .catch(next)
 })
@@ -197,7 +191,7 @@ router.put('/:article', auth.required, function(req, res, next) {
         .save()
         .then(function(article) {
           return article.getAuthor().then(author => {
-            return res.json({ article: article.toJSONFor(author, user) })
+            return res.json({ article: article.toJSONFor(user) })
           })
         })
         .catch(next)
@@ -239,7 +233,7 @@ router.post('/:article/favorite', auth.required, function(req, res, next) {
       return user.favorite(articleId).then(function() {
         return req.article.updateFavoriteCount().then(function(article) {
           return article.getAuthor().then(author => {
-            return res.json({ article: article.toJSONFor(author, user) })
+            return res.json({ article: article.toJSONFor(user) })
           })
         })
       })
@@ -260,7 +254,7 @@ router.delete('/:article/favorite', auth.required, function(req, res, next) {
       return user.unfavorite(articleId).then(function() {
         return req.article.updateFavoriteCount().then(function(article) {
           return article.getAuthor().then(author => {
-            return res.json({ article: article.toJSONFor(author, user) })
+            return res.json({ article: article.toJSONFor(user) })
           })
         })
       })
@@ -272,7 +266,10 @@ router.delete('/:article/favorite', auth.required, function(req, res, next) {
 router.get('/:article/comments', auth.optional, function(req, res, next) {
   Promise.resolve(req.payload ? User.findByPk(req.payload.id) : null)
     .then(function(user) {
-      return req.article.getComments({ order: [['created_at', 'DESC']] }).then(function(comments) {
+      return req.article.getComments({
+        order: [['created_at', 'DESC']],
+        include: [{ model: User, as: 'Author' }],
+      }).then(function(comments) {
         return res.json({
           comments: comments.map(function(comment) {
             return comment.toJSONFor(user)
@@ -293,7 +290,8 @@ router.post('/:article/comments', auth.required, function(req, res, next) {
       return Comment.create(
         Object.assign({}, req.body.comment, { ArticleId: req.article.id, AuthorId: user.id })
       ).then(function(comment) {
-        res.json({ comment: comment.toJSONFor(user, user) })
+        comment.Author = user
+        res.json({ comment: comment.toJSONFor(user) })
       })
     })
     .catch(next)

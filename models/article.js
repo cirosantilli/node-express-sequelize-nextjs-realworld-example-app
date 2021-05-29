@@ -69,7 +69,7 @@ module.exports = (sequelize) => {
     })
   }
 
-  Article.prototype.toJSONFor = function(author, user) {
+  Article.prototype.toJSONFor = function(user) {
     return {
       slug: this.slug,
       title: this.title,
@@ -80,7 +80,7 @@ module.exports = (sequelize) => {
       tagList: this.tagList,
       favorited: user ? user.isFavorite(this.id) : false,
       favoritesCount: this.favoritesCount,
-      author: author.toProfileJSONFor(user)
+      author: this.Author.toProfileJSONFor(user)
     }
   }
   return Article
