@@ -1,324 +1,46 @@
-= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React + Redux + Heroku Example Realworld App
-:china-dictatorship-media-base: https://raw.githubusercontent.com/cirosantilli/china-dictatorship-media/master
-:china-dictatorship-media-base-ignore: {china-dictatorship-media-base}
-:idprefix:
-:idseparator: -
-:sectanchors:
-:sectlinks:
-:sectnumlevels: 6
-:sectnums:
-:toc: macro
-:toclevels: 6
-:toc-title:
+= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + Next.js fullstack static/SSG/ISG Example Realworld App
 
 Got it running on <<heroku-deployment>> as of April 2021 at https://cirosantilli-realworld-express.herokuapp.com/
 
-Includes a working single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app frontend statically and serving it from the public folder of the backend.
+This is a branch of https://github.com/cirosantilli/node-express-sequelize-realworld-example-app rebased on top of that master, we show it in a separate GitHub repository just to give it more visibility.
 
-CSS bundling to use https://demo.productionready.io/main.css from the SCSS source is also setup, but blocked on: https://github.com/gothinkster/conduit-bootstrap-template/issues/5#issuecomment-829104220
+Any information that applies to both repositories will be kept in that README.
 
-This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app (deleted on 2021-06-21 probably because of fear of backslash from the Chinese communist party after Ciro created some issues there) which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app both of which are backend implementations of the awesome https://github.com/gothinkster/realworld sigoden was a good starting point, but it notably did not implement any of the many-to-many relations properly in SQL, rather hacking it with strings. We have now implemented those properly with relations (and it was not a breeze partly because sequelize is so quirky).
+Ideally we would like to have both demos on the same tree as they share all backend code, but Next.js and NPM impose too many restrictions which we don't have the time to work around.
 
-The `react-redux-realworld-example-app` is stored at link:react-redux-realworld-example-app[] as a submodule, and some small modifications have been made to it from the upstream, they are tracked at: https://github.com/cirosantilli/react-redux-realworld-example-app
+This frontend is based on https://github.com/reck1ess/next-realworld-example-app/tree/66003772a42bf71c7b2771119121d4c9cf4b07d4 which was SSR only via API, not SSG. We decided to merge it in-tree rather than keep it a separate submodule because the fullstack implementation means that the barrier between front-end and back-end becomes is quite blurred, e.g. "front-end" files also contain functions with direct backend database access without going through the API.
 
-Website behaviour is intended to match the front and backend upstreams as closely as possible, minus except possible obvious bugs.
+Both next and the backend API run on the same express server via a https://nextjs.org/docs/advanced-features/custom-server[Next.js custom server].
 
-Other versions of this repository include:
+The design goals are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSG.
 
-* Next.js instead of React + Redux: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app
-
-Tested on an Ubuntu 21.04 development host.
-
-toc::[]
+Due to ISR/SSR, the entire website should look exactly the same with and without JavaScript for a logged out user.
 
 == Local development with SQLite
 
-.....
+....
 npm install
 npm run dev
-.....
+....
 
-The browser automatically pops the development front-end server at http://localhost:4101[] which makes requests to the backend server that runs at http://localhost:3000[].
-
-You might also want to generate some test data as mentioned at: <<generate-demo-data>>.
-
-The SQLite database is located at `db.sqlite3`.
+You can now visit http://localhost:3000[] to view the website. Both API and pages are served from that single server.
 
 == Local optimized frontend
 
-.....
+....
 npm install
-npm run build
-npm start
-.....
-
-The website can now be seen at: http://localhost:3000
-
-This setup does not start the front-end development server at http://localhost:4101[], but rather compiles the front-end files statically, and serves them on the public folder of the backend server, giving performance representative performance characteristics of the frontend.
-
-This setup is much closer to the final type of setup that will run in production, and it runs a single server.
-
-Running it locally might help debug some front-end deployment issues.
-
-But otherwise you will just normally use the <<local-run-as-identical-to-deployment-as-possible>> setup instead for development, because this setup lacks important debug features such as:
-
-* hot code reloading
-
-This setup still runs on `NODE_ENV=development`, which implies that sqlite is used, so no further database setup is needed for PostgreSQL. This also means however that you might experience different performance characteristics or behaviour not ironed out by Sequelize between SQLite vs PotsgreSQL.
-
-=== Local run as identical to deployment as possible
-
-Here we use PostgreSQL instead of SQLite with the prebuilt static frontend. Note that optimized frontend is also used on the SQLite setup described at <<local-optimized-frontend>>).
-
-For when you really need to debug some deployment stuff locally
-
-Setup:
-
-....
-sudo apt install postgresql
-
-# Become able to run psql command without sudo.
-sudo -u postgres createuser -s "$(whoami)"
-createdb "$(whoami)"
-
-createdb node_express_sequelize_realworld
-psql -c "CREATE ROLE node_express_sequelize_realworld_user with login password 'a'"
-psql -c 'GRANT ALL PRIVILEGES ON DATABASE node_express_sequelize_realworld TO node_express_sequelize_realworld_user'
-echo "SECRET=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)" >> .env
+npm run build-dev
+npm run start-dev
 ....
 
-Run:
-
-....
-npm run build
-npm run start-prod
-....
-
-then visit the running website at: http://localhost:3000/
-
-To <<generate-demo-data>> for this instance run:
-
-....
-NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' ./bin/generate-demo-data.js --force-production
-....
+If you make any changes to the code, at least code under `/pages` for sure, you have to rebuild before they take effect in this mode, as Next.js appears to also run server-only code such as `getStaticPaths` from one of the webpack bundles.
 
 == Heroku deployment
 
-First time setup:
+We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
 
-....
-heroku git:remote -a cirosantilli-realworld-express
-# Automatically sets DATABASE_URL.
-heroku addons:create heroku-postgresql:hobby-dev
-# Otherwise the react build picks up the .eslint from this directory,
-# which specifies a plugin that is not installed because it is in the
-# devDependencies of this package.json... For the love of God, this is
-# a deployment, not a CI.
-# https://stackoverflow.com/questions/55821078/disable-eslint-that-create-react-app-provides
-heroku config:set DISABLE_ESLINT_PLUGIN=true
-# Notably to skip ultra-slow sqlite native build.
-heroku config:set NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
-heroku config:set SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
-....
+== TODO
 
-Every update:
+=== TODO security
 
-....
-npm run deploy
-....
-
-=== Heroku instance management
-
-Get a PostgreSQL shell:
-
-....
-heroku psql
-....
-
-DELETE ALL DATA IN THE DATABASE and <<generate-demo-data>> inside Heroku:
-
-....
-heroku run bash
-./bin/generate-demo-data.js --force-production
-....
-
-We have to run `heroku run bash` instead of `heroku ps:exec` because the second command does not set `DATABASE_URL`:
-
-* https://stackoverflow.com/questions/62502951/heroku-env-variables-database-url-and-port-not-showing-in-dyno-heroku-psexec/68050303#68050303
-* https://stackoverflow.com/questions/48119289/how-to-get-environment-variables-in-live-heroku-dyno/64951959#64951959
-* https://www.reddit.com/r/rails/comments/ejljxj/how_to_seed_a_postgres_production_database_on/
-
-Edit a file in Heroku to debug that you are trying to run manually, e.g. by adding print commands, uses https://github.com/hakash/termit[] minimal https://en.wikipedia.org/wiki/GNU_nano[nano]-like text editor:
-
-....
-heroku ps:exec
-termit app.js
-....
-
-== Debugging
-
-=== Step debugging
-
-For the backend, add `debugger;` to the point of interest, and run as:
-
-....
-npm run back-inspect
-....
-
-On the debugger, do a `c` to continue so that the server will start running (impossible to skip automatically: https://stackoverflow.com/questions/16420374/how-to-disable-in-the-node-debugger-break-on-first-line[]), and then trigger your event of interest from the browser:
-
-....
-npm run front
-....
-
-=== VERBOSE environment variable
-
-If you run as:
-
-....
-VERBOSE=1 npm run dev
-....
-
-this enables the following extra logs:
-
-* a log line for every request done
-
-=== Log database queries done
-
-....
-DEBUG='sequelize:sql:*' npm run start-prod
-....
-
-=== Generate demo data
-
-Note that this will first erase any data present in the database:
-
-....
-./bin/generate-demo-data.js
-....
-
-You can then login with users such as:
-
-* `user0@mail.com`
-* `user1@mail.com`
-
-and password `asdf`.
-
-Test data size can be configured with CLI parameters, e.g.:
-
-....
-./bin/generate-demo-data.js --n-users 5 --n-articles-per-user 8 --n-follows-per-user 3
-....
-
-=== Prevent the browser from opening automatically
-
-In case you've broken things so bad that the very first GET blows up the website and further requests don't respond https://stackoverflow.com/questions/61927814/how-to-disable-open-browser-in-cra
-
-....
-BROWSER=none npm run dev
-....
-
-This gives you time to setup e.g. Network recording in Chrome Developer Tools to be able to understand what is going on.
-
-=== Sequelize sometimes does not show the full stack trace
-
-This is a big problem during development, not sure how to solve it: https://github.com/sequelize/sequelize/issues/8199#issuecomment-863943835
-
-== Testing
-
-=== API tests
-
-These tests are part of https://github.com/gothinkster/realworld which we track here as a submodule.
-
-Test test method uses Postman, but we feel that it is not a very good way to do the testing, as it uses JSON formats everywhere with embedded JavaScript, presumably to be edited in some dedicated editor like Jupyter does. It would be much better to just have a pure JavaScript setup instead.
-
-They test the JSON REST API without the frontend.
-
-First start the backend server in a terminal:
-
-....
-npm run back-test
-....
-
-`npm run back-test` will make our server use a clean one-off in-memory database instead of using the default in-disk development `./db.sqlite3` as done for `npm run back`.
-
-Then on another terminal:
-
-....
-npm run test-api
-....
-
-Run a single test called `Register` instead:
-
-....
-npm run test-api -- --folder Register
-....
-
-TODO: many tests depend on previous steps, notably register. But we weren't able to make it run just given specific tests e.g. with:
-
-....
-npmr test-api -- --folder 'Register' --folder 'Login and Remember Token' --folder 'Create Article'
-....
-
-only the last `--folder` is used. Some threads say that multiple ones can be used in newer Newman, but even after updating it to latest v5 we couldn't get it to work: 
-
-* https://stackoverflow.com/questions/60057009/how-to-run-single-request-from-the-collection-in-newman
-* https://stackoverflow.com/questions/52519415/how-to-read-two-folder-with-newman
-
-=== Unit tests
-
-Ideally, all tests should be API test, so that they will work across any backend implementation more easily, and test the system more fully.
-
-However, setting up full API tests can be annoying, especially the user creation part, as especially since Postman is so clunky.
-
-Furthermore, the API tests can have a slower setup time, since by going directly to the backend API we can call `bulkCreate` which can be much faster than creating objects one by one.
-
-So sometimes, especially for things like model relations, we will just revert to a some quick API test:
-
-....
-npm test
-....
-
-To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then 
-
-....
-NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' npm test
-....
-
-== Benchmarks
-
-Methodology:
-
-* time after click event https://stackoverflow.com/questions/67750849/how-to-filter-by-event-type-in-chrome-devtools-profile-tab-e-g-to-see-mouse-cli/67750850#67750850 up until new page renders, not considering any images on the new page, just text
-* caches warmed by clicking all pages involved just before the experiment
-* hardware: Lenovo ThinkPad P51
-* browser: Chromium 91
-
-Results:
-
-* click from global feed to article
-** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, `npm run dev`: 0.2s
-** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, `npm run start`: 0.2s
-** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8 + frontend https://github.com/cirosantilli/next-realworld-example-app/tree/d510e33745966618ee95243ad8f7d3d974adcf14 `npm run dev`: 0.2s
-** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8 + frontend https://github.com/cirosantilli/next-realworld-example-app/tree/d510e33745966618ee95243ad8f7d3d974adcf14 `npm run`: 0.2s
-
-== Bugs
-
-Notable React Redux upstream bugs:
-
-* https://github.com/gothinkster/react-redux-realworld-example-app/issues/197 Your Feed pagination is just completely broken. This is not an API bug in this repo.
-
-== Database conventions
-
-The naming conventions are meant to be similar to the JavaScript naming conventions:
-
-* camel case on tables and columns
-* tables start with a capital letter, because they are class-like
-* columns start with a lowercase letter, because they are field-like
-* tables use singular form
-
-Achieving this requires fighting a bit with sequelize, which by default produces inconsistent names on foreign keys.
-
-== Related projects
-
-https://github.com/Varun-Hegde/Conduit_NodeJS/tree/99cc32f19a42d74ff9729765772b4676c537a755 some of the <<api-tests>> were failing, and some parts of the code didin't feel as clean as I'd like, so I ended up using https://github.com/sigoden/node-express-realworld-example-app[] as a basis. However I later learnt they did do/attempt to do the many to many relatioships properly unlike sigoden which just hacked with strings. The critical "hard" querry however https://github.com/Varun-Hegde/Conduit_NodeJS/blob/99cc32f19a42d74ff9729765772b4676c537a755/controllers/articles.js#L271[], which finds "posts by users I follow" and which best exercises the ORM's is not done nicel in a single SQL command as achieved in this repository after a lot of suffering.
+Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.

@@ -1,6 +1,6 @@
-const config = require('../config')
+const configShared = require('../config/shared')
 const router = require('express').Router()
 
 let indexCache
-router.use(config.apiPath, require('./api'))
+router.use(configShared.apiPath, require('./api'))
 module.exports = router

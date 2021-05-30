@@ -12,8 +12,8 @@ module.exports = (sequelize) => {
     return {
       id: this.id,
       body: this.body,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
       author: (await this.author.toProfileJSONFor(user))
     }
   }

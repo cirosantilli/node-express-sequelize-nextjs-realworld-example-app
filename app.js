@@ -8,6 +8,7 @@ const express = require('express')
 const http = require('http')
 const methods = require('methods')
 const morgan = require('morgan')
+const next = require('next')
 const passport = require('passport')
 const passport_local = require('passport-local');
 const path = require('path')
@@ -15,6 +16,7 @@ const session = require('express-session')
 
 const models = require('./models')
 const config = require('./config')
+const configShared = require('./config/shared')
 
 function doStart(app) {
   const sequelize = models(__dirname);
@@ -46,12 +48,13 @@ function doStart(app) {
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
   app.use(require('method-override')())
-  const buildDir = path.join(__dirname, 'react-redux-realworld-example-app', 'build');
-  app.use(express.static(buildDir));
-  app.get(new RegExp('^(?!' + config.apiPath + '(/|$))'), function (req, res) {
-    res.sendFile(path.join(buildDir, 'index.html'));
+
+  // Next handles anythiung outside of /api.
+  app.get(new RegExp('^(?!' + configShared.apiPath + '(/|$))'), function (req, res) {
+    return nextHandle(req, res);
   });
   app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }))
+  // https://stackoverflow.com/questions/42099925/logging-all-requests-in-node-js-express/64668730#64668730
   app.use(require('./routes'))
 
   // 404 handler.
@@ -92,6 +95,10 @@ function start(cb) {
 }
 
 const app = express()
-doStart(app)
+const nextApp = next({ dev: !config.isProductionNext })
+const nextHandle = nextApp.getRequestHandler()
+nextApp.prepare().then(() => {
+  doStart(app)
+})
 
 module.exports = { app, start }

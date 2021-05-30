@@ -4,15 +4,13 @@
   "description": "conduit on node",
   "main": "app.js",
   "scripts": {
-    "back": "nodemon --async-stack-traces --unhandled-rejections=strict ./app.js",
-    "back-inspect": "node --async-stack-traces --unhandled-rejections=strict inspect ./app.js",
-    "back-test": "NODE_ENV=test npm run back",
-    "build": "cd react-redux-realworld-example-app && npm run build",
+    "back-test": "NODE_ENV=test npm run dev",
+    "build": "next build",
+    "build-dev": "NODE_ENV_OVERRIDE=development npm run build",
     "deploy": "git push heroku master",
-    "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
-    "front": "cd react-redux-realworld-example-app && npm start",
-    "preinstall": "cd react-redux-realworld-example-app && npm install",
+    "dev": "nodemon ./app.js",
     "start": "node --unhandled-rejections=strict ./app.js",
+    "start-dev": "NODE_ENV_OVERRIDE=development NODE_ENV_NEXT=production node --unhandled-rejections=strict ./app.js",
     "start-prod": "env $(cat .env | xargs) NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' npm start",
     "test": "mocha test --ignore-leaks test.js",
     "test-api": "./realworld/api/run-api-tests.sh"
@@ -23,24 +21,38 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "@types/node": "^14.0.27",
+    "@types/react": "^16.9.44",
+    "axios": "^0.19.2",
     "body-parser": "1.15.0",
     "commander": "6.2.1",
     "cors": "2.7.1",
+    "emotion": "^10.0.27",
+    "emotion-server": "^10.0.27",
     "errorhandler": "1.4.3",
     "express": "4.13.4",
     "express-jwt": "3.3.0",
     "express-session": "1.13.0",
     "jsonwebtoken": "7.1.9",
+    "lazysizes": "^5.2.2",
+    "marked": "^1.1.1",
     "method-override": "2.3.5",
     "methods": "1.1.2",
-    "morgan": "1.7.0",
+    "morgan": "^1.7.0",
+    "next": "10.2.2",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
     "pg": "8.5.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "request": "2.69.0",
     "sequelize": "6.5.1",
     "slug": "0.9.1",
-    "termit": "0.4.4"
+    "termit": "0.4.4",
+    "swr": "0.3.0",
+    "typescript": "3.9.7"
   },
   "prettier": {
     "printWidth": 120,
@@ -48,6 +60,8 @@
     "singleQuote": true
   },
   "devDependencies": {
+    "@types/node": "14.0.27",
+    "@types/react": "16.9.44",
     "concurrently": "6.2.0",
     "eslint": "7.11.0",
     "eslint-plugin-prettier": "2.6.0",
@@ -55,10 +69,10 @@
     "newman": "5.2.3",
     "nodemon": "1.11.0",
     "prettier": "1.12.1",
-    "sqlite3": "5.0.2"
+    "sqlite3": "5.0.2",
+    "typescript": "3.9.7"
   },
   "cacheDirectories": [
-    "node_modules",
-    "react-redux-realworld-example-app/node_modules"
+    "node_modules"
   ]
 }

@@ -46,3 +46,9 @@ package-lock.json
 # Temporary files
 *.tmp
 *.bak
+
+# next.js
+/.next/
+/out/
+/.now/
+.now
