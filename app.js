@@ -37,7 +37,9 @@ function doStart(app) {
   app.use(cors())
 
   // Normal express config defaults
-  app.use(morgan('combined'))
+  if (config.verbose) {
+    app.use(morgan('combined'))
+  }
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
   app.use(require('method-override')())
