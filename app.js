@@ -6,14 +6,34 @@ const http = require('http')
 const methods = require('methods')
 const morgan = require('morgan')
 const passport = require('passport')
+const passport_local = require('passport-local');
 const path = require('path')
 const session = require('express-session')
 
-const model = require('./models')
+const models = require('./models')
 const config = require('./config')
-require('./config/passport')
 
 function doStart(app) {
+  const sequelize = models(__dirname);
+  passport.use(
+    new passport_local.Strategy(
+      {
+        usernameField: 'user[email]',
+        passwordField: 'user[password]'
+      },
+      function(email, password, done) {
+        sequelize.models.User.findOne({ where: { email: email } })
+          .then(function(user) {
+            if (!user || !user.validPassword(password)) {
+              return done(null, false, { errors: { 'email or password': 'is invalid' } })
+            }
+
+            return done(null, user)
+          })
+          .catch(done)
+      }
+    )
+  )
   app.use(cors())
 
   // Normal express config defaults
@@ -46,8 +66,9 @@ function doStart(app) {
   if (!module.parent) {
     (async () => {
       try {
-        await model.sequelize.authenticate();
-        await model.sequelize.sync();
+        await sequelize.authenticate();
+        await sequelize.sync();
+        app.set('sequelize', sequelize)
         start();
       } catch (e) {
         console.error(e);
