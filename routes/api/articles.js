@@ -148,7 +148,7 @@ router.post('/', auth.required, function(req, res, next) {
       }
 
       let article = new Article(req.body.article)
-      article.AuthorId = user.id
+      article.authorId = user.id
       return article.save().then(article => {
         article.author = user
         return res.json({ article: article.toJSONFor(user) })
@@ -170,7 +170,7 @@ router.get('/:article', auth.optional, function(req, res, next) {
 // update article
 router.put('/:article', auth.required, function(req, res, next) {
   User.findByPk(req.payload.id).then(function(user) {
-    if (req.article.AuthorId.toString() === req.payload.id.toString()) {
+    if (req.article.authorId.toString() === req.payload.id.toString()) {
       if (typeof req.body.article.title !== 'undefined') {
         req.article.title = req.body.article.title
       }
@@ -288,7 +288,7 @@ router.post('/:article/comments', auth.required, function(req, res, next) {
         return res.sendStatus(401)
       }
       return Comment.create(
-        Object.assign({}, req.body.comment, { ArticleId: req.article.id, AuthorId: user.id })
+        Object.assign({}, req.body.comment, { ArticleId: req.article.id, authorId: user.id })
       ).then(function(comment) {
         comment.author = user
         res.json({ comment: comment.toJSONFor(user) })
