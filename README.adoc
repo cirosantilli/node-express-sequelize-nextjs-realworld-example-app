@@ -1,4 +1,4 @@
-= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React Example Realworld App
+= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React + Redux Example Realworld App
 
 Includes a working single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app frontend statically and serving it from the public folder of the backend.
 
@@ -9,6 +9,10 @@ This started as a fork of: https://github.com/sigoden/node-express-realworld-exa
 The `react-redux-realworld-example-app` is stored at link:react-redux-realworld-example-app[] as a submodule, and some small modifications have been made to it from the upstream, they are tracked at: https://github.com/cirosantilli/react-redux-realworld-example-app
 
 Website behaviour is intended to match the front and backend upstreams as closely as possible, minus except possible obvious bugs.
+
+Other versions of this repository include:
+
+* Next.js instead of React + Redux: https://github.com/cirosantilli/node-express-sequelize-nextjs-jrealworld-example-app
 
 == Local development with SQLite
 
@@ -104,8 +108,17 @@ That method uses Postman, but we feel that it is not a very good way to do the t
 
 == Benchmarks
 
-Methodology: time after click event https://stackoverflow.com/questions/67750849/how-to-filter-by-event-type-in-chrome-devtools-profile-tab-e-g-to-see-mouse-cli/67750850#67750850 up until new page renders, not considering any images on the new page, just text. All benchmarks on Lenovo ThinkPad P51.
+Methodology:
+
+* time after click event https://stackoverflow.com/questions/67750849/how-to-filter-by-event-type-in-chrome-devtools-profile-tab-e-g-to-see-mouse-cli/67750850#67750850 up until new page renders, not considering any images on the new page, just text
+* caches warmed by clicking all pages involved just before the experiment
+* hardware: Lenovo ThinkPad P51
+* browser: Chromium 91
+
+Results:
 
 * click from global feed to article
-** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, Chromium 91, `npm run dev`: 0.2s
-** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, Chromium 91, `npm run start`: 0.4s
+** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, `npm run dev`: 0.2s
+** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, `npm run start`: 0.2s
+** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8 + frontend https://github.com/cirosantilli/next-realworld-example-app/tree/d510e33745966618ee95243ad8f7d3d974adcf14 `npm run dev`: 0.2s
+** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8 + frontend https://github.com/cirosantilli/next-realworld-example-app/tree/d510e33745966618ee95243ad8f7d3d974adcf14 `npm run`: 0.2s
