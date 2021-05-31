@@ -91,6 +91,20 @@ heroku config:set SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
 git push heroku master
 ....
 
+== Debugging
+
+=== VERBOSE environment variable
+
+If you run as:
+
+....
+VERBOSE=1 npm run dev
+....
+
+this enables the following extra logs:
+
+* a log line for every request done
+
 == Testing
 
 === API tests
