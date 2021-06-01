@@ -14,6 +14,8 @@ Other versions of this repository include:
 
 * Next.js instead of React + Redux: https://github.com/cirosantilli/node-express-sequelize-nextjs-jrealworld-example-app
 
+Tested on Ubuntu 20.10.
+
 == Local development with SQLite
 
 .....
