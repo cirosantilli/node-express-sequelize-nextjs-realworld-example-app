@@ -135,7 +135,6 @@ module.exports = (sequelize) => {
     if (this.favorites.indexOf(id) === -1) {
       this.favorites = this.favorites.concat([id])
     }
-
     return this.save()
   }
 

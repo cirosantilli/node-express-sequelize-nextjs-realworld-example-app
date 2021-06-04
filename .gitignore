@@ -42,3 +42,7 @@ db.sqlite3
 /.env
 
 package-lock.json
+
+# Temporary files
+*.tmp
+*.bak
