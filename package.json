@@ -6,6 +6,7 @@
   "scripts": {
     "back": "nodemon --unhandled-rejections=strict ./app.js",
     "build": "cd react-redux-realworld-example-app && npm run build",
+    "deploy": "git push heroku master",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
     "front": "cd react-redux-realworld-example-app && npm start",
     "preinstall": "cd react-redux-realworld-example-app && npm install",

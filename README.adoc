@@ -60,12 +60,12 @@ createdb node_express_sequelize_realworld
 psql -c "CREATE ROLE node_express_sequelize_realworld_user with login password 'a'"
 psql -c 'GRANT ALL PRIVILEGES ON DATABASE node_express_sequelize_realworld TO node_express_sequelize_realworld_user'
 echo "SECRET=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)" >> .env
-npm run build
 ....
 
 Run:
 
 ....
+npm run build
 env $(cat .env | xargs) \
 NODE_ENV=production \
 DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' \
@@ -76,7 +76,9 @@ then visit the running website at: http://localhost:3000/
 
 == Heroku deployment
 
-Got it running perfectly at as of April 2021 https://cirosantilli-realworld-express.herokuapp.com/ with the following steps:
+Got it running perfectly at as of April 2021 https://cirosantilli-realworld-express.herokuapp.com/
+
+First time setup:
 
 ....
 # Automatically sets DATABASE_URL.
@@ -90,7 +92,12 @@ heroku config:set DISABLE_ESLINT_PLUGIN=true
 # Notably to skip ultra-slow sqlite native build.
 heroku config:set NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
 heroku config:set SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
-git push heroku master
+....
+
+Every update:
+
+....
+npm run deploy
 ....
 
 == Debugging
