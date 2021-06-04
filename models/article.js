@@ -59,14 +59,13 @@ module.exports = (sequelize) => {
     Article.hasMany(sequelize.models.Comment)
   }
 
-  Article.prototype.updateFavoriteCount = function() {
-    let article = this
-
-    return sequelize.models.User.count({ where: { favorites: { [Op.in]: [article.id] } } }).then(function(count) {
-      article.favoritesCount = count
-
-      return article.save()
+  Article.prototype.updateFavoriteCount = async function() {
+    const count = await sequelize.models.User.count({
+      where: { favorites: { [Op.in]: [this.id] } }
     })
+    console.error(count);
+    this.favoritesCount = count
+    return this.save()
   }
 
   Article.prototype.toJSONFor = function(user) {

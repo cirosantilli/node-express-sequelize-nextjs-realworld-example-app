@@ -221,13 +221,11 @@ router.delete('/:article', auth.required, function(req, res, next) {
 // Favorite an article
 router.post('/:article/favorite', auth.required, function(req, res, next) {
   let articleId = req.article.id
-
   req.app.get('sequelize').models.User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
       }
-
       return user.favorite(articleId).then(function() {
         return req.article.updateFavoriteCount().then(function(article) {
           return article.getAuthor().then(author => {
@@ -242,13 +240,11 @@ router.post('/:article/favorite', auth.required, function(req, res, next) {
 // Unfavorite an article
 router.delete('/:article/favorite', auth.required, function(req, res, next) {
   let articleId = req.article.id
-
   req.app.get('sequelize').models.User.findByPk(req.payload.id)
     .then(function(user) {
       if (!user) {
         return res.sendStatus(401)
       }
-
       return user.unfavorite(articleId).then(function() {
         return req.article.updateFavoriteCount().then(function(article) {
           return article.getAuthor().then(author => {

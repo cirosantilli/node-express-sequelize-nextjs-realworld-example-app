@@ -54,28 +54,6 @@ module.exports = (sequelize) => {
       },
       bio: DataTypes.STRING,
       image: DataTypes.STRING,
-      favorites: {
-        type: DataTypes.STRING,
-        set(v) {
-          this.setDataValue('favorites', Array.isArray(v) ? v.join(',') : '')
-        },
-        get() {
-          const favorites = this.getDataValue('favorites')
-          if (!favorites) return []
-          return favorites.split(',').map(v => Number(v))
-        }
-      },
-      following: {
-        type: DataTypes.STRING,
-        set(v) {
-          this.setDataValue('following', Array.isArray(v) ? v.join(',') : '')
-        },
-        get() {
-          const following = this.getDataValue('following')
-          if (!following) return []
-          return following.split(',').map(v => Number(v))
-        }
-      },
       hash: DataTypes.STRING(1024),
       salt: DataTypes.STRING
     },
@@ -135,6 +113,7 @@ module.exports = (sequelize) => {
     if (this.favorites.indexOf(id) === -1) {
       this.favorites = this.favorites.concat([id])
     }
+    console.error(this.favorites);
     return this.save()
   }
 
@@ -145,6 +124,7 @@ module.exports = (sequelize) => {
       array.splice(index, 1)
       this.favorites = array
     }
+    console.error(this.favorites);
     return this.save()
   }
 
@@ -177,5 +157,12 @@ module.exports = (sequelize) => {
       return followId.toString() === id.toString()
     })
   }
+
+  User.associate = function() {
+    sequelize.models.Article.belongsToMany(User, { through: 'Favorites' });
+    User.belongsToMany(sequelize.models.Article, { through: 'Favorites' });
+    User.belongsToMany(User, { through: 'Following', as: 'following' });
+  }
+
   return User
 }
