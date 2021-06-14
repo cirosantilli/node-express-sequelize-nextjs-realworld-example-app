@@ -12,7 +12,7 @@ Website behaviour is intended to match the front and backend upstreams as closel
 
 Other versions of this repository include:
 
-* Next.js instead of React + Redux: https://github.com/cirosantilli/node-express-sequelize-nextjs-jrealworld-example-app
+* Next.js instead of React + Redux: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app
 
 Tested on Ubuntu 20.10.
 
