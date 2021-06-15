@@ -26,13 +26,13 @@ module.exports = (sequelize) => {
     });
   }
 
-  Comment.prototype.toJSONFor = function(user) {
+  Comment.prototype.toJSONFor = async function(user) {
     return {
       id: this.id,
       body: this.body,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      author: this.author.toProfileJSONFor(user)
+      author: (await this.author.toProfileJSONFor(user))
     }
   }
   return Comment

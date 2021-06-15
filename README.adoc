@@ -124,7 +124,12 @@ Note that this will first erase any data present in the database:
 ./bin/generate-demo-data.js
 ....
 
-You can then login with `user0@mail.com` and password `asdf`.
+You can then login with users such as:
+
+* `user0@mail.com`
+* `user1@mail.com`
+
+and password `asdf`.
 
 == Testing
 

@@ -99,69 +99,44 @@ module.exports = (sequelize) => {
     };
   }
 
-  User.prototype.toProfileJSONFor = function(user) {
+  User.prototype.toProfileJSONFor = async function(user) {
     let data = {
       username: this.username,
       bio: this.bio === undefined ? '' : this.bio,
       image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
-      following: user ? user.isFollowing(this.id) : false
+      following: user ? (await user.isFollowing(this.id)) : false
     }
     return data
   }
 
   User.prototype.favorite = function(id) {
-    if (this.favorites.indexOf(id) === -1) {
-      this.favorites = this.favorites.concat([id])
-    }
-    console.error(this.favorites);
-    return this.save()
+    return this.addFavorite(id)
   }
 
-  User.prototype.unfavorite = function(id) {
-    let index = this.favorites.indexOf(id)
-    if (index !== -1) {
-      let array = this.favorites.slice()
-      array.splice(index, 1)
-      this.favorites = array
-    }
-    console.error(this.favorites);
-    return this.save()
+  User.prototype.unfavorite = async function(id) {
+    return this.removeFavorite(id)
   }
 
-  User.prototype.isFavorite = function(id) {
-    return this.favorites.some(function(favoriteId) {
-      return favoriteId.toString() === id.toString()
-    })
+  User.prototype.isFavorite = async function(id) {
+    return this.hasFavorite(id)
   }
 
-  User.prototype.follow = function(id) {
-    if (this.following.indexOf(id) === -1) {
-      this.following = this.following.concat([id])
-    }
-
-    return this.save()
+  User.prototype.follow = async function(id) {
+    return this.addFollow(id)
   }
 
-  User.prototype.unfollow = function(id) {
-    let index = this.following.indexOf(id)
-    if (index !== -1) {
-      let array = this.following.slice()
-      array.splice(index, 1)
-      this.following = array
-    }
-    return this.save()
+  User.prototype.unfollow = async function(id) {
+    return this.removeFollow(id)
   }
 
-  User.prototype.isFollowing = function(id) {
-    return this.following.some(function(followId) {
-      return followId.toString() === id.toString()
-    })
+  User.prototype.isFollowing = async function(id) {
+    return this.hasFollow(id)
   }
 
   User.associate = function() {
-    sequelize.models.Article.belongsToMany(User, { through: 'Favorites' });
-    User.belongsToMany(sequelize.models.Article, { through: 'Favorites' });
-    User.belongsToMany(User, { through: 'Following', as: 'following' });
+    sequelize.models.Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'Favorite' });
+    User.belongsToMany(sequelize.models.Article, { through: 'UserFavoriteArticle', as: 'Favorite' });
+    User.belongsToMany(User, { through: 'UserFollowUser', as: 'Follow' });
   }
 
   return User

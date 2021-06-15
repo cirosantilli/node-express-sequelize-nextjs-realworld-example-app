@@ -63,12 +63,11 @@ module.exports = (sequelize) => {
     const count = await sequelize.models.User.count({
       where: { favorites: { [Op.in]: [this.id] } }
     })
-    console.error(count);
     this.favoritesCount = count
     return this.save()
   }
 
-  Article.prototype.toJSONFor = function(user) {
+  Article.prototype.toJSONFor = async function(user) {
     return {
       slug: this.slug,
       title: this.title,
@@ -79,7 +78,7 @@ module.exports = (sequelize) => {
       tagList: this.tagList,
       favorited: user ? user.isFavorite(this.id) : false,
       favoritesCount: this.favoritesCount,
-      author: this.author.toProfileJSONFor(user)
+      author: (await this.author.toProfileJSONFor(user))
     }
   }
   return Article

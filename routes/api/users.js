@@ -68,11 +68,9 @@ router.post('/users/login', function(req, res, next) {
 
 router.post('/users', function(req, res, next) {
   let user = new (req.app.get('sequelize').models.User)()
-
   user.username = req.body.user.username
   user.email = req.body.user.email
   user.setPassword(req.body.user.password)
-
   user
     .save()
     .then(function() {

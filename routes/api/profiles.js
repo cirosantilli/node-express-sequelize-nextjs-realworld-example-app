@@ -16,50 +16,50 @@ router.param('username', function(req, res, next, username) {
     .catch(next)
 })
 
-router.get('/:username', auth.optional, function(req, res, next) {
-  if (req.payload) {
-    req.app.get('sequelize').models.User.findByPk(req.payload.id).then(function(user) {
-      if (!user) {
-        return res.json({ profile: req.profile.toProfileJSONFor(false) })
+router.get('/:username', auth.optional, async function(req, res, next) {
+  try {
+    let toProfileJSONForUser;
+    if (req.payload) {
+      const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
+      if (user) {
+        toProfileJSONForUser = user
+      } else {
+        toProfileJSONForUser = false
       }
-
-      return res.json({ profile: req.profile.toProfileJSONFor(user) })
-    })
-  } else {
-    return res.json({ profile: req.profile.toProfileJSONFor(false) })
+    } else {
+      toProfileJSONForUser = false
+    }
+    return res.json({ profile: await req.profile.toProfileJSONFor(toProfileJSONForUser) })
+  } catch(error) {
+    next(error);
   }
 })
 
-router.post('/:username/follow', auth.required, function(req, res, next) {
-  let profileId = req.profile.id
-
-  req.app.get('sequelize').models.User.findByPk(req.payload.id)
-    .then(function(user) {
-      if (!user) {
-        return res.sendStatus(401)
-      }
-
-      return user.follow(profileId).then(function() {
-        return res.json({ profile: req.profile.toProfileJSONFor(user) })
-      })
-    })
-    .catch(next)
+router.post('/:username/follow', auth.required, async function(req, res, next) {
+  try {
+    let profileId = req.profile.id
+    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    if (!user) {
+      return res.sendStatus(401)
+    }
+    await user.follow(profileId)
+    return res.json({ profile: await req.profile.toProfileJSONFor(user) })
+  } catch(error) {
+    next(error);
+  }
 })
 
-router.delete('/:username/follow', auth.required, function(req, res, next) {
-  let profileId = req.profile.id
-
-  req.app.get('sequelize').models.User.findByPk(req.payload.id)
-    .then(function(user) {
-      if (!user) {
-        return res.sendStatus(401)
-      }
-
-      return user.unfollow(profileId).then(function() {
-        return res.json({ profile: req.profile.toProfileJSONFor(user) })
-      })
-    })
-    .catch(next)
+router.delete('/:username/follow', auth.required, async function(req, res, next) {
+  try {
+    const user = req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    if (!user) {
+      return res.sendStatus(401)
+    }
+    await user.unfollow(profileId)
+    return res.json({ profile: await req.profile.toProfileJSONFor(user) })
+  } catch(error) {
+    next(error);
+  }
 })
 
 module.exports = router
