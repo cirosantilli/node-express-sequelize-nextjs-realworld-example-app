@@ -104,6 +104,20 @@ npm run deploy
 
 == Debugging
 
+=== Step debugging
+
+For the backend, add `debugger;` to the point of interest, and run as:
+
+....
+npm run back-inspect
+....
+
+On the debugger, do a `c` to continue so that the server will start running (impossible to skip automatically: https://stackoverflow.com/questions/16420374/how-to-disable-in-the-node-debugger-break-on-first-line[]), and then trigger your event of interest from the browser:
+
+....
+npm run front
+....
+
 === VERBOSE environment variable
 
 If you run as:
@@ -131,11 +145,29 @@ You can then login with users such as:
 
 and password `asdf`.
 
+Test data size can be configured with CLI parameters, e.g.:
+
+....
+./bin/generate-demo-data.js --n-users 5 --n-articles-per-user 8 --n-follows-per-user 3
+....
+
+=== Prevent the browser from opening automatically
+
+In case you've broken things so bad that the very first GET blows up the website and further requests don't respond https://stackoverflow.com/questions/61927814/how-to-disable-open-browser-in-cra
+
+....
+BROWSER=none npm run dev
+....
+
+This gives you time to setup e.g. Network recording in Chrome Developer Tools to be able to understand what is going on.
+
 == Testing
 
 === API tests
 
 These tests are part of https://github.com/gothinkster/realworld which we track here as a submodule.
+
+Test test method uses Postman, but we feel that it is not a very good way to do the testing, as it uses JSON formats everywhere with embedded JavaScript, presumably to be edited in some dedicated editor like Jupyter does. It would be much better to just have a pure JavaScript setup instead.
 
 They test the JSON REST API without the frontend:
 
@@ -155,7 +187,30 @@ Run a single test called `Register` instead:
 npm run test-api -- --folder Register
 ....
 
-That method uses Postman, but we feel that it is not a very good way to do the testing, as it uses JSON formats everywhere with embedded JavaScript, presumably to be edited in some dedicated editor like Jupyter does. It would be much better to just have a pure JavaScript setup instead.
+TODO: many tests depend on previous steps, notably register. But we weren't able to make it run just given specific tests e.g. with:
+
+....
+npmr test-api -- --folder 'Register' --folder 'Login and Remember Token' --folder 'Create Article'
+....
+
+only the last `--folder` is used. Some threads say that multiple ones can be used in newer Newman, but even after updating it to latest v5 we couldn't get it to work: 
+
+* https://stackoverflow.com/questions/60057009/how-to-run-single-request-from-the-collection-in-newman
+* https://stackoverflow.com/questions/52519415/how-to-read-two-folder-with-newman
+
+=== Unit tests
+
+Ideally, all tests should be API test, so that they will work across any backend implementation more easily, and test the system more fully.
+
+However, setting up full API tests can be annoying, especially the user creation part, as especially since Postman is so clunky.
+
+Furthermore, the API tests can have a slower setup time, since by going directly to the backend API we can call `bulkCreate` which can be much faster than creating objects one by one.
+
+So sometimes, especially for things like model relations, we will just revert to a some quick API test:
+
+....
+npm test
+....
 
 == Benchmarks
 

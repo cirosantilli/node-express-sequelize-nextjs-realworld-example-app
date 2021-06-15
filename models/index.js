@@ -4,7 +4,7 @@ const Sequelize = require('sequelize')
 
 const config = require('../config')
 
-module.exports = (toplevelPath) => {
+module.exports = (toplevelDir, toplevelBasename) => {
   const sequelizeParams = {
     logging: config.verbose ? console.log : false
   };
@@ -23,7 +23,10 @@ module.exports = (toplevelPath) => {
     sequelize = new Sequelize(config.databaseUrl, sequelizeParams);
   } else {
     sequelizeParams.dialect = 'sqlite';
-    sequelizeParams.storage = path.join(toplevelPath, 'db.sqlite3');
+    if (toplevelBasename === undefined) {
+      toplevelBasename = 'db.sqlite3'
+    }
+    sequelizeParams.storage = path.join(toplevelDir, toplevelBasename);
     sequelize = new Sequelize(sequelizeParams);
   }
   const db = {}

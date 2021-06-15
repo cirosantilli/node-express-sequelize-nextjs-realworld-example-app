@@ -100,25 +100,17 @@ router.get('/feed', auth.required, async function(req, res, next) {
     if (!user) {
       return res.sendStatus(401)
     }
-    const results = Promise.all([
-      req.app.get('sequelize').models.Article.findAll({
-        where: { author_id: { [Op.in]: user.following } },
-        offset: Number(offset),
-        limit: Number(limit),
-        include: [{ model: req.app.get('sequelize').models.User, as: 'author' }]
-      }),
-      req.app.get('sequelize').models.Article.count({
-        where: { author_id: { [Op.in]: user.following } },
-        include: [{ model: req.app.get('sequelize').models.User, as: 'author' }]
-      })
+    const results = await Promise.all([
+      user.getArticlesByFollowed(Number(offset), Number(limit))
     ])
     let articles = results[0]
     let articlesCount = results[1]
+    const articlesJson = await Promise.all(articles.map(function(article) {
+      return article.toJSONFor(article.author)
+    }))
     return res.json({
-      articles: await Promise.all(articles.map(function(article) {
-        return article.toJSONFor(article.author)
-      })),
-      articlesCount: articlesCount
+      articles: articlesJson,
+      articlesCount: articlesCount,
     })
   } catch(error) {
     next(error);

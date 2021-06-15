@@ -4,13 +4,15 @@
   "description": "conduit on node",
   "main": "app.js",
   "scripts": {
-    "back": "nodemon --unhandled-rejections=strict ./app.js",
+    "back": "nodemon --async-stack-traces --unhandled-rejections=strict ./app.js",
+    "back-inspect": "node --async-stack-traces --unhandled-rejections=strict inspect ./app.js",
     "build": "cd react-redux-realworld-example-app && npm run build",
     "deploy": "git push heroku master",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
     "front": "cd react-redux-realworld-example-app && npm start",
     "preinstall": "cd react-redux-realworld-example-app && npm install",
     "start": "node --unhandled-rejections=strict ./app.js",
+    "test": "mocha test --ignore-leaks test.js",
     "test-api": "./realworld/api/run-api-tests.sh"
   },
   "repository": {
@@ -44,8 +46,10 @@
   },
   "devDependencies": {
     "concurrently": "6.2.0",
+    "commander": "6.2.1",
     "eslint": "^7.11.0",
     "eslint-plugin-prettier": "^2.6.0",
+    "mocha": "6.2.2",
     "newman": "^3.5.2",
     "nodemon": "^1.11.0",
     "prettier": "^1.12.1",

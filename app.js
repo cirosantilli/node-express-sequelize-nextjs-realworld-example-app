@@ -1,3 +1,6 @@
+// https://stackoverflow.com/questions/7697038/more-than-10-lines-in-a-node-js-stack-error
+Error.stackTraceLimit = Infinity;
+
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const errorhandler = require('errorhandler')
@@ -24,7 +27,7 @@ function doStart(app) {
       function(email, password, done) {
         sequelize.models.User.findOne({ where: { email: email } })
           .then(function(user) {
-            if (!user || !user.validPassword(password)) {
+            if (!user || !sequelize.models.User.validPassword(user, password)) {
               return done(null, false, { errors: { 'email or password': 'is invalid' } })
             }
 

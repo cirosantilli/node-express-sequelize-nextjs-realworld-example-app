@@ -64,16 +64,6 @@ module.exports = (sequelize) => {
     }
   )
 
-  User.prototype.validPassword = function(password) {
-    let hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex')
-    return this.hash === hash
-  }
-
-  User.prototype.setPassword = function(password) {
-    this.salt = crypto.randomBytes(16).toString('hex')
-    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex')
-  }
-
   User.prototype.generateJWT = function() {
     let today = new Date()
     let exp = new Date(today)
@@ -133,10 +123,36 @@ module.exports = (sequelize) => {
     return this.hasFollow(id)
   }
 
+  User.prototype.getArticlesByFollowed = async function(offset, limit) {
+    return sequelize.models.Article.findAll({
+      where: { author_id: { [Op.in]: this.following } },
+      offset: offset,
+      limit: limit,
+      include: [{ model: User, as: 'author' }]
+    })
+  }
+
+  User.prototype.getArticleCountByFollowed = async function() {
+    return sequelize.models.Article.count({
+      where: { author_id: { [Op.in]: this.following } },
+      include: [{ model: User, as: 'author' }]
+    })
+  }
+
   User.associate = function() {
     sequelize.models.Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'Favorite' });
     User.belongsToMany(sequelize.models.Article, { through: 'UserFavoriteArticle', as: 'Favorite' });
     User.belongsToMany(User, { through: 'UserFollowUser', as: 'Follow' });
+  }
+
+  User.validPassword = function(user, password) {
+    let hash = crypto.pbkdf2Sync(password, user.salt, 10000, 512, 'sha512').toString('hex')
+    return user.hash === hash
+  }
+
+  User.setPassword = function(user, password) {
+    user.salt = crypto.randomBytes(16).toString('hex')
+    user.hash = crypto.pbkdf2Sync(password, user.salt, 10000, 512, 'sha512').toString('hex')
   }
 
   return User

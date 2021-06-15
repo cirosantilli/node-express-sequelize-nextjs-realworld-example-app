@@ -35,7 +35,7 @@ router.put('/user', auth.required, function(req, res, next) {
         user.image = req.body.user.image
       }
       if (typeof req.body.user.password !== 'undefined') {
-        user.setPassword(req.body.user.password)
+        req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
       }
 
       return user.save().then(function() {
@@ -70,7 +70,7 @@ router.post('/users', function(req, res, next) {
   let user = new (req.app.get('sequelize').models.User)()
   user.username = req.body.user.username
   user.email = req.body.user.email
-  user.setPassword(req.body.user.password)
+  req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
   user
     .save()
     .then(function() {
