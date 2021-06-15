@@ -23,10 +23,16 @@ module.exports = (toplevelDir, toplevelBasename) => {
     sequelize = new Sequelize(config.databaseUrl, sequelizeParams);
   } else {
     sequelizeParams.dialect = 'sqlite';
-    if (toplevelBasename === undefined) {
-      toplevelBasename = 'db.sqlite3'
+    let storage;
+    if (toplevelDir === undefined) {
+      storage = ':memory:';
+    } else {
+      if (toplevelBasename === undefined) {
+        toplevelBasename = 'db.sqlite3';
+      }
+      storage = path.join(toplevelDir, toplevelBasename);
     }
-    sequelizeParams.storage = path.join(toplevelDir, toplevelBasename);
+    sequelizeParams.storage = storage;
     sequelize = new Sequelize(sequelizeParams);
   }
   const db = {}

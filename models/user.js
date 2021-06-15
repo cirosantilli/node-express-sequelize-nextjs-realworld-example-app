@@ -125,7 +125,7 @@ module.exports = (sequelize) => {
 
   User.prototype.getArticlesByFollowed = async function(offset, limit) {
     return sequelize.models.Article.findAll({
-      where: { author_id: { [Op.in]: this.following } },
+      where: { author_id: { [sequelize.Op.in]: this.following } },
       offset: offset,
       limit: limit,
       include: [{ model: User, as: 'author' }]
@@ -134,7 +134,7 @@ module.exports = (sequelize) => {
 
   User.prototype.getArticleCountByFollowed = async function() {
     return sequelize.models.Article.count({
-      where: { author_id: { [Op.in]: this.following } },
+      where: { author_id: { [sequelize.Op.in]: this.following } },
       include: [{ model: User, as: 'author' }]
     })
   }

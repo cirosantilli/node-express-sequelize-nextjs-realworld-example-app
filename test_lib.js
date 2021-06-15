@@ -1,23 +1,21 @@
 // Need a separate file from test.js because Mocha automatically defines stuff like it,
 // which would break non-Mocha requirers.
 
-const assert = require('assert')
 const path = require('path')
 
-const config = require('./config')
 const models = require('./models')
-assert(!config.isProduction)
 
 async function generateDemoData(params) {
   const nUsers = params.nUsers === undefined ? 10 : params.nUsers
   const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
   const nFollowsPerUser = params.nFollowsPerUser === undefined ? 2 : params.nFollowsPerUser
   const nFavoritesPerUser = params.nFavoritesPerUser === undefined ? 5 : params.nFavoritesPerUser
+  const directory = params.directory
   const basename = params.basename
 
   const nArticles = nUsers * nArticlesPerUser
 
-  const sequelize = models(__dirname, basename);
+  const sequelize = models(directory, basename);
   await sequelize.sync({force: true})
 
   // Users
@@ -59,7 +57,7 @@ async function generateDemoData(params) {
   }
   const articles = await sequelize.models.Article.bulkCreate(articleArgs)
 
-  // Fovorites
+  // Favorites
   let articleIdx = 0
   const favoriteArgs = []
   for (var i = 0; i < nUsers; i++) {
@@ -74,6 +72,6 @@ async function generateDemoData(params) {
   }
   await sequelize.models.UserFavoriteArticle.bulkCreate(favoriteArgs)
 
-  await sequelize.close();
+  return sequelize
 }
 exports.generateDemoData = generateDemoData
