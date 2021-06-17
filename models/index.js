@@ -35,14 +35,46 @@ module.exports = (toplevelDir, toplevelBasename) => {
     sequelizeParams.storage = storage;
     sequelize = new Sequelize(sequelizeParams);
   }
-  const db = {}
-  db.Article = require('./article')(sequelize)
-  db.Comment = require('./comment')(sequelize)
-  db.User = require('./user')(sequelize)
-  Object.keys(db).forEach(modelName => {
-    if (db[modelName].associate) {
-      db[modelName].associate()
+  const Article = require('./article')(sequelize)
+  const Comment = require('./comment')(sequelize)
+  const User = require('./user')(sequelize)
+
+  // Associations.
+
+  // User follow user
+  User.belongsToMany(User, { through: 'UserFollowUser', as: 'Follows' });
+
+  // User favorite Article
+  Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'Favorite' });
+  User.belongsToMany(Article, { through: 'UserFavoriteArticle', as: 'Favorite' });
+
+  // Article author User
+  Article.belongsTo(User, {
+    as: 'author',
+    foreignKey: {
+      name: 'authorId',
+      allowNull: false
     }
   })
+  User.hasMany(Article, {as: 'authoredArticles', foreignKey: 'authorId'})
+
+  // Article has Comment
+  Article.hasMany(Comment)
+  Comment.belongsTo(Article, {
+    foreignKey: {
+      allowNull: false
+    },
+  })
+  Comment.belongsTo(Article)
+
+  // Comment author User
+  Comment.belongsTo(User, {
+    as: 'author',
+    foreignKey: {
+      allowNull: false
+    },
+  });
+  User.hasMany(Comment);
+
   return sequelize;
 }

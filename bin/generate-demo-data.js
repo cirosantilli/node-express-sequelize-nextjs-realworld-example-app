@@ -7,7 +7,7 @@ const config = require('../config')
 assert(!config.isProduction)
 
 function myParseInt(value, dummyPrevious) {
-  const parsedValue = parseInt(value, 10);
+  const parsedValue = parseInt(value);
   if (isNaN(parsedValue)) {
     throw new commander.InvalidOptionArgumentError('Not a number.');
   }
@@ -15,10 +15,10 @@ function myParseInt(value, dummyPrevious) {
 }
 
 const commander = require('commander');
-commander.option('-u, --n-users <n>', 'n users', parseInt, 10);
-commander.option('-a, --n-articles-per-user <n>', 'n articles per user', parseInt, 10);
-commander.option('-f, --n-follows-per-user <n>', 'n follows per user', parseInt, 2);
-commander.option('-v, --n-favorites-per-user <n>', 'n favorites per user', parseInt, 5);
+commander.option('-u, --n-users <n>', 'n users', myParseInt, 10);
+commander.option('-a, --n-articles-per-user <n>', 'n articles per user', myParseInt, 10);
+commander.option('-f, --n-follows-per-user <n>', 'n follows per user', myParseInt, 2);
+commander.option('-v, --n-favorites-per-user <n>', 'n favorites per user', myParseInt, 5);
 commander.parse(process.argv);
 
 (async () => {

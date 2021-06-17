@@ -49,16 +49,6 @@ module.exports = (sequelize) => {
     }
   )
 
-  Article.associate = function() {
-    Article.belongsTo(sequelize.models.User, {
-      as: 'author',
-      foreignKey: {
-        allowNull: false
-      }
-    })
-    Article.hasMany(sequelize.models.Comment)
-  }
-
   Article.prototype.updateFavoriteCount = async function() {
     const count = await sequelize.models.User.count({
       where: { favorites: { [Op.in]: [this.id] } }

@@ -124,25 +124,30 @@ module.exports = (sequelize) => {
   }
 
   User.prototype.getArticlesByFollowed = async function(offset, limit) {
-    return sequelize.models.Article.findAll({
-      where: { author_id: { [sequelize.Op.in]: this.following } },
-      offset: offset,
-      limit: limit,
-      include: [{ model: User, as: 'author' }]
+    const followedUsers = (await sequelize.models.User.findByPk(this.id, {
+      attributes: [],
+      include: [
+        {
+          model: User,
+          as: 'Follows',
+          include: [
+            {
+              model: sequelize.models.Article,
+              as: 'authoredArticles',
+            }
+          ],
+        },
+      ],
+    })).Follows
+    const posts = []
+    for (const followedUser of followedUsers) {
+      posts.push(...followedUser.authoredArticles)
+    }
+    posts.sort((x, y) => {
+        return x.createdAt < y.createdAt ? -1 :
+               x.createdAt > y.createdAt ?  1 : 0
     })
-  }
-
-  User.prototype.getArticleCountByFollowed = async function() {
-    return sequelize.models.Article.count({
-      where: { author_id: { [sequelize.Op.in]: this.following } },
-      include: [{ model: User, as: 'author' }]
-    })
-  }
-
-  User.associate = function() {
-    sequelize.models.Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'Favorite' });
-    User.belongsToMany(sequelize.models.Article, { through: 'UserFavoriteArticle', as: 'Favorite' });
-    User.belongsToMany(User, { through: 'UserFollowUser', as: 'Follow' });
+    return posts
   }
 
   User.validPassword = function(user, password) {

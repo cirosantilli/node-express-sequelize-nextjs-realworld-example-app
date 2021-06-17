@@ -52,6 +52,8 @@ async function generateDemoData(params) {
       description: `My description ${i}`,
       body: `My **body** ${i}`,
       authorId: users[userIdx].id,
+      createdAt: new Date(2000 + i, 0, 1, 2, 3, 4, 5),
+      updatedAt: new Date(2000 + i, 0, 1, 2, 3, 4, 5),
     }
     articleArgs.push(articleArg)
   }
