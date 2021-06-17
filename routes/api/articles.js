@@ -91,21 +91,22 @@ router.get('/feed', auth.required, async function(req, res, next) {
     let limit = 20
     let offset = 0
     if (typeof req.query.limit !== 'undefined') {
-      limit = req.query.limit
+      limit = Number(req.query.limit)
     }
     if (typeof req.query.offset !== 'undefined') {
-      offset = req.query.offset
+      offset = Number(req.query.offset)
     }
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
     if (!user) {
       return res.sendStatus(401)
     }
     const results = await Promise.all([
-      user.getArticlesByFollowed(Number(offset), Number(limit))
+      user.getArticlesByFollowed(offset, limit),
+      user.getArticleCountByFollowed(),
     ])
     let articles = results[0]
     let articlesCount = results[1]
-    const articlesJson = await Promise.all(articles.map(function(article) {
+    const articlesJson = await Promise.all(articles.map((article) => {
       return article.toJSONFor(article.author)
     }))
     return res.json({
@@ -136,8 +137,11 @@ router.post('/', auth.required, async function(req, res, next) {
 // return a article
 router.get('/:article', auth.optional, async function(req, res, next) {
   try {
-    const results = Promise.all([req.payload ? req.app.get('sequelize').models.User.findByPk(req.payload.id) : null, req.article.getAuthor()]);
-    let [user, author] = results
+    const results = await Promise.all([
+      req.payload ? req.app.get('sequelize').models.User.findByPk(req.payload.id) : null,
+      req.article.getAuthor()
+    ]);
+    const [user, author] = results
     return res.json({ article: await req.article.toJSONFor(user) })
   } catch(error) {
     next(error);

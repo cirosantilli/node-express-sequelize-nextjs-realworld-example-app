@@ -1,8 +1,10 @@
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
+
 const secret = require('../config').secret
 
-const { DataTypes } = require('sequelize')
+const Sequelize = require('sequelize')
+const { DataTypes } = Sequelize
 
 module.exports = (sequelize) => {
   let User = sequelize.define(
@@ -126,6 +128,15 @@ module.exports = (sequelize) => {
   User.prototype.getArticlesByFollowed = async function(offset, limit) {
     const followedUsers = (await sequelize.models.User.findByPk(this.id, {
       attributes: [],
+      offset: offset,
+      limit: limit,
+      subQuery: false,
+      order: [[
+        {model: User, as: 'Follows'},
+        {model: sequelize.models.Article, as: 'authoredArticles'},
+        'createdAt',
+        'DESC'
+      ]],
       include: [
         {
           model: User,
@@ -141,13 +152,37 @@ module.exports = (sequelize) => {
     })).Follows
     const posts = []
     for (const followedUser of followedUsers) {
-      posts.push(...followedUser.authoredArticles)
+      for (const authoredArticle of followedUser.authoredArticles) {
+        posts.push(authoredArticle)
+        authoredArticle.author = followedUser
+      }
     }
     posts.sort((x, y) => {
-        return x.createdAt < y.createdAt ? -1 :
-               x.createdAt > y.createdAt ?  1 : 0
+        return x.createdAt < y.createdAt ?  1 :
+               x.createdAt > y.createdAt ? -1 : 0
     })
     return posts
+  }
+
+  User.prototype.getArticleCountByFollowed = async function() {
+    return (await User.findByPk(this.id, {
+      attributes: [
+        [Sequelize.fn('COUNT', Sequelize.col('Follows.authoredArticles.id')), 'count']
+      ],
+      include: [
+        {
+          model: User,
+          as: 'Follows',
+          attributes: [],
+          through: {attributes: []},
+          include: [{
+              model: sequelize.models.Article,
+              as: 'authoredArticles',
+              attributes: [],
+          }],
+        },
+      ],
+    })).dataValues.count
   }
 
   User.validPassword = function(user, password) {

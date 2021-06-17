@@ -51,7 +51,8 @@ router.post('/:username/follow', auth.required, async function(req, res, next) {
 
 router.delete('/:username/follow', auth.required, async function(req, res, next) {
   try {
-    const user = req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    let profileId = req.profile.id
+    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
     if (!user) {
       return res.sendStatus(401)
     }

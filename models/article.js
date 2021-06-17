@@ -13,15 +13,26 @@ module.exports = (sequelize) => {
         },
         set(v) {
           this.setDataValue('slug', v.toLowerCase())
-        }
+        },
+        allowNull: false,
       },
-      title: DataTypes.STRING,
-      description: DataTypes.STRING,
-      body: DataTypes.STRING,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      body: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       favoritesCount: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
-        field: 'favorites_count'
+        field: 'favorites_count',
+        allowNull: false,
       },
       tagList: {
         type: DataTypes.STRING,

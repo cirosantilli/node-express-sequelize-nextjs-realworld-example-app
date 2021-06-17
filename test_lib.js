@@ -1,4 +1,4 @@
-// Need a separate file from test.js because Mocha automatically defines stuff like it,
+/// Need a separate file from test.js because Mocha automatically defines stuff like it,
 // which would break non-Mocha requirers.
 
 const path = require('path')
@@ -57,7 +57,13 @@ async function generateDemoData(params) {
     }
     articleArgs.push(articleArg)
   }
-  const articles = await sequelize.models.Article.bulkCreate(articleArgs)
+  const articles = await sequelize.models.Article.bulkCreate(
+    articleArgs,
+    {
+      validate: true,
+      individualHooks: true,
+    }
+  )
 
   // Favorites
   let articleIdx = 0

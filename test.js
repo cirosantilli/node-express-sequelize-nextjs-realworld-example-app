@@ -29,13 +29,19 @@ it('feed shows articles by followers', async ()=>{
   })
 
   const user0 = await sequelize.models.User.findOne({where: {username: 'user0'}})
-  const user0ArticlesByFollowed = await user0.getArticlesByFollowed()
-  assert.strictEqual(user0ArticlesByFollowed[0].title, 'My title 1')
-  assert.strictEqual(user0ArticlesByFollowed[1].title, 'My title 2')
+
+  // getArticlesByFollowed
+  const user0ArticlesByFollowed = await user0.getArticlesByFollowed(1, 4)
+  //assert.strictEqual(user0ArticlesByFollowed[].title, 'My title 10')
+  assert.strictEqual(user0ArticlesByFollowed[0].title, 'My title 9')
+  assert.strictEqual(user0ArticlesByFollowed[1].title, 'My title 6')
   assert.strictEqual(user0ArticlesByFollowed[2].title, 'My title 5')
-  assert.strictEqual(user0ArticlesByFollowed[3].title, 'My title 6')
-  assert.strictEqual(user0ArticlesByFollowed[4].title, 'My title 9')
-  assert.strictEqual(user0ArticlesByFollowed[5].title, 'My title 10')
-  assert.strictEqual(user0ArticlesByFollowed.length, 6)
+  assert.strictEqual(user0ArticlesByFollowed[3].title, 'My title 2')
+  //assert.strictEqual(user0ArticlesByFollowed[4].title, 'My title 1')
+  assert.strictEqual(user0ArticlesByFollowed.length, 4)
+
+  // getArticlesCountByFollowed
+  assert.strictEqual(await user0.getArticleCountByFollowed(), 6)
+
   await sequelize.close()
 })
