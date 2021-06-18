@@ -101,18 +101,6 @@ module.exports = (sequelize) => {
     return data
   }
 
-  User.prototype.favorite = function(id) {
-    return this.addFavorite(id)
-  }
-
-  User.prototype.unfavorite = async function(id) {
-    return this.removeFavorite(id)
-  }
-
-  User.prototype.isFavorite = async function(id) {
-    return this.hasFavorite(id)
-  }
-
   User.prototype.follow = async function(id) {
     return this.addFollow(id)
   }
@@ -132,7 +120,7 @@ module.exports = (sequelize) => {
       limit: limit,
       subQuery: false,
       order: [[
-        {model: User, as: 'Follows'},
+        {model: User, as: 'follows'},
         {model: sequelize.models.Article, as: 'authoredArticles'},
         'createdAt',
         'DESC'
@@ -140,7 +128,7 @@ module.exports = (sequelize) => {
       include: [
         {
           model: User,
-          as: 'Follows',
+          as: 'follows',
           include: [
             {
               model: sequelize.models.Article,
@@ -149,7 +137,7 @@ module.exports = (sequelize) => {
           ],
         },
       ],
-    })).Follows
+    })).follows
     const posts = []
     for (const followedUser of followedUsers) {
       for (const authoredArticle of followedUser.authoredArticles) {
@@ -167,12 +155,12 @@ module.exports = (sequelize) => {
   User.prototype.getArticleCountByFollowed = async function() {
     return (await User.findByPk(this.id, {
       attributes: [
-        [Sequelize.fn('COUNT', Sequelize.col('Follows.authoredArticles.id')), 'count']
+        [Sequelize.fn('COUNT', Sequelize.col('follows.authoredArticles.id')), 'count']
       ],
       include: [
         {
           model: User,
-          as: 'Follows',
+          as: 'follows',
           attributes: [],
           through: {attributes: []},
           include: [{

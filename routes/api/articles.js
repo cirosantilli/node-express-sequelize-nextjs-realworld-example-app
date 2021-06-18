@@ -107,7 +107,7 @@ router.get('/feed', auth.required, async function(req, res, next) {
     let articles = results[0]
     let articlesCount = results[1]
     const articlesJson = await Promise.all(articles.map((article) => {
-      return article.toJSONFor(article.author)
+      return article.toJSONFor(user)
     }))
     return res.json({
       articles: articlesJson,
@@ -120,7 +120,7 @@ router.get('/feed', auth.required, async function(req, res, next) {
 
 router.post('/', auth.required, async function(req, res, next) {
   try {
-    const user = req.app.get('sequelize').models.User.findByPk(req.payload.id);
+    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
     if (!user) {
       return res.sendStatus(401)
     }
@@ -151,7 +151,7 @@ router.get('/:article', auth.optional, async function(req, res, next) {
 // update article
 router.put('/:article', auth.required, async function(req, res, next) {
   try {
-    const user = req.app.get('sequelize').models.User.findByPk(req.payload.id);
+    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
     if (req.article.authorId.toString() === req.payload.id.toString()) {
       if (typeof req.body.article.title !== 'undefined') {
         req.article.title = req.body.article.title
@@ -198,12 +198,17 @@ router.delete('/:article', auth.required, function(req, res, next) {
 router.post('/:article/favorite', auth.required, async function(req, res, next) {
   try {
     const articleId = req.article.id
-    const user = req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    const [user, article] = await Promise.all([
+      req.app.get('sequelize').models.User.findByPk(req.payload.id),
+      req.app.get('sequelize').models.Article.findByPk(articleId),
+    ])
     if (!user) {
       return res.sendStatus(401)
     }
-    await user.favorite(articleId)
-    const article = await req.article.updateFavoriteCount()
+    if (!article) {
+      return res.sendStatus(404)
+    }
+    await user.addFavorite(articleId)
     return res.json({ article: await article.toJSONFor(user) })
   } catch(error) {
     next(error);
@@ -214,12 +219,17 @@ router.post('/:article/favorite', auth.required, async function(req, res, next) 
 router.delete('/:article/favorite', auth.required, async function(req, res, next) {
   try {
     const articleId = req.article.id
-    const user = req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    const [user, article] = await Promise.all([
+      req.app.get('sequelize').models.User.findByPk(req.payload.id),
+      req.app.get('sequelize').models.Article.findByPk(articleId),
+    ])
     if (!user) {
       return res.sendStatus(401)
     }
-    await user.unfavorite(articleId)
-    const article = await req.article.updateFavoriteCount()
+    if (!article) {
+      return res.sendStatus(404)
+    }
+    await user.removeFavorite(articleId)
     return res.json({ article: await article.toJSONFor(user) })
   } catch(error) {
     next(error);

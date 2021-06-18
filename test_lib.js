@@ -37,7 +37,7 @@ async function generateDemoData(params) {
     for (var j = 0; j < nFollowsPerUser; j++) {
       followArgs.push({
         UserId: userId,
-        FollowId: users[(i + 1 + j) % nUsers].id,
+        followId: users[(i + 1 + j) % nUsers].id,
       })
     }
   }

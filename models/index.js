@@ -42,11 +42,11 @@ module.exports = (toplevelDir, toplevelBasename) => {
   // Associations.
 
   // User follow user
-  User.belongsToMany(User, { through: 'UserFollowUser', as: 'Follows' });
+  User.belongsToMany(User, { through: 'UserFollowUser', as: 'follows' });
 
   // User favorite Article
-  Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'Favorite' });
-  User.belongsToMany(Article, { through: 'UserFavoriteArticle', as: 'Favorite' });
+  Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'favorites' });
+  User.belongsToMany(Article, { through: 'UserFavoriteArticle', as: 'favorites' });
 
   // Article author User
   Article.belongsTo(User, {

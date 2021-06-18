@@ -4,7 +4,7 @@ Includes a working single-process fullstack <<heroku-deployment>> by building th
 
 CSS bundling to use https://demo.productionready.io/main.css from the SCSS source is also setup, but blocked on: https://github.com/gothinkster/conduit-bootstrap-template/issues/5#issuecomment-829104220
 
-This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app (deleted on 2021-06-21 probably because of fear of backslash from the Chinese communist party after Ciro created some issues there) which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app both of which are backend implementations of the awesome https://github.com/gothinkster/realworld
+This started as a fork of: https://github.com/sigoden/node-express-realworld-example-app (deleted on 2021-06-21 probably because of fear of backslash from the Chinese communist party after Ciro created some issues there) which was likely a port of https://github.com/gothinkster/node-express-realworld-example-app both of which are backend implementations of the awesome https://github.com/gothinkster/realworld sigoden was a good starting point, but it notably did not implement any of the many-to-many relations properly in SQL, rather hacking it with strings. We have now implemented those properly with relations (and it was not a breeze partly because sequelize is so quirky).
 
 The `react-redux-realworld-example-app` is stored at link:react-redux-realworld-example-app[] as a submodule, and some small modifications have been made to it from the upstream, they are tracked at: https://github.com/cirosantilli/react-redux-realworld-example-app
 

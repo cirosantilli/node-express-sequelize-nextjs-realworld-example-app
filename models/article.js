@@ -28,12 +28,6 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      favoritesCount: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-        field: 'favorites_count',
-        allowNull: false,
-      },
       tagList: {
         type: DataTypes.STRING,
         field: 'tag_list',
@@ -56,17 +50,15 @@ module.exports = (sequelize) => {
             article.slug = slug(article.title) + '-' + ((Math.random() * Math.pow(36, 6)) | 0).toString(36)
           }
         }
-      }
+      },
+      // TODO for sorting by latest.
+      //indexes: [
+      //  {
+      //    fields: ['createdAt'],
+      //  },
+      //],
     }
   )
-
-  Article.prototype.updateFavoriteCount = async function() {
-    const count = await sequelize.models.User.count({
-      where: { favorites: { [Op.in]: [this.id] } }
-    })
-    this.favoritesCount = count
-    return this.save()
-  }
 
   Article.prototype.toJSONFor = async function(user) {
     return {
@@ -77,9 +69,9 @@ module.exports = (sequelize) => {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       tagList: this.tagList,
-      favorited: user ? user.isFavorite(this.id) : false,
-      favoritesCount: this.favoritesCount,
-      author: (await this.author.toProfileJSONFor(user))
+      favorited: user ? (await user.hasFavorite(this.id)) : false,
+      favoritesCount: await this.countFavorites(),
+      author: (await (await this.getAuthor()).toProfileJSONFor(user))
     }
   }
   return Article
