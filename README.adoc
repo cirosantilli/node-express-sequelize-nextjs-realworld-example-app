@@ -161,6 +161,10 @@ BROWSER=none npm run dev
 
 This gives you time to setup e.g. Network recording in Chrome Developer Tools to be able to understand what is going on.
 
+=== Sequelize sometimes does not show the full stack trace
+
+This is a big problem during development, not sure how to solve it: https://github.com/sequelize/sequelize/issues/8199#issuecomment-863943835
+
 == Testing
 
 === API tests
@@ -228,3 +232,7 @@ Results:
 ** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8, `npm run start`: 0.2s
 ** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8 + frontend https://github.com/cirosantilli/next-realworld-example-app/tree/d510e33745966618ee95243ad8f7d3d974adcf14 `npm run dev`: 0.2s
 ** this repo at 98e628a76b4253bb51ff4a8659305fabfda1b1f8 + frontend https://github.com/cirosantilli/next-realworld-example-app/tree/d510e33745966618ee95243ad8f7d3d974adcf14 `npm run`: 0.2s
+
+== Bugs
+
+* https://github.com/gothinkster/react-redux-realworld-example-app/issues/197 Your Feed pagination is just completely broken

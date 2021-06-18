@@ -70,7 +70,7 @@ module.exports = (sequelize) => {
       updatedAt: this.updatedAt,
       tagList: this.tagList,
       favorited: user ? (await user.hasFavorite(this.id)) : false,
-      favoritesCount: await this.countFavorites(),
+      favoritesCount: await this.countFavoritedBy(),
       author: (await (await this.getAuthor()).toProfileJSONFor(user))
     }
   }

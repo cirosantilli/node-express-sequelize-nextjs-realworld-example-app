@@ -73,7 +73,7 @@ async function generateDemoData(params) {
     for (var j = 0; j < nFavoritesPerUser; j++) {
       favoriteArgs.push({
         UserId: userId,
-        ArticleId: articles[(articleIdx + j) % nArticles].id,
+        ArticleId: articles[articleIdx % nArticles].id,
       })
       articleIdx += 1
     }

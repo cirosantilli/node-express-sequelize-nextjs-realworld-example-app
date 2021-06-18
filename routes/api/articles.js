@@ -47,19 +47,32 @@ router.get('/', auth.optional, async function(req, res, next) {
     if (typeof req.query.tag !== 'undefined') {
       query.tagList = { [Op.like]: req.query.tag + ',%' }
     }
-    const results = await Promise.all([
-      req.query.author ? req.app.get('sequelize').models.User.findOne({ where: { username: req.query.author } }) : null,
-      req.query.favorited ? req.app.get('sequelize').models.User.findOne({ where: { username: req.query.favorited } }) : null
-    ])
-    let author = results[0]
-    let favoriter = results[1]
-    if (author) {
-      query.author_id = author.id
+    //const results = await Promise.all([
+    //  req.query.author ? req.app.get('sequelize').models.User.findOne({ where: { username: req.query.author } }) : null,
+    //  //req.query.favorited ? req.app.get('sequelize').models.User.findOne({ where: { username: req.query.favorited } }) : null
+    //])
+    //let author = results[0]
+    //let favoriter = results[1]
+    //if (author) {
+    //  query.author_id = author.id
+    //}
+    //if (favoriter) {
+    //  query.id = { [Op.in]: favoriter.favorites }
+    //}
+    const authorInclude = {
+      model: req.app.get('sequelize').models.User,
+      as: 'author',
     }
-    if (favoriter) {
-      query.id = { [Op.in]: favoriter.favorites }
-    } else if (req.query.favorited) {
-      query.id = { [Op.in]: [] }
+    if (req.query.author) {
+      authorInclude.where = {username: req.query.author}
+    }
+    const include = [authorInclude]
+    if (req.query.favorited) {
+      include.push({
+        model: req.app.get('sequelize').models.User,
+        as: 'favoritedBy',
+        where: {username: req.query.favorited},
+      })
     }
     const results2 = await Promise.all([
       req.app.get('sequelize').models.Article.findAll({
@@ -67,7 +80,7 @@ router.get('/', auth.optional, async function(req, res, next) {
         order: [['created_at', 'DESC']],
         limit: Number(limit),
         offset: Number(offset),
-        include: [{ model: req.app.get('sequelize').models.User, as: 'author' }]
+        include: include,
       }),
       req.app.get('sequelize').models.Article.count({ where: query }),
       req.payload ? req.app.get('sequelize').models.User.findByPk(req.payload.id) : null
