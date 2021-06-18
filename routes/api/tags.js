@@ -1,18 +1,13 @@
 const router = require('express').Router()
-const _ = require('underscore')
 
 // return a list of tags
-router.get('/', function(req, res, next) {
-  req.app.get('sequelize').models.Article.findAll({
-    attributes: ['tagList']
-  })
-    .then(function(articles) {
-      let tags = articles.reduce(function(allTags, article) {
-        return allTags.concat(article.tagList)
-      }, [])
-      return res.json({ tags: _.uniq(tags) })
-    })
-    .catch(next)
+router.get('/', async function(req, res, next) {
+  try {
+    const tagList = (await req.app.get('sequelize').models.Tag.findAll()).map(tag => tag.name)
+    return res.json({ tags: tagList })
+  } catch(error) {
+    next(error);
+  }
 })
 
 module.exports = router

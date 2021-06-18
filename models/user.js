@@ -96,21 +96,9 @@ module.exports = (sequelize) => {
       username: this.username,
       bio: this.bio === undefined ? '' : this.bio,
       image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
-      following: user ? (await user.isFollowing(this.id)) : false
+      following: user ? (await user.hasFollow(this.id)) : false
     }
     return data
-  }
-
-  User.prototype.follow = async function(id) {
-    return this.addFollow(id)
-  }
-
-  User.prototype.unfollow = async function(id) {
-    return this.removeFollow(id)
-  }
-
-  User.prototype.isFollowing = async function(id) {
-    return this.hasFollow(id)
   }
 
   User.prototype.getArticlesByFollowed = async function(offset, limit) {

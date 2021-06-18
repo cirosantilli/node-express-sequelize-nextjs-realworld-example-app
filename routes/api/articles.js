@@ -44,9 +44,6 @@ router.get('/', auth.optional, async function(req, res, next) {
     if (typeof req.query.offset !== 'undefined') {
       offset = req.query.offset
     }
-    if (typeof req.query.tag !== 'undefined') {
-      query.tagList = { [Op.like]: req.query.tag + ',%' }
-    }
     const authorInclude = {
       model: req.app.get('sequelize').models.User,
       as: 'author',
@@ -60,6 +57,13 @@ router.get('/', auth.optional, async function(req, res, next) {
         model: req.app.get('sequelize').models.User,
         as: 'favoritedBy',
         where: {username: req.query.favorited},
+      })
+    }
+    if (req.query.tag) {
+      include.push({
+        model: req.app.get('sequelize').models.Tag,
+        as: 'tags',
+        where: {name: req.query.tag},
       })
     }
     const [{count: articlesCount, rows: articles}, user] = await Promise.all([
@@ -159,10 +163,25 @@ router.put('/:article', auth.required, async function(req, res, next) {
       if (typeof req.body.article.body !== 'undefined') {
         req.article.body = req.body.article.body
       }
-      if (typeof req.body.article.tagList !== 'undefined') {
-        req.article.tagList = req.body.article.tagList
-      }
-      const article = await req.article.save()
+      const article = req.article
+      const tagList = req.body.article.tagList
+      await Promise.all([
+        (typeof tagList === 'undefined')
+          ? null
+          : req.app.get('sequelize').models.Tag.bulkCreate(
+            tagList.map((tag) => {return {name: tag}}),
+            {ignoreDuplicates: true}
+          ).then(tags => {
+            // IDs may be missing from the above, so we have to do a find.
+            // https://github.com/sequelize/sequelize/issues/11223#issuecomment-864185973
+            req.app.get('sequelize').models.Tag.findAll({
+              where: {name: tagList}
+            }).then(tags => {
+              return article.setTags(tags)
+            })
+          }),
+        article.save()
+      ])
       return res.json({ article: await article.toJSONFor(user) })
     } else {
       return res.sendStatus(403)

@@ -38,7 +38,7 @@ module.exports = (toplevelDir, toplevelBasename) => {
   const Article = require('./article')(sequelize)
   const Comment = require('./comment')(sequelize)
   const User = require('./user')(sequelize)
-  //const Tag = require('./tag')(sequelize)
+  const Tag = require('./tag')(sequelize)
 
   // Associations.
 
@@ -78,8 +78,8 @@ module.exports = (toplevelDir, toplevelBasename) => {
   User.hasMany(Comment);
 
   // Tag Article
-  //Article.belongsToMany(Tag, { through: 'ArticleTag', as: 'favorites' });
-  //Tag.belongsToMany(Article, { through: 'ArticleTag', as: 'favorites' });
+  Article.belongsToMany(Tag, { through: 'ArticleTag', as: 'tags' });
+  Tag.belongsToMany(Article, { through: 'ArticleTag', as: 'taggedArticles' });
 
   return sequelize;
 }

@@ -10,6 +10,7 @@ async function generateDemoData(params) {
   const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
   const nFollowsPerUser = params.nFollowsPerUser === undefined ? 2 : params.nFollowsPerUser
   const nFavoritesPerUser = params.nFavoritesPerUser === undefined ? 5 : params.nFavoritesPerUser
+  const nTags = params.nTags === undefined ? 10 : params.nTags
   const directory = params.directory
   const basename = params.basename
 
@@ -79,6 +80,28 @@ async function generateDemoData(params) {
     }
   }
   await sequelize.models.UserFavoriteArticle.bulkCreate(favoriteArgs)
+
+  // Tags
+  const tagArgs = []
+  for (var i = 0; i < nTags; i++) {
+    tagArgs.push({name: `tag${i}`})
+  }
+  const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
+
+  // ArticleTags
+  let tagIdx = 0
+  const articleTagArgs = []
+  for (var i = 0; i < nArticles; i++) {
+    const articleId = articles[i].id
+    for (var j = 0; j < 2; j++) {
+      articleTagArgs.push({
+        ArticleId: articles[i].id,
+        TagId: tags[tagIdx % nTags].id,
+      })
+      tagIdx += 1
+    }
+  }
+  await sequelize.models.ArticleTag.bulkCreate(articleTagArgs)
 
   return sequelize
 }

@@ -28,18 +28,6 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      tagList: {
-        type: DataTypes.STRING,
-        field: 'tag_list',
-        set(v) {
-          this.setDataValue('tagList', Array.isArray(v) ? v.join(',') + ',-' : '')
-        },
-        get() {
-          const tagList = this.getDataValue('tagList')
-          if (!tagList) return []
-          return tagList.split(',').slice(0, -1)
-        }
-      }
     },
     {
       underscored: true,
@@ -60,7 +48,23 @@ module.exports = (sequelize) => {
     }
   )
 
+  Article.prototype.getTagsAsList = async function() {
+    let tags;
+    if (this.tags === undefined) {
+      tags = await this.getTags()
+    } else {
+      tags = this.tags
+    }
+    return tags.map(tag => tag.name)
+  }
+
   Article.prototype.toJSONFor = async function(user) {
+    let author;
+    if (this.author === undefined) {
+      author = await this.getAuthor()
+    } else {
+      author = this.author
+    }
     return {
       slug: this.slug,
       title: this.title,
@@ -68,10 +72,10 @@ module.exports = (sequelize) => {
       body: this.body,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      tagList: this.tagList,
+      tagList: await this.getTagsAsList(),
       favorited: user ? (await user.hasFavorite(this.id)) : false,
       favoritesCount: await this.countFavoritedBy(),
-      author: (await (await this.getAuthor()).toProfileJSONFor(user))
+      author: (await author.toProfileJSONFor(user)),
     }
   }
   return Article
