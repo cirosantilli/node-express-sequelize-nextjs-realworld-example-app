@@ -1,4 +1,6 @@
-= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React + Redux Example Realworld App
+= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React + Redux + Heroku Example Realworld App
+
+Got it running perfectly on <<heroku-deployment>> at as of April 2021 at https://cirosantilli-realworld-express.herokuapp.com/
 
 Includes a working single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app frontend statically and serving it from the public folder of the backend.
 
@@ -78,11 +80,10 @@ then visit the running website at: http://localhost:3000/
 
 == Heroku deployment
 
-Got it running perfectly at as of April 2021 https://cirosantilli-realworld-express.herokuapp.com/
-
 First time setup:
 
 ....
+heroku git:remote -a cirosantilli-realworld-express
 # Automatically sets DATABASE_URL.
 heroku addons:create heroku-postgresql:hobby-dev
 # Otherwise the react build picks up the .eslint from this directory,
@@ -100,6 +101,21 @@ Every update:
 
 ....
 npm run deploy
+....
+
+=== Heroku database operations
+
+Get a PostgreSQL shell:
+
+....
+heroku psql
+....
+
+DELETE ALL DATA IN THE DATABASE and <<generate-demo-data>> inside Heroku:
+
+....
+heroku ps:exec
+./bin/generate-demo-data.js --force-production
 ....
 
 == Debugging
