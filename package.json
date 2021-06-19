@@ -37,7 +37,8 @@
     "pg": "8.5.1",
     "request": "2.69.0",
     "sequelize": "^6.5.1",
-    "slug": "0.9.1"
+    "slug": "0.9.1",
+    "termit": "^0.4.4"
   },
   "prettier": {
     "printWidth": 120,

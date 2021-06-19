@@ -103,7 +103,7 @@ Every update:
 npm run deploy
 ....
 
-=== Heroku database operations
+=== Heroku instance management
 
 Get a PostgreSQL shell:
 
@@ -116,6 +116,13 @@ DELETE ALL DATA IN THE DATABASE and <<generate-demo-data>> inside Heroku:
 ....
 heroku ps:exec
 ./bin/generate-demo-data.js --force-production
+....
+
+Edit a file in Heroku to debug that you are trying to run manually, e.g. by adding print commands, uses https://github.com/hakash/termit[] minimal https://en.wikipedia.org/wiki/GNU_nano[nano]-like text editor:
+
+....
+heroku ps:exec
+termit app.js
 ....
 
 == Debugging
