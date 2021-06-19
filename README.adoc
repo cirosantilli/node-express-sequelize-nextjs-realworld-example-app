@@ -1,6 +1,6 @@
 = Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React + Redux + Heroku Example Realworld App
 
-Got it running perfectly on <<heroku-deployment>> at as of April 2021 at https://cirosantilli-realworld-express.herokuapp.com/
+Got it running on <<heroku-deployment>> as of April 2021 at https://cirosantilli-realworld-express.herokuapp.com/
 
 Includes a working single-process fullstack <<heroku-deployment>> by building the https://github.com/gothinkster/react-redux-realworld-example-app frontend statically and serving it from the public folder of the backend.
 
@@ -117,6 +117,8 @@ DELETE ALL DATA IN THE DATABASE and <<generate-demo-data>> inside Heroku:
 heroku ps:exec
 ./bin/generate-demo-data.js --force-production
 ....
+
+TODO not working because `DATABASE_URL` is not set inside `ps:exec`: https://stackoverflow.com/questions/62502951/heroku-env-variables-database-url-and-port-not-showing-in-dyno-heroku-psexec
 
 Edit a file in Heroku to debug that you are trying to run manually, e.g. by adding print commands, uses https://github.com/hakash/termit[] minimal https://en.wikipedia.org/wiki/GNU_nano[nano]-like text editor:
 
