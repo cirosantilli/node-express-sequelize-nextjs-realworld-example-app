@@ -62,6 +62,7 @@ function doStart(app) {
   // Error handlers
   if (config.isProduction) {
     app.use(function(err, req, res, next) {
+      console.error(err.stack)
       res.status(500).send('error: 500 Internal Server Error')
     });
   } else {

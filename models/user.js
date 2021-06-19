@@ -142,6 +142,7 @@ module.exports = (sequelize) => {
 
   User.prototype.getArticleCountByFollowed = async function() {
     return (await User.findByPk(this.id, {
+      subQuery: false,
       attributes: [
         [Sequelize.fn('COUNT', Sequelize.col('follows.authoredArticles.id')), 'count']
       ],

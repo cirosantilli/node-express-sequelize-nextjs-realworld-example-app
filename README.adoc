@@ -16,7 +16,7 @@ Other versions of this repository include:
 
 * Next.js instead of React + Redux: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app
 
-Tested on Ubuntu 20.10.
+Tested on an Ubuntu 21.04 development host.
 
 == Local development with SQLite
 
@@ -53,13 +53,19 @@ This setup still runs on `NODE_ENV=development`, which implies that sqlite is us
 
 === Local run as identical to deployment as possible
 
-Here we use PostgreSQL instead of SQLite with the prebuilt static frontend.
+Here we use PostgreSQL instead of SQLite with the prebuilt static frontend. Note that optimized frontend is also used on the SQLite setup described at <<local-optimized-frontend>>).
 
 For when you really need to debug some deployment stuff locally
 
 Setup:
 
 ....
+sudo apt install postgresql
+
+# Become able to run psql command without sudo.
+sudo -u postgres createuser -s "$(whoami)"
+createdb "$(whoami)"
+
 createdb node_express_sequelize_realworld
 psql -c "CREATE ROLE node_express_sequelize_realworld_user with login password 'a'"
 psql -c 'GRANT ALL PRIVILEGES ON DATABASE node_express_sequelize_realworld TO node_express_sequelize_realworld_user'
@@ -70,13 +76,16 @@ Run:
 
 ....
 npm run build
-env $(cat .env | xargs) \
-NODE_ENV=production \
-DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' \
-npm start
+npm run start-prod
 ....
 
 then visit the running website at: http://localhost:3000/
+
+To <<generate-demo-data>> for this instance run:
+
+....
+NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' ./bin/generate-demo-data.js --force-production
+....
 
 == Heroku deployment
 
@@ -114,11 +123,15 @@ heroku psql
 DELETE ALL DATA IN THE DATABASE and <<generate-demo-data>> inside Heroku:
 
 ....
-heroku ps:exec
+heroku run bash
 ./bin/generate-demo-data.js --force-production
 ....
 
-TODO not working because `DATABASE_URL` is not set inside `ps:exec`: https://stackoverflow.com/questions/62502951/heroku-env-variables-database-url-and-port-not-showing-in-dyno-heroku-psexec
+We have to run `heroku run bash` instead of `heroku ps:exec` because the second command does not set `DATABASE_URL`:
+
+* https://stackoverflow.com/questions/62502951/heroku-env-variables-database-url-and-port-not-showing-in-dyno-heroku-psexec/68050303#68050303
+* https://stackoverflow.com/questions/48119289/how-to-get-environment-variables-in-live-heroku-dyno/64951959#64951959
+* https://www.reddit.com/r/rails/comments/ejljxj/how_to_seed_a_postgres_production_database_on/
 
 Edit a file in Heroku to debug that you are trying to run manually, e.g. by adding print commands, uses https://github.com/hakash/termit[] minimal https://en.wikipedia.org/wiki/GNU_nano[nano]-like text editor:
 
@@ -154,6 +167,12 @@ VERBOSE=1 npm run dev
 this enables the following extra logs:
 
 * a log line for every request done
+
+=== Log database queries done
+
+....
+DEBUG='sequelize:sql:*' npm run start-prod
+....
 
 === Generate demo data
 
@@ -261,3 +280,53 @@ Results:
 == Bugs
 
 * https://github.com/gothinkster/react-redux-realworld-example-app/issues/197 Your Feed pagination is just completely broken
+
+=== PostgreSQL
+
+On `getArticleCountByFollowed`:
+
+....
+sequelize:sql:pg Executing (default): SELECT "User"."id", COUNT("follows->authoredArticles"."id") AS "count" FROM "users" AS "User" LEFT OUTER JOIN ( "UserFollowUser" AS "follows->UserFollowUser" INNER JOIN "users" AS "follows" ON "follows"."id" = "follows->UserFollowUser"."follow_id") ON "User"."id" = "follows->UserFollowUser"."user_id" LEFT OUTER JOIN "articles" AS "follows->authoredArticles" ON "follows"."id" = "follows->authoredArticles"."author_id" WHERE "User"."id" = 1; +4ms
+SequelizeDatabaseError: column "User.id" must appear in the GROUP BY clause or be used in an aggregate function
+....
+
+This breaks `/` for the logged in user which accesses `/feed`.
+
+Indented query:
+
+....
+SELECT
+  "User"."id",
+  COUNT("follows->authoredArticles"."id") AS "count"
+FROM
+  "users" AS "User"
+  LEFT OUTER JOIN (
+    "UserFollowUser" AS "follows->UserFollowUser"
+    INNER JOIN "users" AS "follows" ON "follows"."id" = "follows->UserFollowUser"."follow_id"
+  ) ON "User"."id" = "follows->UserFollowUser"."user_id"
+  LEFT OUTER JOIN "articles" AS "follows->authoredArticles" ON "follows"."id" = "follows->authoredArticles"."author_id"
+WHERE
+  "User"."id" = 1;
+....
+
+Working query for SQLite for comparison:
+
+....
+SELECT
+  ` User `.` id `,
+  COUNT(` follows - > authoredArticles `.` id `) AS ` count `
+FROM
+  ` users ` AS ` User `
+  LEFT OUTER JOIN ` UserFollowUser ` AS ` follows - > UserFollowUser ` ON ` User `.` id ` = ` follows - > UserFollowUser `.` user_id `
+  LEFT OUTER JOIN ` users ` AS ` follows ` ON ` follows `.` id ` = ` follows - > UserFollowUser `.` follow_id `
+  LEFT OUTER JOIN ` articles ` AS ` follows - > authoredArticles ` ON ` follows `.` id ` = ` follows - > authoredArticles `.` author_id `
+WHERE
+  ` User `.` id ` = 1;
+....
+
+Threads:
+
+* https://github.com/sequelize/sequelize/issues/3256
+* https://github.com/sequelize/sequelize/issues/9800
+* https://stackoverflow.com/questions/28206680/using-group-by-and-joins-in-sequelize
+* https://dba.stackexchange.com/questions/275647/posgres-database-requires-a-group-by-clause-column-candidates-id-must-appe
