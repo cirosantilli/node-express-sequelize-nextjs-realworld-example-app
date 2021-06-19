@@ -22,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "1.15.0",
+    "commander": "6.2.1",
     "cors": "2.7.1",
     "errorhandler": "1.4.3",
     "express": "4.13.4",
@@ -45,7 +46,6 @@
   },
   "devDependencies": {
     "concurrently": "6.2.0",
-    "commander": "6.2.1",
     "eslint": "^7.11.0",
     "eslint-plugin-prettier": "^2.6.0",
     "mocha": "6.2.2",
