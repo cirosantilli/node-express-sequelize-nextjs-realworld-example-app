@@ -273,6 +273,12 @@ So sometimes, especially for things like model relations, we will just revert to
 npm test
 ....
 
+To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then 
+
+....
+NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' npm test
+....
+
 == Benchmarks
 
 Methodology:

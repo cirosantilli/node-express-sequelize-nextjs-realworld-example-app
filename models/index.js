@@ -1,6 +1,6 @@
 const path = require('path')
 
-const Sequelize = require('sequelize')
+const { Sequelize, DataTypes } = require('sequelize')
 
 const config = require('../config')
 
@@ -42,8 +42,27 @@ module.exports = (toplevelDir, toplevelBasename) => {
 
   // Associations.
 
-  // User follow user
-  User.belongsToMany(User, { through: 'UserFollowUser', as: 'follows' });
+  // User follow user (super many to many)
+  const UserFollowUser = sequelize.define('UserFollowUser', {
+      UserId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: User,
+          key: 'id'
+        }
+      },
+      followId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: User,
+          key: 'id'
+        }
+      },
+    }
+  );
+  User.belongsToMany(User, {through: UserFollowUser, as: 'follows'});
+  UserFollowUser.belongsTo(User)
+  User.hasMany(UserFollowUser)
 
   // User favorite Article
   Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'favoritedBy' });

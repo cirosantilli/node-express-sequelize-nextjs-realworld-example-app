@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const secret = require('../config').secret
 
 const Sequelize = require('sequelize')
-const { DataTypes } = Sequelize
+const { DataTypes, Op } = Sequelize
 
 module.exports = (sequelize) => {
   let User = sequelize.define(
@@ -101,43 +101,33 @@ module.exports = (sequelize) => {
     return data
   }
 
-  User.prototype.getArticlesByFollowed = async function(offset, limit) {
-    const followedUsers = (await sequelize.models.User.findByPk(this.id, {
-      attributes: [],
+  User.prototype.findAndCountArticlesByFollowed = async function(offset, limit) {
+    return sequelize.models.Article.findAndCountAll({
       offset: offset,
       limit: limit,
       subQuery: false,
       order: [[
-        {model: User, as: 'follows'},
-        {model: sequelize.models.Article, as: 'authoredArticles'},
         'createdAt',
         'DESC'
       ]],
       include: [
         {
-          model: User,
-          as: 'follows',
+          model: sequelize.models.User,
+          as: 'author',
+          required: true,
           include: [
             {
-              model: sequelize.models.Article,
-              as: 'authoredArticles',
+              model: sequelize.models.UserFollowUser,
+              on: {
+                followId: {[Op.col]: 'author.id' },
+              },
+              attributes: [],
+              where: {UserId: this.id},
             }
           ],
         },
       ],
-    })).follows
-    const posts = []
-    for (const followedUser of followedUsers) {
-      for (const authoredArticle of followedUser.authoredArticles) {
-        posts.push(authoredArticle)
-        authoredArticle.author = followedUser
-      }
-    }
-    posts.sort((x, y) => {
-        return x.createdAt < y.createdAt ?  1 :
-               x.createdAt > y.createdAt ? -1 : 0
     })
-    return posts
   }
 
   User.prototype.getArticleCountByFollowed = async function() {
