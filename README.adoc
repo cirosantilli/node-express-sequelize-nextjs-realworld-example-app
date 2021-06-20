@@ -1,4 +1,15 @@
 = Node.js + Express.js + Sequelize + SQLite/PostgreSQL + React + Redux + Heroku Example Realworld App
+:china-dictatorship-media-base: https://raw.githubusercontent.com/cirosantilli/china-dictatorship-media/master
+:china-dictatorship-media-base-ignore: {china-dictatorship-media-base}
+:idprefix:
+:idseparator: -
+:sectanchors:
+:sectlinks:
+:sectnumlevels: 6
+:sectnums:
+:toc: macro
+:toclevels: 6
+:toc-title:
 
 Got it running on <<heroku-deployment>> as of April 2021 at https://cirosantilli-realworld-express.herokuapp.com/
 
@@ -17,6 +28,8 @@ Other versions of this repository include:
 * Next.js instead of React + Redux: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app
 
 Tested on an Ubuntu 21.04 development host.
+
+toc::[]
 
 == Local development with SQLite
 
