@@ -298,54 +298,6 @@ Results:
 
 == Bugs
 
-* https://github.com/gothinkster/react-redux-realworld-example-app/issues/197 Your Feed pagination is just completely broken
+Notably React Redux upstream bugs:
 
-=== PostgreSQL
-
-On `getArticleCountByFollowed`:
-
-....
-sequelize:sql:pg Executing (default): SELECT "User"."id", COUNT("follows->authoredArticles"."id") AS "count" FROM "users" AS "User" LEFT OUTER JOIN ( "UserFollowUser" AS "follows->UserFollowUser" INNER JOIN "users" AS "follows" ON "follows"."id" = "follows->UserFollowUser"."follow_id") ON "User"."id" = "follows->UserFollowUser"."user_id" LEFT OUTER JOIN "articles" AS "follows->authoredArticles" ON "follows"."id" = "follows->authoredArticles"."author_id" WHERE "User"."id" = 1; +4ms
-SequelizeDatabaseError: column "User.id" must appear in the GROUP BY clause or be used in an aggregate function
-....
-
-This breaks `/` for the logged in user which accesses `/feed`.
-
-Indented query:
-
-....
-SELECT
-  "User"."id",
-  COUNT("follows->authoredArticles"."id") AS "count"
-FROM
-  "users" AS "User"
-  LEFT OUTER JOIN (
-    "UserFollowUser" AS "follows->UserFollowUser"
-    INNER JOIN "users" AS "follows" ON "follows"."id" = "follows->UserFollowUser"."follow_id"
-  ) ON "User"."id" = "follows->UserFollowUser"."user_id"
-  LEFT OUTER JOIN "articles" AS "follows->authoredArticles" ON "follows"."id" = "follows->authoredArticles"."author_id"
-WHERE
-  "User"."id" = 1;
-....
-
-Working query for SQLite for comparison:
-
-....
-SELECT
-  ` User `.` id `,
-  COUNT(` follows - > authoredArticles `.` id `) AS ` count `
-FROM
-  ` users ` AS ` User `
-  LEFT OUTER JOIN ` UserFollowUser ` AS ` follows - > UserFollowUser ` ON ` User `.` id ` = ` follows - > UserFollowUser `.` user_id `
-  LEFT OUTER JOIN ` users ` AS ` follows ` ON ` follows `.` id ` = ` follows - > UserFollowUser `.` follow_id `
-  LEFT OUTER JOIN ` articles ` AS ` follows - > authoredArticles ` ON ` follows `.` id ` = ` follows - > authoredArticles `.` author_id `
-WHERE
-  ` User `.` id ` = 1;
-....
-
-Threads:
-
-* https://github.com/sequelize/sequelize/issues/3256
-* https://github.com/sequelize/sequelize/issues/9800
-* https://stackoverflow.com/questions/28206680/using-group-by-and-joins-in-sequelize
-* https://dba.stackexchange.com/questions/275647/posgres-database-requires-a-group-by-clause-column-candidates-id-must-appe
+* https://github.com/gothinkster/react-redux-realworld-example-app/issues/197 Your Feed pagination is just completely broken. This is not an API bug in this repo.
