@@ -11,10 +11,6 @@ module.exports = (sequelize) => {
           message: 'Tag name must be unique.'
         },
       },
-    },
-    {
-      underscored: true,
-      tableName: 'tags',
     }
   )
   return Tag

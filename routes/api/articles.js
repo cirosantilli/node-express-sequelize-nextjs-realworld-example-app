@@ -69,7 +69,7 @@ router.get('/', auth.optional, async function(req, res, next) {
     const [{count: articlesCount, rows: articles}, user] = await Promise.all([
       req.app.get('sequelize').models.Article.findAndCountAll({
         where: query,
-        order: [['created_at', 'DESC']],
+        order: [['createdAt', 'DESC']],
         limit: Number(limit),
         offset: Number(offset),
         include: include,
@@ -257,7 +257,7 @@ router.get('/:article/comments', auth.optional, async function(req, res, next) {
       user = null
     }
     const comments = await req.article.getComments({
-      order: [['created_at', 'DESC']],
+      order: [['createdAt', 'DESC']],
       include: [{ model: req.app.get('sequelize').models.User, as: 'author' }],
     })
     return res.json({
@@ -278,7 +278,7 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
       return res.sendStatus(401)
     }
     const comment = await req.app.get('sequelize').models.Comment.create(
-      Object.assign({}, req.body.comment, { ArticleId: req.article.id, authorId: user.id })
+      Object.assign({}, req.body.comment, { articleId: req.article.id, authorId: user.id })
     )
     comment.author = user
     res.json({ comment: await comment.toJSONFor(user) })

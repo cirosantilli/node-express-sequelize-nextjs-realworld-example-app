@@ -37,7 +37,7 @@ async function generateDemoData(params) {
     const userId = users[i].id
     for (var j = 0; j < nFollowsPerUser; j++) {
       followArgs.push({
-        UserId: userId,
+        userId: userId,
         followId: users[(i + 1 + j) % nUsers].id,
       })
     }
@@ -73,8 +73,8 @@ async function generateDemoData(params) {
     const userId = users[i].id
     for (var j = 0; j < nFavoritesPerUser; j++) {
       favoriteArgs.push({
-        UserId: userId,
-        ArticleId: articles[articleIdx % nArticles].id,
+        userId: userId,
+        articleId: articles[articleIdx % nArticles].id,
       })
       articleIdx += 1
     }
@@ -95,8 +95,8 @@ async function generateDemoData(params) {
     const articleId = articles[i].id
     for (var j = 0; j < 2; j++) {
       articleTagArgs.push({
-        ArticleId: articles[i].id,
-        TagId: tags[tagIdx % nTags].id,
+        articleId: articles[i].id,
+        tagId: tags[tagIdx % nTags].id,
       })
       tagIdx += 1
     }

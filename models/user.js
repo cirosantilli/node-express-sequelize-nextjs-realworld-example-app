@@ -60,8 +60,6 @@ module.exports = (sequelize) => {
       salt: DataTypes.STRING
     },
     {
-      underscored: true,
-      tableName: 'users',
       indexes: [{ fields: ['username'] }, { fields: ['email'] }]
     }
   )
@@ -122,7 +120,7 @@ module.exports = (sequelize) => {
                 followId: {[Op.col]: 'author.id' },
               },
               attributes: [],
-              where: {UserId: this.id},
+              where: {userId: this.id},
             }
           ],
         },

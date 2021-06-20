@@ -301,3 +301,14 @@ Results:
 Notably React Redux upstream bugs:
 
 * https://github.com/gothinkster/react-redux-realworld-example-app/issues/197 Your Feed pagination is just completely broken. This is not an API bug in this repo.
+
+== Database conventions
+
+The naming conventions are meant to be similar to the JavaScript naming conventions:
+
+* camel case on tables and columns
+* tables start with a capital letter, because they are class-like
+* columns start with a lowercase letter, because they are field-like
+* tables use singular form
+
+Achieving this requires fighting a bit with sequelize, which by default produces inconsistent names on foreign keys.

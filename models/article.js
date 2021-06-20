@@ -30,8 +30,6 @@ module.exports = (sequelize) => {
       },
     },
     {
-      underscored: true,
-      tableName: 'articles',
       hooks: {
         beforeValidate: (article, options) => {
           if (!article.slug) {

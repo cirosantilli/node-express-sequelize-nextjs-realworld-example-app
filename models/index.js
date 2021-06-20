@@ -6,7 +6,10 @@ const config = require('../config')
 
 module.exports = (toplevelDir, toplevelBasename) => {
   const sequelizeParams = {
-    logging: config.verbose ? console.log : false
+    logging: config.verbose ? console.log : false,
+    define: {
+      freezeTableName: true,
+    },
   };
   let sequelize;
   if (config.isProduction) {
@@ -43,8 +46,9 @@ module.exports = (toplevelDir, toplevelBasename) => {
   // Associations.
 
   // User follow user (super many to many)
-  const UserFollowUser = sequelize.define('UserFollowUser', {
-      UserId: {
+  const UserFollowUser = sequelize.define('UserFollowUser',
+    {
+      userId: {
         type: DataTypes.INTEGER,
         references: {
           model: User,
@@ -58,15 +62,18 @@ module.exports = (toplevelDir, toplevelBasename) => {
           key: 'id'
         }
       },
+    },
+    {
+      tableName: 'UserFollowUser'
     }
   );
-  User.belongsToMany(User, {through: UserFollowUser, as: 'follows'});
-  UserFollowUser.belongsTo(User)
-  User.hasMany(UserFollowUser)
+  User.belongsToMany(User, {through: UserFollowUser, as: 'follows', foreignKey: 'userId', otherKey: 'followId'});
+  UserFollowUser.belongsTo(User, {foreignKey: 'userId'})
+  User.hasMany(UserFollowUser, {foreignKey: 'followId'})
 
   // User favorite Article
-  Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'favoritedBy' });
-  User.belongsToMany(Article, { through: 'UserFavoriteArticle', as: 'favorites' });
+  Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'favoritedBy', foreignKey: 'articleId', otherKey: 'userId'  });
+  User.belongsToMany(Article, { through: 'UserFavoriteArticle', as: 'favorites',   foreignKey: 'userId', otherKey: 'articleId'  });
 
   // Article author User
   Article.belongsTo(User, {
@@ -79,26 +86,27 @@ module.exports = (toplevelDir, toplevelBasename) => {
   User.hasMany(Article, {as: 'authoredArticles', foreignKey: 'authorId'})
 
   // Article has Comment
-  Article.hasMany(Comment)
+  Article.hasMany(Comment, {foreignKey: 'articleId'})
   Comment.belongsTo(Article, {
     foreignKey: {
+      name: 'articleId',
       allowNull: false
     },
   })
-  Comment.belongsTo(Article)
 
   // Comment author User
   Comment.belongsTo(User, {
     as: 'author',
     foreignKey: {
+      name: 'authorId',
       allowNull: false
     },
   });
-  User.hasMany(Comment);
+  User.hasMany(Comment, {foreignKey: 'authorId'});
 
   // Tag Article
-  Article.belongsToMany(Tag, { through: 'ArticleTag', as: 'tags' });
-  Tag.belongsToMany(Article, { through: 'ArticleTag', as: 'taggedArticles' });
+  Article.belongsToMany(Tag, { through: 'ArticleTag', as: 'tags',           foreignKey: 'articleId', otherKey: 'tagId' });
+  Tag.belongsToMany(Article, { through: 'ArticleTag', as: 'taggedArticles', foreignKey: 'tagId', otherKey: 'articleId' });
 
   return sequelize;
 }

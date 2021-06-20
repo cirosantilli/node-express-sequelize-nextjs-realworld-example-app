@@ -5,10 +5,6 @@ module.exports = (sequelize) => {
     'Comment',
     {
       body: DataTypes.STRING
-    },
-    {
-      underscored: true,
-      tableName: 'comments'
     }
   )
 
