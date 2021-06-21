@@ -312,3 +312,7 @@ The naming conventions are meant to be similar to the JavaScript naming conventi
 * tables use singular form
 
 Achieving this requires fighting a bit with sequelize, which by default produces inconsistent names on foreign keys.
+
+== Related projects
+
+https://github.com/Varun-Hegde/Conduit_NodeJS/tree/99cc32f19a42d74ff9729765772b4676c537a755 some of the <<api-tests>> were failing, and some parts of the code didin't feel as clean as I'd like, so I ended up using https://github.com/sigoden/node-express-realworld-example-app[] as a basis. However I later learnt they did do/attempt to do the many to many relatioships properly unlike sigoden which just hacked with strings. The critical "hard" querry however https://github.com/Varun-Hegde/Conduit_NodeJS/blob/99cc32f19a42d74ff9729765772b4676c537a755/controllers/articles.js#L271[], which finds "posts by users I follow" and which best exercises the ORM's is not done nicel in a single SQL command as achieved in this repository after a lot of suffering.
