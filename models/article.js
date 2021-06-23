@@ -46,23 +46,19 @@ module.exports = (sequelize) => {
     }
   )
 
-  Article.prototype.getTagsAsList = async function() {
-    let tags;
-    if (this.tags === undefined) {
-      tags = await this.getTags()
-    } else {
-      tags = this.tags
-    }
-    return tags.map(tag => tag.name)
-  }
-
   Article.prototype.toJSONFor = async function(user) {
-    let author;
-    if (this.author === undefined) {
-      author = await this.getAuthor()
+    let authorPromise;
+    if (this.authorPromise === undefined) {
+      authorPromise = this.getAuthor()
     } else {
-      author = this.author
+      authorPromise = new Promise(resolve => {resolve(this.author)})
     }
+    const [tags, favorited, favoritesCount, author] = await Promise.all([
+      this.getTags(),
+      user ? user.hasFavorite(this.id) : false,
+      this.countFavoritedBy(),
+      authorPromise.then(author => author.toProfileJSONFor(user)),
+    ])
     return {
       slug: this.slug,
       title: this.title,
@@ -70,10 +66,10 @@ module.exports = (sequelize) => {
       body: this.body,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      tagList: await this.getTagsAsList(),
-      favorited: user ? (await user.hasFavorite(this.id)) : false,
-      favoritesCount: await this.countFavoritedBy(),
-      author: (await author.toProfileJSONFor(user)),
+      tagList: tags.map(tag => tag.name),
+      favorited,
+      favoritesCount,
+      author,
     }
   }
   return Article
