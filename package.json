@@ -37,9 +37,9 @@
     "passport-local": "1.0.0",
     "pg": "8.5.1",
     "request": "2.69.0",
-    "sequelize": "^6.5.1",
+    "sequelize": "6.5.1",
     "slug": "0.9.1",
-    "termit": "^0.4.4"
+    "termit": "0.4.4"
   },
   "prettier": {
     "printWidth": 120,
@@ -48,13 +48,13 @@
   },
   "devDependencies": {
     "concurrently": "6.2.0",
-    "eslint": "^7.11.0",
-    "eslint-plugin-prettier": "^2.6.0",
+    "eslint": "7.11.0",
+    "eslint-plugin-prettier": "2.6.0",
     "mocha": "6.2.2",
-    "newman": "^3.5.2",
-    "nodemon": "^1.11.0",
-    "prettier": "^1.12.1",
-    "sqlite3": "^4.0.0"
+    "newman": "3.5.2",
+    "nodemon": "1.11.0",
+    "prettier": "1.12.1",
+    "sqlite3": "5.0.2"
   },
   "cacheDirectories": [
     "node_modules",
