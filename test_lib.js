@@ -5,6 +5,13 @@ const path = require('path')
 
 const models = require('./models')
 
+function addDays(oldDate, days) {
+  const newDate = new Date(oldDate.valueOf());
+  newDate.setDate(oldDate.getDate() + days);
+  return newDate;
+}
+const date0 = new Date(2000, 0, 0, 0, 0, 0, 0)
+
 async function generateDemoData(params) {
   const nUsers = params.nUsers === undefined ? 10 : params.nUsers
   const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
@@ -48,13 +55,14 @@ async function generateDemoData(params) {
   const articleArgs = [];
   for (var i = 0; i < nArticles; i++) {
     const userIdx = i % nUsers
+    const date = addDays(date0, i)
     const articleArg = {
       title: `My title ${i}`,
       description: `My description ${i}`,
       body: `My **body** ${i}`,
       authorId: users[userIdx].id,
-      createdAt: new Date(2000 + i, 0, 1, 2, 3, 4, 5),
-      updatedAt: new Date(2000 + i, 0, 1, 2, 3, 4, 5),
+      createdAt: date,
+      updatedAt: date,
     }
     articleArgs.push(articleArg)
   }
