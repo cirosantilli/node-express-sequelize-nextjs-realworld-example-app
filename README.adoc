@@ -42,6 +42,8 @@ The browser automatically pops the development front-end server at http://localh
 
 You might also want to generate some test data as mentioned at: <<generate-demo-data>>.
 
+The SQLite database is located at `db.sqlite3`.
+
 == Local optimized frontend
 
 .....
@@ -230,11 +232,15 @@ These tests are part of https://github.com/gothinkster/realworld which we track 
 
 Test test method uses Postman, but we feel that it is not a very good way to do the testing, as it uses JSON formats everywhere with embedded JavaScript, presumably to be edited in some dedicated editor like Jupyter does. It would be much better to just have a pure JavaScript setup instead.
 
-They test the JSON REST API without the frontend:
+They test the JSON REST API without the frontend.
+
+First start the backend server in a terminal:
 
 ....
-npm run back
+npm run back-test
 ....
+
+`npm run back-test` will make our server use a clean one-off in-memory database instead of using the default in-disk development `./db.sqlite3` as done for `npm run back`.
 
 Then on another terminal:
 

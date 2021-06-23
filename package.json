@@ -6,6 +6,7 @@
   "scripts": {
     "back": "nodemon --async-stack-traces --unhandled-rejections=strict ./app.js",
     "back-inspect": "node --async-stack-traces --unhandled-rejections=strict inspect ./app.js",
+    "back-test": "NODE_ENV=test npm run back",
     "build": "cd react-redux-realworld-example-app && npm run build",
     "deploy": "git push heroku master",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",

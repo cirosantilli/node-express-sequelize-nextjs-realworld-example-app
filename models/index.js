@@ -27,7 +27,7 @@ module.exports = (toplevelDir, toplevelBasename) => {
   } else {
     sequelizeParams.dialect = 'sqlite';
     let storage;
-    if (toplevelDir === undefined) {
+    if (process.env.NODE_ENV === 'test' || toplevelDir === undefined) {
       storage = ':memory:';
     } else {
       if (toplevelBasename === undefined) {

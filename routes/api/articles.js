@@ -2,6 +2,21 @@ const router = require('express').Router()
 const auth = require('../auth')
 const Op = require('sequelize').Op
 
+async function setArticleTags(req, article, tagList) {
+  return req.app.get('sequelize').models.Tag.bulkCreate(
+    tagList.map((tag) => {return {name: tag}}),
+    {ignoreDuplicates: true}
+  ).then(tags => {
+    // IDs may be missing from the above, so we have to do a find.
+    // https://github.com/sequelize/sequelize/issues/11223#issuecomment-864185973
+    req.app.get('sequelize').models.Tag.findAll({
+      where: {name: tagList}
+    }).then(tags => {
+      return article.setTags(tags)
+    })
+  })
+}
+
 // Preload article objects on routes with ':article'
 router.param('article', function(req, res, next, slug) {
   req.app.get('sequelize').models.Article.findOne({
@@ -122,7 +137,13 @@ router.post('/', auth.required, async function(req, res, next) {
     }
     let article = new (req.app.get('sequelize').models.Article)(req.body.article)
     article.authorId = user.id
-    await article.save()
+    const tagList = req.body.article.tagList
+    await Promise.all([
+      (typeof tagList === 'undefined')
+        ? null
+        : setArticleTags(req, article, tagList),
+      article.save()
+    ])
     article.author = user
     return res.json({ article: await article.toJSONFor(user) })
   } catch(error) {
@@ -163,18 +184,7 @@ router.put('/:article', auth.required, async function(req, res, next) {
       await Promise.all([
         (typeof tagList === 'undefined')
           ? null
-          : req.app.get('sequelize').models.Tag.bulkCreate(
-            tagList.map((tag) => {return {name: tag}}),
-            {ignoreDuplicates: true}
-          ).then(tags => {
-            // IDs may be missing from the above, so we have to do a find.
-            // https://github.com/sequelize/sequelize/issues/11223#issuecomment-864185973
-            req.app.get('sequelize').models.Tag.findAll({
-              where: {name: tagList}
-            }).then(tags => {
-              return article.setTags(tags)
-            })
-          }),
+          : setArticleTags(req, article, tagList),
         article.save()
       ])
       return res.json({ article: await article.toJSONFor(user) })
