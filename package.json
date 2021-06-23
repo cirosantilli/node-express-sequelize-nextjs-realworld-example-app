@@ -51,7 +51,7 @@
     "eslint": "7.11.0",
     "eslint-plugin-prettier": "2.6.0",
     "mocha": "6.2.2",
-    "newman": "3.5.2",
+    "newman": "5.2.3",
     "nodemon": "1.11.0",
     "prettier": "1.12.1",
     "sqlite3": "5.0.2"
