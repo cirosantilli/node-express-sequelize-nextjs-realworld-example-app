@@ -304,7 +304,7 @@ Results:
 
 == Bugs
 
-Notably React Redux upstream bugs:
+Notable React Redux upstream bugs:
 
 * https://github.com/gothinkster/react-redux-realworld-example-app/issues/197 Your Feed pagination is just completely broken. This is not an API bug in this repo.
 
