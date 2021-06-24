@@ -12,9 +12,6 @@ import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import { ArticleType } from "lib/types/articleType";
 import { CommentType } from "lib/types/commentType";
-import { getStaticPathsArticle, getStaticPropsArticle } from "lib/article";
-
-const configModule = require("../../config");
 
 interface ArticlePageProps {
   article: ArticleType;
@@ -155,9 +152,9 @@ const CommentListPresenter = styled("div")`
 `;
 
 const ArticlePage = ({ article, comments }: ArticlePageProps) => {
-  const router = useRouter()
+  const router = useRouter();
   if (router.isFallback) {
-    return <div>loading</div>;
+    return <LoadingSpinner />;
   }
   const markup = { __html: marked(article.body) };
   return (
@@ -192,6 +189,11 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   );
 };
 
+// Server
+
+import { getStaticPathsArticle, getStaticPropsArticle } from "lib/article";
+const configModule = require("../../config");
+
 export const getStaticPaths = getStaticPathsArticle;
-export const getStaticProps = getStaticPropsArticle(configModule.isrTime, true);
+export const getStaticProps = getStaticPropsArticle(configModule.revalidate, true);
 export default ArticlePage;

@@ -1,18 +1,18 @@
-= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + Next.js fullstack static/SSG/ISG Example Realworld App
+= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + Next.js fullstack static/SSR/ISG Example Realworld App
 
-Got it running on <<heroku-deployment>> as of April 2021 at https://cirosantilli-realworld-express.herokuapp.com/
+Got it running on Heroku as of April 2021 at https://cirosantilli-realworld-next.herokuapp.com/
 
-This is a branch of https://github.com/cirosantilli/node-express-sequelize-realworld-example-app rebased on top of that master, we show it in a separate GitHub repository just to give it more visibility.
+This is a branch of https://github.com/cirosantilli/node-express-sequelize-realworld-example-app rebased on top of the `master` branch of that repository, we show it in a separate GitHub repository just to give it more visibility.
 
-Any information that applies to both repositories will be kept in that README.
+Any information that applies to both repositories will be kept in that README only.
 
 Ideally we would like to have both demos on the same tree as they share all backend code, but Next.js and NPM impose too many restrictions which we don't have the time to work around.
 
-This frontend is based on https://github.com/reck1ess/next-realworld-example-app/tree/66003772a42bf71c7b2771119121d4c9cf4b07d4 which was SSR only via API, not SSG. We decided to merge it in-tree rather than keep it a separate submodule because the fullstack implementation means that the barrier between front-end and back-end becomes is quite blurred, e.g. "front-end" files also contain functions with direct backend database access without going through the API.
+The frontend part of this repository is a fork of https://github.com/reck1ess/next-realworld-example-app/tree/66003772a42bf71c7b2771119121d4c9cf4b07d4 which was SSR only via API, not ISG. We decided to merge it in-tree rather than keep it a separate submodule because the fullstack implementation means that the barrier between front-end and back-end becomes is quite blurred, e.g. "front-end" files under `/pages` also contain functions with direct backend database access without going through the API.
 
-Both next and the backend API run on the same express server via a https://nextjs.org/docs/advanced-features/custom-server[Next.js custom server].
+Both Next.js and the backend API run on the same express server via a https://nextjs.org/docs/advanced-features/custom-server[Next.js custom server].
 
-The design goals are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSG.
+The design goals are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSR.
 
 Due to ISR/SSR, the entire website should look exactly the same with and without JavaScript for a logged out user.
 
@@ -35,6 +35,8 @@ npm run start-dev
 
 If you make any changes to the code, at least code under `/pages` for sure, you have to rebuild before they take effect in this mode, as Next.js appears to also run server-only code such as `getStaticPaths` from one of the webpack bundles.
 
+Running `next build` is one very important test of the code, as it builds many of the most important pages of the website, and runs checks such as TypeScript type checking.
+
 == Heroku deployment
 
 We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
@@ -44,3 +46,9 @@ We are not sure if Next.js ISR can be deployed reliably due to the ephemeral fil
 === TODO security
 
 Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
+
+== Bugs
+
+https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/missing functionality, some notable ones:
+
+* https://github.com/reck1ess/next-realworld-example-app/issues/22 Your Feed not working

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV_OVERRIDE === undefined) {
 module.exports = {
   apiPath: '/api',
   databaseUrl: process.env.DATABASE_URL || '',
-  isrTime: 10,
+  revalidate: 10,
   isProduction: isProduction,
   isProductionNext: process.env.NODE_ENV_NEXT === undefined ?
     (isProduction) :
