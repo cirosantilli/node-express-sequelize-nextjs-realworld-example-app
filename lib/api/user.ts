@@ -101,9 +101,6 @@ const UserAPI = {
     }
   },
   get: async (username) => {
-    console.error('asdf');
-    console.error(await axios.get(`${SERVER_BASE_URL}/profiles/${username}`));
-    console.error('qwer');
     return axios.get(`${SERVER_BASE_URL}/profiles/${username}`)
   }
 };

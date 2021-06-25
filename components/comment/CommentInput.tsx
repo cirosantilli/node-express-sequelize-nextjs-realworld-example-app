@@ -16,14 +16,11 @@ const CommentInput = () => {
   const {
     query: { pid },
   } = router;
-
   const [content, setContent] = React.useState("");
   const [isLoading, setLoading] = React.useState(false);
-
   const handleChange = React.useCallback((e) => {
     setContent(e.target.value);
   }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -76,7 +73,7 @@ const CommentInput = () => {
       <div className="card-footer">
         <CustomImage
           className="comment-author-img"
-          src={currentUser?.image}
+          src={currentUser.effectiveImage}
           alt="Comment author's profile image"
         />
         <button className="btn btn-sm btn-primary" type="submit">
