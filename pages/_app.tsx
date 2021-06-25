@@ -3,7 +3,9 @@ import { cache } from "emotion";
 import Head from "next/head";
 import React from "react";
 
+import Footer from "components/common/Footer";
 import Layout from "components/common/Layout";
+import Navbar from "components/common/Navbar";
 import ContextProvider from "lib/context";
 import "styles.css";
 
@@ -23,9 +25,9 @@ const MyApp = ({ Component, pageProps }) => (
     </Head>
     <CacheProvider value={cache}>
       <ContextProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <Navbar />
+        <Component {...pageProps} />
+        <Footer />
       </ContextProvider>
     </CacheProvider>
   </>

@@ -53,11 +53,9 @@ https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/mis
 
 * https://github.com/reck1ess/next-realworld-example-app/issues/22 Your Feed not working
 
-== Comments on the original reck1ess/next-realworld-example-app
+The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in a few senses:
 
-`reck1ess/next-realworld-example-app` felt a bit quirky in a few senses:
-
-* usage of `useSWR` even for data that is already pre-rendered. Presumably this is to give some kind of pool based realtime support? But that is not what other implementations do.
+* usage of `useSWR` even for data that is already pre-rendered. Presumably this is to give some kind of pool based realtime support? But that is not what other implementations do, and neither should we. We don't want data to update by surprise under a user's feet.
 * uses custom https://github.com/emotion-js/emotion[emotion-js] CSS in addition to the global http://demo.productionready.io/main.css[], which is also required.
 +
 While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.

@@ -1,11 +1,15 @@
 import styled from "@emotion/styled";
 import Head from "next/head";
 import React from "react";
+import useSWR from "swr";
 
 import ArticleList from "components/article/ArticleList";
+import Maybe from "components/common/Maybe";
 import Banner from "components/home/Banner";
 import Tags from "components/home/Tags";
 import TabList from "components/home/TabList";
+import checkLogin from "lib/utils/checkLogin";
+import storage from "lib/utils/storage";
 
 const IndexPageContainer = styled("div")``;
 
@@ -75,35 +79,41 @@ const SidebarTitle = styled("p")`
   margin-bottom: 0.2rem;
 `;
 
-const IndexPage = () => (
-  <>
-    <Head>
-      <title>HOME | NEXT REALWORLD</title>
-      <meta
-        name="description"
-        content="Next.js + SWR codebase containing realworld examples (CRUD, auth, advanced patterns, etc) that adheres to the realworld spec and API"
-      />
-    </Head>
-    <IndexPageContainer className="home-page">
-      <Banner />
-      <IndexPagePresenter>
-        <MainContent>
-          <ContentContainer>
-            <FeedToggle>
-              <TabList />
-            </FeedToggle>
-            <ArticleList />
-          </ContentContainer>
-          <SidebarContainer>
-            <SidebarPresenter>
-              <SidebarTitle>Popular Tags</SidebarTitle>
-              <Tags />
-            </SidebarPresenter>
-          </SidebarContainer>
-        </MainContent>
-      </IndexPagePresenter>
-    </IndexPageContainer>
-  </>
-);
+const IndexPage = () => {
+  const { data: currentUser } = useSWR("user", storage);
+  const isLoggedIn = checkLogin(currentUser);
+  return (
+    <>
+      <Head>
+        <title>HOME | NEXT REALWORLD</title>
+        <meta
+          name="description"
+          content="Next.js + SWR codebase containing realworld examples (CRUD, auth, advanced patterns, etc) that adheres to the realworld spec and API"
+        />
+      </Head>
+      <IndexPageContainer className="home-page">
+        <Maybe test={!isLoggedIn}>
+          <Banner />
+        </Maybe>
+        <IndexPagePresenter>
+          <MainContent>
+            <ContentContainer>
+              <FeedToggle>
+                <TabList />
+              </FeedToggle>
+              <ArticleList />
+            </ContentContainer>
+            <SidebarContainer>
+              <SidebarPresenter>
+                <SidebarTitle>Popular Tags</SidebarTitle>
+                <Tags />
+              </SidebarPresenter>
+            </SidebarContainer>
+          </MainContent>
+        </IndexPagePresenter>
+      </IndexPageContainer>
+    </>
+  )
+}
 
 export default IndexPage;

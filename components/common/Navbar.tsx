@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import React from "react";
 import useSWR from "swr";
 
-import CustomLink from "./CustomLink";
-import Maybe from "./Maybe";
-import NavLink from "./NavLink";
+import CustomLink from "components/common/CustomLink";
+import Maybe from "components/common/Maybe";
+import NavLink from "components/common/NavLink";
 import { usePageDispatch } from "lib/context/PageContext";
 import checkLogin from "lib/utils/checkLogin";
 import storage from "lib/utils/storage";
