@@ -24,9 +24,9 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <Link href="/" as="/" onClick={handleClick}>
-          <a className="navbar-brand">conduit</a>
-        </Link>
+        <CustomLink href="/" as="/" onClick={handleClick} className="navbar-brand">
+          conduit
+        </CustomLink>
         <ul className="nav navbar-nav pull-xs-right">
           <NavbarItem>
             <NavLink href="/" as="/" onClick={handleClick}>

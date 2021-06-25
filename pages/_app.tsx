@@ -4,7 +4,6 @@ import Head from "next/head";
 import React from "react";
 
 import Footer from "components/common/Footer";
-import Layout from "components/common/Layout";
 import Navbar from "components/common/Navbar";
 import ContextProvider from "lib/context";
 import "styles.css";
