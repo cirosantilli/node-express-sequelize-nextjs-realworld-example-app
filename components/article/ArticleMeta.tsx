@@ -42,7 +42,6 @@ const ArticleDate = styled("span")`
 
 const ArticleMeta = ({ article }) => {
   if (!article) return;
-
   return (
     <ArticleMetaContainer>
       <CustomLink
@@ -54,7 +53,6 @@ const ArticleMeta = ({ article }) => {
           alt="author-profile-image"
         />
       </CustomLink>
-
       <ArticleInfo>
         <ArticleAuthorLink
           href="/profile/[pid]"
@@ -64,7 +62,6 @@ const ArticleMeta = ({ article }) => {
         </ArticleAuthorLink>
         <ArticleDate>{formatDate(article.createdAt)}</ArticleDate>
       </ArticleInfo>
-
       <ArticleActions article={article} />
     </ArticleMetaContainer>
   );

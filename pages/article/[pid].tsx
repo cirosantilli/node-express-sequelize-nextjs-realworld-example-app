@@ -19,8 +19,6 @@ interface ArticlePageProps {
   pid: string;
 }
 
-const ArticlePageContainer = styled("div")``;
-
 const ArticleInfoContainer = styled("div")`
   color: #fff;
   background: #333;
@@ -158,7 +156,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   }
   const markup = { __html: marked(article.body) };
   return (
-    <ArticlePageContainer>
+    <div className="article-page">
       <ArticleInfoContainer>
         <ArticleInfoPresenter>
           <ArticleTitle>{article.title}</ArticleTitle>
@@ -185,7 +183,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
           </CommentListPresenter>
         </CommentListContainer>
       </ArticleContentContainer>
-    </ArticlePageContainer>
+    </div>
   );
 };
 

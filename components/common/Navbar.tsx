@@ -5,6 +5,7 @@ import React from "react";
 import Link from "next/link";
 import useSWR from "swr";
 
+import CustomImage from "components/common/CustomImage";
 import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
 import NavLink from "components/common/NavLink";
@@ -52,6 +53,11 @@ const Navbar = () => {
                 as={`/profile/${currentUser?.username}`}
                 onClick={handleClick}
               >
+                <CustomImage
+                  className="user-pic"
+                  src={currentUser?.effectiveImage}
+                  alt="Comment author's profile image"
+                />
                 {currentUser?.username}
               </NavLink>
             </NavbarItem>

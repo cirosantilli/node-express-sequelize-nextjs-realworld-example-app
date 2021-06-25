@@ -33,7 +33,7 @@ const LoginForm = () => {
         if (profileStatus !== 200) {
           setErrors(profileData.errors);
         }
-        data.user.effectiveImage = profileData.image;
+        data.user.effectiveImage = profileData.profile.image;
         window.localStorage.setItem("user", JSON.stringify(data.user));
         mutate("user", data?.user);
         Router.push("/");
