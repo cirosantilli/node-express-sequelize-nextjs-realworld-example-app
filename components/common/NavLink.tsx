@@ -35,7 +35,7 @@ const NavLink = ({ href, as, onClick, children }: NavLinkProps) => {
         onClick={onClick}
         className={`${
           encodeURIComponent(asPath) === encodeURIComponent(as) && `active`
-        }`}
+        } nav-link`}
       >
         {children}
       </Anchor>

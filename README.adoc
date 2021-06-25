@@ -61,3 +61,5 @@ The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in
 While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.
 +
 And if it were to use emotion, it should be emotion only, without the global CSS.
+
+These are all poinst that we have or would like to address in this fork.
