@@ -9,36 +9,20 @@ interface NavLinkProps {
   children: React.ReactNode;
 }
 
-const Anchor = styled("a")`
-  display: block;
-  padding-top: 0.425rem;
-  padding-bottom: 0.425rem;
-  color: rgba(0, 0, 0, 0.3);
-  text-decoration: none !important;
-
-  &:hover {
-    color: rgba(0, 0, 0, 0.8) !important;
-  }
-
-  &.is-active {
-    color: rgba(0, 0, 0, 0.8);
-  }
-`;
-
 const NavLink = ({ href, as, onClick, children }: NavLinkProps) => {
   const router = useRouter();
   const { asPath } = router;
 
   return (
     <Link href={href} as={as} passHref>
-      <Anchor
+      <a
         onClick={onClick}
         className={`${
-          encodeURIComponent(asPath) === encodeURIComponent(as) && `active`
-        } nav-link`}
+          encodeURIComponent(asPath) === encodeURIComponent(as) && 'active ' || ''
+        }nav-link`}
       >
         {children}
-      </Anchor>
+      </a>
     </Link>
   );
 };

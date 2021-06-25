@@ -60,6 +60,16 @@ The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in
 +
 While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.
 +
-And if it were to use emotion, it should be emotion only, without the global CSS.
+And if it were to use emotion, it should be emotion only, without the global CSS. Instead, that repo uses both, sometimes specifying the same CSS multiple times in two ways.
++
+It is also very annoying that they used separated defined components rather than in-tree emotion CSS which can be done as:
++
+....
+<div css={css`
+  font-weight: 300;
+`}>
+....
++
+which leads to a much easier to read DOM tree, and less identifiers flying everywhere.
 
 These are all poinst that we have or would like to address in this fork.
