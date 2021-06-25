@@ -52,3 +52,14 @@ Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
 https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/missing functionality, some notable ones:
 
 * https://github.com/reck1ess/next-realworld-example-app/issues/22 Your Feed not working
+
+== Comments on the original reck1ess/next-realworld-example-app
+
+`reck1ess/next-realworld-example-app` felt a bit quirky in a few senses:
+
+* usage of `useSWR` even for data that is already pre-rendered. Presumably this is to give some kind of pool based realtime support? But that is not what other implementations do.
+* uses custom https://github.com/emotion-js/emotion[emotion-js] CSS in addition to the global http://demo.productionready.io/main.css[], which is also required.
++
+While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.
++
+And if it were to use emotion, it should be emotion only, without the global CSS.
