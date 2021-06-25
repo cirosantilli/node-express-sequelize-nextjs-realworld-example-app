@@ -96,7 +96,7 @@ const Navbar = () => {
             <NavbarItem>
               <NavLink href="/editor/new" as="/editor/new">
                 <i className="ion-compose" />
-                &nbsp;New Post
+                &nbsp;New Article
               </NavLink>
             </NavbarItem>
             <NavbarItem>
