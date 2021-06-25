@@ -17,7 +17,7 @@ import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import storage from "lib/utils/storage";
 
-const Profile = ({ initialProfile }) => {
+const Profile = ({ profile }) => {
   const router = useRouter();
   if (router.isFallback) {
     return <LoadingSpinner />;
@@ -26,25 +26,10 @@ const Profile = ({ initialProfile }) => {
   const {
     query: { pid },
   } = router;
-
-  const {
-    data: fetchedProfile,
-    error: profileError,
-  } = useSWR(
-    `${SERVER_BASE_URL}/profiles/${encodeURIComponent(String(pid))}`,
-    fetcher,
-    { initialData: initialProfile }
-  );
-
-  if (profileError) return <ErrorMessage message="Can't load profile" />;
-
-  const profile = fetchedProfile || initialProfile;
   const { username, bio, image, following } = profile;
-
   const { data: currentUser } = useSWR("user", storage);
   const isLoggedIn = checkLogin(currentUser);
   const isUser = currentUser && username === currentUser?.username;
-
   const handleFollow = async () => {
     mutate(
       `${SERVER_BASE_URL}/profiles/${pid}`,
@@ -54,7 +39,6 @@ const Profile = ({ initialProfile }) => {
     UserAPI.follow(pid);
     trigger(`${SERVER_BASE_URL}/profiles/${pid}`);
   };
-
   const handleUnfollow = async () => {
     mutate(
       `${SERVER_BASE_URL}/profiles/${pid}`,
@@ -64,7 +48,6 @@ const Profile = ({ initialProfile }) => {
     UserAPI.unfollow(pid);
     trigger(`${SERVER_BASE_URL}/profiles/${pid}`);
   };
-
   return (
     <div className="profile-page">
       <div className="user-info">
@@ -155,7 +138,7 @@ export const getStaticProps: GetStaticProps = async ({ params: { pid } }) => {
   }
   return {
     revalidate: configModule.revalidate,
-    props: { initialProfile: await user.toProfileJSONFor() },
+    props: { profile: await user.toProfileJSONFor() },
   }
 }
 
