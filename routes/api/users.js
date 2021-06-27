@@ -8,7 +8,6 @@ router.get('/user', auth.required, function(req, res, next) {
       if (!user) {
         return res.sendStatus(401)
       }
-
       return res.json({ user: user.toAuthJSON() })
     })
     .catch(next)

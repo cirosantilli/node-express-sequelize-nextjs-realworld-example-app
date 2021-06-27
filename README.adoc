@@ -43,6 +43,36 @@ We are not sure if Next.js ISR can be deployed reliably due to the ephemeral fil
 
 == TODO
 
+=== Personal user data in `/user/settings`
+
+`reck1ess` was using a mixture of SSR and client side redirects.
+
+If you tried to access `/user/settings` directly e.g. by pasting it on the browser, it would redirect you to home even if you were logged in, and the server showed an error message:
+
+....
+Error: No router instance found.
+You should only use "next/router" inside the client side of your app.
+....
+
+We patched to avoid that.
+
+However, we are still currently just using data from the `localStorage`. This is bad because if the user changes details on another device, the data will be stale.
+
+Also this is a very specific case of personal user data, so it doesn't reflect the more general case of data that is not in `localStorage`.
+
+Instead, we should handle `/user/settings` from Next.js server side, notably check JWT token there and 401 if not logged in.
+
+=== Single URL with multiple pages
+
+We don't know how to have multiple pages under a single URL in Next.js nicely. This is needed for tab navigation e.g. under `/` "Your Feed" vs "Global Feed", and for pagination:
+
+* https://stackoverflow.com/questions/62628685/static-pagination-in-nextjs
+* https://stackoverflow.com/questions/65471275/material-ui-tabs-with-nextjs
+
+Note however that such functionality also makes it impossible to access those pages without JavaScript, therefore one of the main points of React, which is SEO without the need for JavaScript.
+
+`reck1ess` original implementation works around this by just fetching from the API and rendering, like a regular non-Next React app would.
+
 === TODO security
 
 Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
@@ -55,7 +85,7 @@ https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/mis
 
 The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in a few senses:
 
-* usage of `useSWR` even for data that is already pre-rendered. Presumably this is to give some kind of pool based realtime support? But that is not what other implementations do, and neither should we. We don't want data to update by surprise under a user's feet.
+* usage of `useSWR` even for data that can be already pre-rendered by Next.js such are articles. Presumably this is to give some kind of pool based realtime support? But that is not what other implementations do, and neither should we. We don't want data to update by surprise under a user's feet.
 * uses custom https://github.com/emotion-js/emotion[emotion-js] CSS in addition to the global http://demo.productionready.io/main.css[], which is also required.
 +
 While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.

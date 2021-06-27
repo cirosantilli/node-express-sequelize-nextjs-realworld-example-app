@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import React, { useMemo, useEffect } from "react";
+import React from "react";
 import useSWR from "swr";
 
 import ArticlePreview from "components/article/ArticlePreview";
@@ -56,7 +56,7 @@ const ArticleList = () => {
     }
   };
 
-  let fetchURL = useMemo(() => getFetchURL(), [
+  let fetchURL = React.useMemo(() => getFetchURL(), [
     favorite,
     page,
     tag,
@@ -69,7 +69,7 @@ const ArticleList = () => {
     articlesCount: 0,
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     setPageCount(articlesCount);
   }, [articlesCount]);
 

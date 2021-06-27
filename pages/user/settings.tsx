@@ -6,27 +6,20 @@ import SettingsForm from "../../components/profile/SettingsForm";
 import checkLogin from "../../lib/utils/checkLogin";
 import storage from "../../lib/utils/storage";
 
-const Settings = ({ res }) => {
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
-
-  if (!isLoggedIn) {
-    if (res) {
-      res.writeHead(302, {
-        Location: "/",
-      });
-      res.end();
+const Settings = () => {
+  React.useEffect(async () => {
+    const currentUser = await storage("user")
+    const isLoggedIn = checkLogin(currentUser);
+    if (!isLoggedIn) {
+      Router.push(`/`);
     }
-    Router.push(`/`);
-  }
-
+  })
   const handleLogout = async (e) => {
     e.preventDefault();
     window.localStorage.removeItem("user");
     mutate("user", null);
     Router.push(`/`).then(() => trigger("user"));
   };
-
   return (
     <div className="settings-page">
       <div className="container page">
@@ -43,12 +36,6 @@ const Settings = ({ res }) => {
       </div>
     </div>
   );
-};
-
-Settings.getInitialProps = async ({ res }) => {
-  return {
-    res,
-  };
 };
 
 export default Settings;

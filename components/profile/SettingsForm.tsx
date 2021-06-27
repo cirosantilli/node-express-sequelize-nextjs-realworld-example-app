@@ -19,10 +19,9 @@ const SettingsForm = () => {
     password: "",
   });
 
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
-
-  React.useEffect(() => {
+  React.useEffect(async () => {
+    const currentUser = await storage("user")
+    const isLoggedIn = checkLogin(currentUser);
     if (!isLoggedIn) return;
     setUserInfo({ ...userInfo, ...currentUser });
   }, []);
