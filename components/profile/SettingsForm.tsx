@@ -23,7 +23,7 @@ const SettingsForm = () => {
   React.useEffect(() => {
     if (!isLoggedIn) return;
     setUserInfo({ ...userInfo, ...currentUser });
-  }, []);
+  }, [currentUser]);
   const updateState = (field) => (e) => {
     const state = userInfo;
     const newState = { ...state, [field]: e.target.value };
@@ -51,9 +51,12 @@ const SettingsForm = () => {
       setErrors(data.errors.body);
     }
     if (data?.user) {
+      if (data.user?.image) {
+        data.user.effectiveImage = data.user.image;
+      }
       window.localStorage.setItem("user", JSON.stringify(data.user));
       mutate("user", data.user);
-      Router.push(`/`);
+      Router.push(`/profile/${user.username}`);
     }
   };
   return (
