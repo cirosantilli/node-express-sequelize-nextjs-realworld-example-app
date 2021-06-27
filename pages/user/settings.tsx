@@ -2,9 +2,9 @@ import Router from "next/router";
 import React from "react";
 import useSWR, { mutate, trigger } from "swr";
 
-import SettingsForm from "../../components/profile/SettingsForm";
-import checkLogin from "../../lib/utils/checkLogin";
-import storage from "../../lib/utils/storage";
+import SettingsForm from "components/common/profile/SettingsForm";
+import checkLogin from "lib/utils/checkLogin";
+import storage from "lib/utils/storage";
 
 const Settings = () => {
   React.useEffect(async () => {

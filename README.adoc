@@ -41,6 +41,20 @@ Running `next build` is one very important test of the code, as it builds many o
 
 We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
 
+== ISR vs SSR
+
+ISR is very tempting, but is has some possibly drawbacks. Part of the goal of this repository is to decide if it is worth already or not.
+
+With ISR, we want article contents and user pages to load instantly from a prerendered cache, as if the user were logged out.
+
+Only after that will login-specific details be filled in by client JavaScript requests, e.g. "have I starred/favorited this article or not".
+
+This could lead to amazing article loading performance.
+
+The downside of that is that the user could see a two stage approach which is annoying, especially if there is no clear indication (first download, then wait, then if updates with personal details). This could be made even better by caching things client side, and `userSWR` which we already using likely makes that transparent, so there is hope. Even more amazing would be if it could cache across requests, e.g. from index page to an article! One day, one day, maybe with GraphQL.
+
+Another big ISR limitation is that you can't force a one-off immediate page update after the user edits a post, a manual refresh is generally needed: https://github.com/vercel/next.js/discussions/25677
+
 == TODO
 
 === Single URL with multiple pages

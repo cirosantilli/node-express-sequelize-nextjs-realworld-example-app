@@ -27,7 +27,7 @@ const ArticleMeta = ({ article }) => {
         >
           {article.author?.username}
         </CustomLink>
-        <span class="date">{formatDate(article.createdAt)}</span>
+        <span className="date">{formatDate(article.createdAt)}</span>
       </div>
       <ArticleActions article={article} />
     </div>

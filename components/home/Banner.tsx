@@ -1,6 +1,6 @@
 import React from "react";
 
-import { APP_NAME } from "../../lib/utils/constant";
+import { APP_NAME } from "lib/utils/constant";
 
 const Banner = () => (
   <div className="banner">

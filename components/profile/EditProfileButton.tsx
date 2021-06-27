@@ -1,7 +1,7 @@
 import React from "react";
 
-import CustomLink from "../common/CustomLink";
-import Maybe from "../common/Maybe";
+import CustomLink from "components/common/CustomLink";
+import Maybe from "components/common/Maybe";
 
 interface EditProfileButtonProps {
   isUser: boolean;

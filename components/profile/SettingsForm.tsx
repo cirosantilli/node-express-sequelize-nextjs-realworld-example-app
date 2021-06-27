@@ -3,10 +3,10 @@ import Router from "next/router";
 import React from "react";
 import useSWR, { mutate } from "swr";
 
-import ListErrors from "../common/ListErrors";
-import checkLogin from "../../lib/utils/checkLogin";
-import { SERVER_BASE_URL } from "../../lib/utils/constant";
-import storage from "../../lib/utils/storage";
+import ListErrors from "components/common/ListErrors";
+import checkLogin from "lib/utils/checkLogin";
+import { SERVER_BASE_URL } from "lib/utils/constant";
+import storage from "lib/utils/storage";
 
 const SettingsForm = () => {
   const [isLoading, setLoading] = React.useState(false);

@@ -2,11 +2,11 @@ import Router, { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 
-import ListErrors from "../../components/common/ListErrors";
-import TagInput from "../../components/editor/TagInput";
-import ArticleAPI from "../../lib/api/article";
-import { SERVER_BASE_URL } from "../../lib/utils/constant";
-import storage from "../../lib/utils/storage";
+import ListErrors from "components/common/ListErrors";
+import TagInput from "components/common/editor/TagInput";
+import ArticleAPI from "lib/api/article";
+import { SERVER_BASE_URL } from "lib/utils/constant";
+import storage from "lib/utils/storage";
 
 function editorReducer(state, action) {
   switch (action.type) {
