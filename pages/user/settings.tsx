@@ -2,17 +2,18 @@ import Router from "next/router";
 import React from "react";
 import useSWR, { mutate, trigger } from "swr";
 
-import SettingsForm from "components/common/profile/SettingsForm";
+import SettingsForm from "components/profile/SettingsForm";
 import checkLogin from "lib/utils/checkLogin";
 import storage from "lib/utils/storage";
 
 const Settings = () => {
-  React.useEffect(async () => {
-    const currentUser = await storage("user")
-    const isLoggedIn = checkLogin(currentUser);
-    if (!isLoggedIn) {
-      Router.push(`/`);
-    }
+  React.useEffect(() => {
+    storage("user").then(currentUser => {
+      const isLoggedIn = checkLogin(currentUser);
+      if (!isLoggedIn) {
+        Router.push(`/`);
+      }
+    })
   })
   const handleLogout = async (e) => {
     e.preventDefault();

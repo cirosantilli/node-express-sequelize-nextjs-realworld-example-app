@@ -1,3 +1,3 @@
-import makeArticleEditor from "components/common/editor/ArticleEditor";
+import makeArticleEditor from "components/editor/ArticleEditor";
 
 export default makeArticleEditor(true);

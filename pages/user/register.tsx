@@ -2,7 +2,7 @@ import Head from "next/head";
 import React from "react";
 
 import CustomLink from "components/common/CustomLink";
-import RegisterForm from "components/common/profile/RegisterForm";
+import RegisterForm from "components/profile/RegisterForm";
 
 const Register = () => (
   <>
