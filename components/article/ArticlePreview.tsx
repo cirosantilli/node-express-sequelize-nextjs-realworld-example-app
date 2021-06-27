@@ -69,7 +69,6 @@ const ArticlePreview = ({ article }) => {
   };
 
   if (!article) return;
-
   return (
     <div className="article-preview" style={{ padding: "1.5rem 0.5rem" }}>
       <div className="article-meta">
@@ -82,7 +81,6 @@ const ArticlePreview = ({ article }) => {
             alt="author's profile image"
           />
         </CustomLink>
-
         <div className="info">
           <CustomLink
             href="/profile/[pid]"
@@ -95,7 +93,6 @@ const ArticlePreview = ({ article }) => {
             {formatDate(preview.createdAt)}
           </span>
         </div>
-
         <div className="pull-xs-right">
           <button
             className={
@@ -107,7 +104,6 @@ const ArticlePreview = ({ article }) => {
           </button>
         </div>
       </div>
-
       <CustomLink
         href="/article/[pid]"
         as={`/article/${preview.slug}`}

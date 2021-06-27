@@ -19,63 +19,6 @@ interface ArticlePageProps {
   pid: string;
 }
 
-const ArticleInfoContainer = styled("div")`
-  color: #fff;
-  background: #333;
-  margin-bottom: 2rem;
-  padding: 2rem 0;
-`;
-
-const ArticleInfoPresenter = styled("div")`
-  margin: 0 auto;
-  padding: 0 15px;
-
-  @media (min-width: 544px) {
-    max-width: 576px;
-  }
-
-  @media (min-width: 768px) {
-    max-width: 720px;
-  }
-
-  @media (min-width: 992px) {
-    max-width: 940px;
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1140px;
-  }
-`;
-
-const ArticleTitle = styled("h1")`
-  margin: 0;
-  font-size: 2.8rem;
-  font-weight: 600;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  line-height: 1.1;
-`;
-
-const ArticleContentContainer = styled("div")`
-  margin: 1.5rem auto 0;
-  padding: 0 15px;
-
-  @media (min-width: 544px) {
-    max-width: 576px;
-  }
-
-  @media (min-width: 768px) {
-    max-width: 720px;
-  }
-
-  @media (min-width: 992px) {
-    max-width: 940px;
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1140px;
-  }
-`;
-
 const ArticleContentPresenter = styled("div")`
   position: relative;
   display: flex;
@@ -85,10 +28,6 @@ const ArticleContentPresenter = styled("div")`
   min-height: 1px;
   margin: 0 -15px;
   padding: 0 15px;
-`;
-
-const ArticleContent = styled("div")`
-  width: 100%;
 `;
 
 const ArticleTagList = styled("ul")`
@@ -157,21 +96,23 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   const markup = { __html: marked(article.body) };
   return (
     <div className="article-page">
-      <ArticleInfoContainer>
-        <ArticleInfoPresenter>
-          <ArticleTitle>{article.title}</ArticleTitle>
+      <div className="banner">
+        <div className="container">
+          <h1>{article.title}</h1>
           <ArticleMeta article={article} />
-        </ArticleInfoPresenter>
-      </ArticleInfoContainer>
-      <ArticleContentContainer>
-        <ArticleContentPresenter className="article-content">
-          <ArticleContent dangerouslySetInnerHTML={markup} />
-          <ArticleTagList>
-            {article.tagList?.map((tag) => (
-              <ArticleTagItem key={tag}>{tag}</ArticleTagItem>
-            ))}
-          </ArticleTagList>
-        </ArticleContentPresenter>
+        </div>
+      </div>
+      <div className="container page">
+        <div className="row article-content">
+          <div className="col-md-12">
+            <div dangerouslySetInnerHTML={markup} />
+            <ArticleTagList>
+              {article.tagList?.map((tag) => (
+                <ArticleTagItem key={tag}>{tag}</ArticleTagItem>
+              ))}
+            </ArticleTagList>
+          </div>
+        </div>
         <Divider />
         <ArticleActions />
         <CommentListContainer>
@@ -182,12 +123,12 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
             ))}
           </CommentListPresenter>
         </CommentListContainer>
-      </ArticleContentContainer>
+      </div>
     </div>
   );
 };
 
-// Server
+// Server only.
 
 import { getStaticPathsArticle, getStaticPropsArticle } from "lib/article";
 const configModule = require("../../config");
