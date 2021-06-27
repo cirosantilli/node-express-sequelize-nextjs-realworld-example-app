@@ -43,6 +43,17 @@ We are not sure if Next.js ISR can be deployed reliably due to the ephemeral fil
 
 == TODO
 
+=== Single URL with multiple pages
+
+We don't know how to have multiple pages under a single URL in Next.js nicely. This is needed for tab navigation e.g. under `/` "Your Feed" vs "Global Feed", and for pagination:
+
+* https://stackoverflow.com/questions/62628685/static-pagination-in-nextjs
+* https://stackoverflow.com/questions/65471275/material-ui-tabs-with-nextjs
+
+Note however that such functionality also makes it impossible to access those pages without JavaScript, therefore one of the main points of React, which is SEO without the need for JavaScript. Therefore maybe it doesn't matter much.
+
+`reck1ess` original implementation works around this by just fetching from the API and rendering, like a regular non-Next React app would.
+
 === Personal user data in `/user/settings`
 
 `reck1ess` was using a mixture of SSR and client side redirects.
@@ -62,17 +73,6 @@ Also this is a very specific case of personal user data, so it doesn't reflect t
 
 Instead, we should handle `/user/settings` from Next.js server side, notably check JWT token there and 401 if not logged in.
 
-=== Single URL with multiple pages
-
-We don't know how to have multiple pages under a single URL in Next.js nicely. This is needed for tab navigation e.g. under `/` "Your Feed" vs "Global Feed", and for pagination:
-
-* https://stackoverflow.com/questions/62628685/static-pagination-in-nextjs
-* https://stackoverflow.com/questions/65471275/material-ui-tabs-with-nextjs
-
-Note however that such functionality also makes it impossible to access those pages without JavaScript, therefore one of the main points of React, which is SEO without the need for JavaScript.
-
-`reck1ess` original implementation works around this by just fetching from the API and rendering, like a regular non-Next React app would.
-
 === TODO security
 
 Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
@@ -85,7 +85,7 @@ https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/mis
 
 The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in a few senses:
 
-* usage of `useSWR` even for data that can be already pre-rendered by Next.js such are articles. Presumably this is to give some kind of pool based realtime support? But that is not what other implementations do, and neither should we. We don't want data to update by surprise under a user's feet.
+* usage of `useSWR` even for data that can be already pre-rendered by Next.js such are articles. Presumably this is to give some kind of pool based realtime support? Or maybe it is just part of a workaround for the problem described at <<single-url-with-multiple-pages>>. But that is not what other implementations do, and neither should we. We don't want data to update by surprise under a user's feet.
 * uses custom https://github.com/emotion-js/emotion[emotion-js] CSS in addition to the global http://demo.productionready.io/main.css[], which is also required.
 +
 While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.
@@ -101,5 +101,7 @@ It is also very annoying that they used separated defined components rather than
 ....
 +
 which leads to a much easier to read DOM tree, and less identifiers flying everywhere.
++
+It must be said that the port to emotion was made in a way that closely mimicks the original class/CSS structure. But still, it is just too much work, and mistakes popped up inevitably.
 
-These are all poinst that we have or would like to address in this fork.
+These are all points that we have or would like to address in this fork.
