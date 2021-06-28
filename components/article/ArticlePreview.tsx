@@ -9,13 +9,10 @@ import { formatDate } from "lib/utils/date";
 
 const ArticlePreview = ({ article }) => {
   const setPage = usePageDispatch();
-  const [preview, setPreview] = React.useState(article);
+  const preview = article;
   const [hover, setHover] = React.useState(false);
   const [currentIndex, setCurrentIndex] = React.useState(-1);
   if (!article) return;
-  React.useEffect(() => {
-    setPreview(article);
-  }, [article])
   return (
     <div className="article-preview" style={{ padding: "1.5rem 0.5rem" }}>
       <div className="article-meta">
