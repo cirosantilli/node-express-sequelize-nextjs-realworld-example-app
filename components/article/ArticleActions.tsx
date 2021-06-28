@@ -3,6 +3,7 @@ import React from "react";
 import useSWR, { trigger } from "swr";
 
 import FavoriteArticleButton from "components/common/FavoriteArticleButton";
+import FollowUserButton from "components/profile/FollowUserButton";
 import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
 import checkLogin from "lib/utils/checkLogin";
