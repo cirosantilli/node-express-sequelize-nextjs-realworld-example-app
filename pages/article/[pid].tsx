@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import marked from "marked";
 import React from "react";
 import { useRouter } from 'next/router'
-import useSWR, { trigger } from "swr";
+import useSWR  from "swr";
 
 import ArticleMeta from "components/article/ArticleMeta";
 import Comment from "components/comment/Comment";
@@ -91,13 +91,10 @@ const CommentListPresenter = styled("div")`
 
 const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   const router = useRouter();
-  if (router.isFallback) {
-    return <LoadingSpinner />;
-  }
-  const { data: articleLoggedInData, error } = useSWR(`${SERVER_BASE_URL}/articles/${article.slug}`, fetcher);
-  let articleLoggedIn;
-  if (articleLoggedInData !== undefined) {
-    articleLoggedIn = articleLoggedInData.article
+  if (router.isFallback) { return <LoadingSpinner />; }
+  const { data: articleApi, error } = useSWR(`${SERVER_BASE_URL}/articles/${article.slug}`, fetcher);
+  if (articleApi !== undefined) {
+    article = articleApi.article
   }
   const markup = { __html: marked(article.body) };
   return (
@@ -105,7 +102,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
       <div className="banner">
         <div className="container">
           <h1>{article.title}</h1>
-          <ArticleMeta article={article} articleLoggedIn={articleLoggedIn} />
+          <ArticleMeta article={article}/>
         </div>
       </div>
       <div className="container page">

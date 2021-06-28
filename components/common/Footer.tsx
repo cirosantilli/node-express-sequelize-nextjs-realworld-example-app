@@ -1,4 +1,6 @@
 import styled from "@emotion/styled";
+
+import CustomLink from "components/common/CustomLink";
 import React from "react";
 
 const FooterContainer = styled("footer")``;
@@ -26,8 +28,6 @@ const FooterPresenter = styled("div")`
   }
 `;
 
-const Logo = styled("a")``;
-
 const Attribution = styled("span")`
   vertical-align: middle;
   margin-left: 10px;
@@ -41,11 +41,12 @@ const Link = styled("a")``;
 const Footer = () => (
   <FooterContainer>
     <FooterPresenter>
-      <Logo href="/">conduit</Logo>
+      <CustomLink href="/" className="logo-font">
+        conduit
+      </CustomLink>
       <Attribution>
-        An interactive learning project from{" "}
-        <Link href="https://thinkster.io">Thinkster</Link>. Code &amp; design
-        licensed under MIT.
+        {" "}© 2021. An interactive learning project from{" "}
+        <Link href="https://thinkster.io">Thinkster</Link>. Code licensed under MIT.
       </Attribution>
     </FooterPresenter>
   </FooterContainer>

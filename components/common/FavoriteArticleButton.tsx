@@ -67,9 +67,7 @@ const FavoriteArticleButton = (props) => {
       }
       onClick={() => handleClickFavorite()}
     >
-      <i className="ion-heart" />{props.showText ? ' ' : ''}{buttonText} <span className="counter">
-        {props.showText ? '(' : ''}{favoritesCount}{props.showText ? ')' : ''}
-      </span>
+      <i className="ion-heart" />{props.showText ? ' ' : ''}{buttonText} {props.showText ? '(' : ''}{favoritesCount}{props.showText ? ')' : ''}
     </button>
   )
 }

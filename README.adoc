@@ -16,6 +16,8 @@ The design goals are similar to https://dev.to/givehug/next-js-apollo-client-and
 
 Due to ISR/SSR, the entire website should look exactly the same with and without JavaScript for a logged out user.
 
+We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel, and have the exact same DOM tree.
+
 == Local development with SQLite
 
 ....
@@ -55,7 +57,11 @@ The downside of that is that the user could see a two stage approach which is an
 
 Another big ISR limitation is that you can't force a one-off immediate page update after the user edits a post, a manual refresh is generally needed: https://github.com/vercel/next.js/discussions/25677
 
-Our organizational principle is that all logged-in API data will be fetched from the toplevel element of each page and passed down. This data will correspond exactly to the static prerendered data, but with the user logged in.
+Our organizational principle is that all logged-in API data will be fetched from the toplevel element of each page. It will have the exact same form as the static rendering props, which come directly from the database during build rather than indirectly the API.
+
+This data will correspond exactly to the static prerendered data, but with the user logged in. It will then simply replace the static rendered logged out version, and trigger a re-render.
+
+This approach feels simple enough that it could even be automated in a framework manner. One day, one day.
 
 It is true that the pass-down approach goes a bit against the phylosophy of `useSWR`, but there isn't much we can do, e.g. `/` fetches all articles with `/api/articles`, and determines favorite states of multiple posts. Therefore, we if hardcoded `useSWR` for the article under `FavoriteArticleButton`, that would fetch the states from each article separately `/api/articles/[slug]`. We want that to happen on single article inspection however.
 

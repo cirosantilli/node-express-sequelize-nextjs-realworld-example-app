@@ -11,7 +11,7 @@ import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import storage from "lib/utils/storage";
 
-const ArticleActions = ({ article, articleLoggedIn }) => {
+const ArticleActions = ({ article }) => {
   const { data: currentUser } = useSWR("user", storage);
   const isLoggedIn = checkLogin(currentUser);
   const router = useRouter();
@@ -28,12 +28,11 @@ const ArticleActions = ({ article, articleLoggedIn }) => {
   };
   const canModify =
     isLoggedIn && currentUser?.username === article?.author?.username;
-  const favorited = articleLoggedIn?.favorited;
   return (
     <>
       <Maybe test={isLoggedIn}>
         <FavoriteArticleButton
-          favorited={favorited}
+          favorited={article.favorited}
           favoritesCount={article.favoritesCount}
           slug={article.slug}
           showText={true}

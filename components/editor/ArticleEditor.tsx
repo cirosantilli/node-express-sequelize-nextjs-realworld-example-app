@@ -115,9 +115,9 @@ export default function makeArticleEditor(isnew: boolean = false) {
                   </fieldset>
                   <fieldset className="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      className="form-control"
                       type="text"
-                      placeholder="Article Description"
+                      placeholder="What's this article about?"
                       value={posting.description}
                       onChange={handleDescription}
                     />
@@ -126,7 +126,7 @@ export default function makeArticleEditor(isnew: boolean = false) {
                     <textarea
                       className="form-control"
                       rows={8}
-                      placeholder="Write your article (in Cirodown)"
+                      placeholder="Write your article (in markdown)"
                       value={posting.body}
                       onChange={handleBody}
                     />

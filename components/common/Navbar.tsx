@@ -36,13 +36,13 @@ const Navbar = () => {
           </NavbarItem>
           <Maybe test={isLoggedIn}>
             <NavbarItem>
-              <NavLink href="/editor/new" as="/editor/new">
+              <NavLink href="/editor" as="/editor">
                 <i className="ion-compose" />
                 &nbsp;New Article
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href="/user/settings" as="/user/settings">
+              <NavLink href="/settings" as="/settings">
                 <i className="ion-gear-a" />
                 &nbsp;Settings
               </NavLink>

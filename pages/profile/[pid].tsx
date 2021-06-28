@@ -19,34 +19,35 @@ import storage from "lib/utils/storage";
 
 const Profile = ({ profile }) => {
   const router = useRouter();
-  if (router.isFallback) {
-    return <LoadingSpinner />;
+  if (router.isFallback) { return <LoadingSpinner />; }
+  const { data: profileApi, error } = useSWR(`${SERVER_BASE_URL}/profiles/${profile.username}`, fetcher);
+  if (profileApi !== undefined) {
+    profile = profileApi.profile
   }
   const setPage = usePageDispatch();
-  const {
-    query: { pid },
-  } = router;
+  const { query: { pid } } = router;
   const { username, bio, image, following } = profile;
   const { data: currentUser } = useSWR("user", storage);
   const isLoggedIn = checkLogin(currentUser);
   const isUser = currentUser && username === currentUser?.username;
   const handleFollow = async () => {
+    // This is what makes the render re-trigger and changes button state.
     mutate(
       `${SERVER_BASE_URL}/profiles/${pid}`,
       { profile: { ...profile, following: true } },
+      // No need to actually fetch the updated value from the server,
+      // we can just calculate it locally from the user's action.
       false
     );
-    UserAPI.follow(pid);
-    trigger(`${SERVER_BASE_URL}/profiles/${pid}`);
+    await UserAPI.follow(pid);
   };
   const handleUnfollow = async () => {
     mutate(
       `${SERVER_BASE_URL}/profiles/${pid}`,
-      { profile: { ...profile, following: true } },
-      true
+      { profile: { ...profile, following: false } },
+      false
     );
-    UserAPI.unfollow(pid);
-    trigger(`${SERVER_BASE_URL}/profiles/${pid}`);
+    await UserAPI.unfollow(pid);
   };
   return (
     <div className="profile-page">
@@ -85,7 +86,7 @@ const Profile = ({ profile }) => {
                     href="/profile/[pid]"
                     as={`/profile/${encodeURIComponent(username)}`}
                   >
-                    <span onClick={() => setPage(0)}>My Articles</span>
+                    <span onClick={() => setPage(0)}>My Posts</span>
                   </NavLink>
                 </li>
                 <li className="nav-item">
@@ -93,7 +94,7 @@ const Profile = ({ profile }) => {
                     href="/profile/[pid]?favorite=true"
                     as={`/profile/${encodeURIComponent(username)}?favorite=true`}
                   >
-                    <span onClick={() => setPage(0)}>Favorited Articles</span>
+                    <span onClick={() => setPage(0)}>Favorited Posts</span>
                   </NavLink>
                 </li>
               </ul>

@@ -14,7 +14,7 @@ const ArticlePreview = ({ article }) => {
   const [currentIndex, setCurrentIndex] = React.useState(-1);
   if (!article) return;
   return (
-    <div className="article-preview" style={{ padding: "1.5rem 0.5rem" }}>
+    <div className="article-preview">
       <div className="article-meta">
         <CustomLink
           href="/profile/[pid]"
@@ -52,7 +52,7 @@ const ArticlePreview = ({ article }) => {
         <h1>{preview.title}</h1>
         <p>{preview.description}</p>
         <span>Read more...</span>
-        <ul className="tag-list" style={{ maxWidth: "100%" }}>
+        <ul className="tag-list">
           {preview.tagList.map((tag, index) => {
             return (
               <Link href={`/?tag=${tag}`} as={`/?tag=${tag}`} key={index}>
@@ -67,20 +67,8 @@ const ArticlePreview = ({ article }) => {
                     setHover(false);
                     setCurrentIndex(-1);
                   }}
-                  style={{
-                    borderColor:
-                      hover && currentIndex === index ? "#5cb85c" : "initial",
-                  }}
                 >
-                  <span
-                    style={{
-                      color:
-                        hover && currentIndex === index ? "#5cb85c" : "inherit",
-                    }}
-                    onClick={() => setPage(0)}
-                  >
-                    {tag}
-                  </span>
+                  {tag}
                 </li>
               </Link>
             );

@@ -6,7 +6,7 @@ import CustomImage from "components/common/CustomImage";
 import CustomLink from "components/common/CustomLink";
 import { formatDate } from "lib/utils/date";
 
-const ArticleMeta = ({ article, articleLoggedIn }) => {
+const ArticleMeta = ({ article }) => {
   if (!article) return;
   return (
     <div className="article-meta">
@@ -29,7 +29,7 @@ const ArticleMeta = ({ article, articleLoggedIn }) => {
         </CustomLink>
         <span className="date">{formatDate(article.createdAt)}</span>
       </div>
-      <ArticleActions article={article} articleLoggedIn={articleLoggedIn} />
+      <ArticleActions article={article} />
     </div>
   );
 };
