@@ -2,16 +2,17 @@ import styled from "@emotion/styled";
 import marked from "marked";
 import React from "react";
 import { useRouter } from 'next/router'
-import fetcher from "lib/utils/fetcher";
+import useSWR, { trigger } from "swr";
 
 import ArticleMeta from "components/article/ArticleMeta";
 import Comment from "components/comment/Comment";
 import CommentInput from "components/comment/CommentInput";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import ArticleAPI from "lib/api/article";
-import { SERVER_BASE_URL } from "lib/utils/constant";
 import { ArticleType } from "lib/types/articleType";
 import { CommentType } from "lib/types/commentType";
+import { SERVER_BASE_URL } from "lib/utils/constant";
+import fetcher from "lib/utils/fetcher";
 
 interface ArticlePageProps {
   article: ArticleType;
@@ -93,13 +94,18 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   if (router.isFallback) {
     return <LoadingSpinner />;
   }
+  const { data: articleLoggedInData, error } = useSWR(`${SERVER_BASE_URL}/articles/${article.slug}`, fetcher);
+  let articleLoggedIn;
+  if (articleLoggedInData !== undefined) {
+    articleLoggedIn = articleLoggedInData.article
+  }
   const markup = { __html: marked(article.body) };
   return (
     <div className="article-page">
       <div className="banner">
         <div className="container">
           <h1>{article.title}</h1>
-          <ArticleMeta article={article} />
+          <ArticleMeta article={article} articleLoggedIn={articleLoggedIn} />
         </div>
       </div>
       <div className="container page">

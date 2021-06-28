@@ -16,19 +16,15 @@ const IndexPageContainer = styled("div")``;
 const IndexPagePresenter = styled("div")`
   margin: 1.5rem auto 0;
   padding: 0 15px;
-
   @media (min-width: 544px) {
     max-width: 576px;
   }
-
   @media (min-width: 768px) {
     max-width: 720px;
   }
-
   @media (min-width: 992px) {
     max-width: 940px;
   }
-
   @media (min-width: 1200px) {
     max-width: 1140px;
   }

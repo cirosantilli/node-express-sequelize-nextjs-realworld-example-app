@@ -47,7 +47,7 @@ ISR is very tempting, but is has some possibly drawbacks. Part of the goal of th
 
 With ISR, we want article contents and user pages to load instantly from a prerendered cache, as if the user were logged out.
 
-Only after that will login-specific details be filled in by client JavaScript requests, e.g. "have I starred/favorited this article or not".
+Only after that will login-specific details be filled in by client JavaScript requests to the backend API, e.g. "have I starred/favorited this article or not".
 
 This could lead to amazing article loading performance.
 

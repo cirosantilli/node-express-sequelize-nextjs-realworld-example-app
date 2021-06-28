@@ -12,10 +12,8 @@ const Tags = () => {
   const setPage = usePageDispatch();
   const handleClick = React.useCallback(() => setPage(0), []);
   const { data, error } = useSWR(`${SERVER_BASE_URL}/tags`, fetcher);
-
   if (error) return <ErrorMessage message="Cannot load popular tags..." />;
   if (!data) return <LoadingSpinner />;
-
   const { tags } = data;
   return (
     <div className="tag-list">

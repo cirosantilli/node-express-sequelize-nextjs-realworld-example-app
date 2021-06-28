@@ -27,12 +27,10 @@ const ArticleList = () => {
   const setPageCount = usePageCountDispatch();
   const lastIndex =
     pageCount > 480 ? Math.ceil(pageCount / 20) : Math.ceil(pageCount / 20) - 1;
-
   const router = useRouter();
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
   const isProfilePage = pathname.startsWith(`/profile`);
-
   const getFetchURL = () => {
     switch (true) {
       case !!tag:
@@ -55,37 +53,30 @@ const ArticleList = () => {
         return `${SERVER_BASE_URL}/articles?offset=${page * DEFAULT_LIMIT}`;
     }
   };
-
   let fetchURL = React.useMemo(() => getFetchURL(), [
     favorite,
     page,
     tag,
     isProfilePage,
   ]);
-
   const { data, error } = useSWR(fetchURL, fetcher);
   const { articles, articlesCount } = data || {
     articles: [],
     articlesCount: 0,
   };
-
   React.useEffect(() => {
     setPageCount(articlesCount);
   }, [articlesCount]);
-
   if (error) return <ErrorMessage message="Cannot load recent articles..." />;
   if (!data) return <LoadingSpinner />;
-
   if (articles?.length === 0) {
     return <EmptyMessage>No articles are here... yet.</EmptyMessage>;
   }
-
   return (
     <>
       {articles?.map((article) => (
         <ArticlePreview key={article.slug} article={article} />
       ))}
-
       <Maybe test={articlesCount && articlesCount > 20}>
         <Pagination
           total={pageCount}

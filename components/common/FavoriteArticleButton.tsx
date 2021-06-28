@@ -15,7 +15,21 @@ const FavoriteArticleButton = (props) => {
   const isLoggedIn = checkLogin(currentUser);
   const [favorited, setFavorited] = React.useState(props.favorited);
   const [favoritesCount, setFavoritesCount] = React.useState(props.favoritesCount);
-  const hasChildren = props.children !== undefined;
+  React.useEffect(() => {
+    setFavorited(props.favorited);
+    setFavoritesCount(props.favoritesCount);
+  }, [props.favorited, props.favoritesCount])
+  let buttonText;
+  if (props.showText) {
+    if (favorited) {
+      buttonText = 'Unfavorite'
+    } else {
+      buttonText = 'Favorite'
+    }
+    buttonText += ' Article'
+  } else {
+    buttonText = ''
+  }
   const handleClickFavorite = async () => {
     if (!isLoggedIn) {
       Router.push(`/user/login`);
@@ -53,8 +67,8 @@ const FavoriteArticleButton = (props) => {
       }
       onClick={() => handleClickFavorite()}
     >
-      <i className="ion-heart" />{hasChildren ? ' ' : ''}{props.children} <span className="counter">
-        {hasChildren ? '(' : ''}{favoritesCount}{hasChildren ? ')' : ''}
+      <i className="ion-heart" />{props.showText ? ' ' : ''}{buttonText} <span className="counter">
+        {props.showText ? '(' : ''}{favoritesCount}{props.showText ? ')' : ''}
       </span>
     </button>
   )
