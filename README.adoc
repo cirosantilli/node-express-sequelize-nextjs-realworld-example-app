@@ -47,13 +47,17 @@ ISR is very tempting, but is has some possibly drawbacks. Part of the goal of th
 
 With ISR, we want article contents and user pages to load instantly from a prerendered cache, as if the user were logged out.
 
-Only after that will login-specific details be filled in by client JavaScript requests to the backend API, e.g. "have I starred/favorited this article or not". Our organizational principle is that all logged-in API data will be fetched from the toplevel element of each page and passed down.
+Only after that will login-specific details be filled in by client JavaScript requests to the backend API, e.g. "have I starred/favorited this article or not".
 
-This could lead to amazing article loading performance.
+This could lead to amazing article text loading performance, since this is the same for all users and can be efficiently cached.
 
 The downside of that is that the user could see a two stage approach which is annoying, especially if there is no clear indication (first download, then wait, then if updates with personal details). This could be made even better by caching things client side, and `userSWR` which we already using likely makes that transparent, so there is hope. Even more amazing would be if it could cache across requests, e.g. from index page to an article! One day, one day, maybe with GraphQL.
 
 Another big ISR limitation is that you can't force a one-off immediate page update after the user edits a post, a manual refresh is generally needed: https://github.com/vercel/next.js/discussions/25677
+
+Our organizational principle is that all logged-in API data will be fetched from the toplevel element of each page and passed down. This data will correspond exactly to the static prerendered data, but with the user logged in.
+
+It is true that the pass-down approach goes a bit against the phylosophy of `useSWR`, but there isn't much we can do, e.g. `/` fetches all articles with `/api/articles`, and determines favorite states of multiple posts. Therefore, we if hardcoded `useSWR` for the article under `FavoriteArticleButton`, that would fetch the states from each article separately `/api/articles/[slug]`. We want that to happen on single article inspection however.
 
 == TODO
 
