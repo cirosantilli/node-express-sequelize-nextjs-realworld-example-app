@@ -78,6 +78,10 @@ const SidebarTitle = styled("p")`
 const IndexPage = () => {
   const { data: currentUser } = useSWR("user", storage);
   const isLoggedIn = checkLogin(currentUser);
+  const [tab, setTab] = React.useState(isLoggedIn ? 'feed' : 'global')
+  React.useEffect(() => {
+    setTab(isLoggedIn ? 'feed' : 'global')
+  }, [isLoggedIn])
   return (
     <>
       <Head>
@@ -95,9 +99,9 @@ const IndexPage = () => {
           <MainContent>
             <ContentContainer>
               <FeedToggle>
-                <TabList />
+                <TabList tab={tab} setTab={setTab} />
               </FeedToggle>
-              <ArticleList />
+              <ArticleList what={tab}/>
             </ContentContainer>
             <SidebarContainer>
               <SidebarPresenter>

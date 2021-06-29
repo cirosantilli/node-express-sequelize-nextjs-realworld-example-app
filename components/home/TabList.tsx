@@ -4,27 +4,24 @@ import useSWR from "swr";
 
 import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
-import NavLink from "components/common/NavLink";
 import checkLogin from "lib/utils/checkLogin";
 import storage from "lib/utils/storage";
 
-const TabList = () => {
+const TabList = ({tab, setTab}) => {
   const { data: currentUser } = useSWR("user", storage);
   const isLoggedIn = checkLogin(currentUser);
   const router = useRouter();
   const {
     query: { tag },
   } = router;
-
   if (!isLoggedIn) {
     return (
       <ul className="nav nav-pills outline-active">
         <li className="nav-item">
-          <NavLink href="/" as="/">
+          <CustomLink className="nav-link" href="/" as="/">
             Global Feed
-          </NavLink>
+          </CustomLink>
         </li>
-
         <Maybe test={!!tag}>
           <li className="nav-item">
             <CustomLink
@@ -39,24 +36,30 @@ const TabList = () => {
       </ul>
     );
   }
-
   return (
     <ul className="nav nav-pills outline-active">
       <li className="nav-item">
-        <NavLink
-          href={`/?follow=${currentUser?.username}`}
-          as={`/?follow=${currentUser?.username}`}
+        <CustomLink
+          className={`nav-link${tab === 'feed' ? ' active' : ''}`}
+          href="/"
+          as="/"
+          onClick={() => {setTab('feed')}}
         >
           Your Feed
-        </NavLink>
+        </CustomLink>
       </li>
-
       <li className="nav-item">
-        <NavLink href="/" as="/">
+        <CustomLink
+          className={`nav-link${tab === 'global' ? ' active' : ''}`}
+          href="/"
+          as="/"
+          onClick={() => {
+            setTab('global')
+          }}
+        >
           Global Feed
-        </NavLink>
+        </CustomLink>
       </li>
-
       <Maybe test={!!tag}>
         <li className="nav-item">
           <CustomLink

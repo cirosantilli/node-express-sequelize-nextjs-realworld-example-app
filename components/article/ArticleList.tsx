@@ -21,7 +21,7 @@ const EmptyMessage = styled("div")`
   padding: 1.5rem 0;
 `;
 
-const ArticleList = () => {
+const ArticleList = (props) => {
   const page = usePageState();
   const pageCount = usePageCountState();
   const setPageCount = usePageCountDispatch();
@@ -31,7 +31,7 @@ const ArticleList = () => {
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
   const isProfilePage = pathname.startsWith(`/profile`);
-  const getFetchURL = () => {
+  let fetchURL = (() => {
     switch (true) {
       case !!tag:
         return `${SERVER_BASE_URL}/articles${asPath}&offset=${
@@ -45,20 +45,14 @@ const ArticleList = () => {
         return `${SERVER_BASE_URL}/articles?author=${encodeURIComponent(
           String(pid)
         )}&offset=${page * DEFAULT_LIMIT}`;
-      case !isProfilePage && !!follow:
+      case props.what === 'feed':
         return `${SERVER_BASE_URL}/articles/feed?offset=${
           page * DEFAULT_LIMIT
         }`;
       default:
         return `${SERVER_BASE_URL}/articles?offset=${page * DEFAULT_LIMIT}`;
     }
-  };
-  let fetchURL = React.useMemo(() => getFetchURL(), [
-    favorite,
-    page,
-    tag,
-    isProfilePage,
-  ]);
+  })()
   const { data, error } = useSWR(fetchURL, fetcher);
   const { articles, articlesCount } = data || {
     articles: [],

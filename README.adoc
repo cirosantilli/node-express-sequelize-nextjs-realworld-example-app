@@ -14,10 +14,6 @@ Both Next.js and the backend API run on the same express server via a https://ne
 
 The design goals are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSR.
 
-Due to ISR/SSR, the entire website should look exactly the same with and without JavaScript for a logged out user.
-
-We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel, and have the exact same DOM tree.
-
 == Local development with SQLite
 
 ....
@@ -65,6 +61,20 @@ This approach feels simple enough that it could even be automated in a framework
 
 It is true that the pass-down approach goes a bit against the phylosophy of `useSWR`, but there isn't much we can do, e.g. `/` fetches all articles with `/api/articles`, and determines favorite states of multiple posts. Therefore, we if hardcoded `useSWR` for the article under `FavoriteArticleButton`, that would fetch the states from each article separately `/api/articles/[slug]`. We want that to happen on single article inspection however.
 
+== What works with JavaScript turned off
+
+Due to ISR/SSR, <<single-url-with-multiple-pages,all pages of the website that have distinct URLs>>, which includes e.g. articles and profiles but not "Your Feed" vs "Global Feed, look exactly the same with and without JavaScript for a logged out user.
+
+For the pages without distinct URLs, we don't know how to do this, the only way we can do it is by fetching.
+
+SSR would require `a` to send custom headers, so that URLs won't be changed, which is impossible:
+
+* https://stackoverflow.com/questions/15835783/adding-http-request-header-to-a-a-href-link
+* https://stackoverflow.com/questions/374885/can-i-change-the-headers-of-the-http-request-sent-by-the-browser
+* https://softwareengineering.stackexchange.com/questions/250602/why-doesnt-the-html-dom-specification-allow-hyperlinks-to-set-an-accept-header
+
+SSG would, in addition to the previous, require specific Next.js support for the above.
+
 == TODO
 
 === Single URL with multiple pages
@@ -76,7 +86,7 @@ We don't know how to have multiple pages under a single URL in Next.js nicely. T
 
 Note however that such functionality also makes it impossible to access those pages without JavaScript, therefore one of the main points of React, which is SEO without the need for JavaScript. Therefore maybe it doesn't matter much.
 
-`reck1ess` original implementation works around this by just fetching from the API and rendering, like a regular non-Next React app would.
+`reck1ess` original implementation works around this by just fetching from the API and rendering, like a regular non-Next React app would, and this is the only way we know how to do it.
 
 Global discussion at: https://github.com/gothinkster/realworld/issues/691
 
@@ -102,6 +112,12 @@ Instead, we should handle `/user/settings` from Next.js server side, notably che
 === TODO security
 
 Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
+
+== Known divergences
+
+We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel, and have the exact same DOM tree.
+
+* reference shows "Your Feed" for logged out user, click leads to login. This just feels wrong, not done anywhere else.
 
 == Bugs
 

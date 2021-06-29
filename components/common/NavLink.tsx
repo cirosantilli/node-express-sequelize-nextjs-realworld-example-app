@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -12,7 +11,6 @@ interface NavLinkProps {
 const NavLink = ({ href, as, onClick, children }: NavLinkProps) => {
   const router = useRouter();
   const { asPath } = router;
-
   return (
     <Link href={href} as={as} passHref>
       <a
