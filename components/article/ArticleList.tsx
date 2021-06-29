@@ -31,7 +31,6 @@ const ArticleList = (props) => {
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
   const isProfilePage = pathname.startsWith(`/profile`);
-  console.error(props);
   let fetchURL = (() => {
     if (isProfilePage) {
       if (!!favorite) {
