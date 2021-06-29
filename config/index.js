@@ -1,6 +1,3 @@
-const path = require('path')
-const fs = require('fs')
-
 let isProduction;
 if (process.env.NODE_ENV_OVERRIDE === undefined) {
   isProduction = process.env.NODE_ENV === 'production'

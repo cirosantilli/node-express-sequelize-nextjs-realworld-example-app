@@ -30,30 +30,29 @@ const ArticleList = (props) => {
   const router = useRouter();
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
-  const isProfilePage = pathname.startsWith(`/profile`);
   let fetchURL = (() => {
-    if (isProfilePage) {
-      if (!!favorite) {
+    switch (props.what) {
+      case 'favorites':
         return `${SERVER_BASE_URL}/articles?favorited=${encodeURIComponent(
           String(pid)
-        )}&offset=${page * DEFAULT_LIMIT}`;
-      } else {
+        )}&offset=${page * DEFAULT_LIMIT}`
+      case 'my-posts':
         return `${SERVER_BASE_URL}/articles?author=${encodeURIComponent(
           String(pid)
         )}&offset=${page * DEFAULT_LIMIT}`;
-      }
+      case 'tag':
+        return `${SERVER_BASE_URL}/articles?tag=${encodeURIComponent(props.tag)}&offset=${
+          page * DEFAULT_LIMIT
+        }`;
+      case 'feed':
+        return `${SERVER_BASE_URL}/articles/feed?offset=${
+          page * DEFAULT_LIMIT
+        }`;
+      case 'global':
+        return `${SERVER_BASE_URL}/articles?offset=${page * DEFAULT_LIMIT}`;
+      default:
+        throw new Error(`Unknown search: ${props.what}`)
     }
-    if (props.what === 'tag') {
-      return `${SERVER_BASE_URL}/articles?tag=${encodeURIComponent(props.tag)}&offset=${
-        page * DEFAULT_LIMIT
-      }`;
-    }
-    if (props.what === 'feed') {
-      return `${SERVER_BASE_URL}/articles/feed?offset=${
-        page * DEFAULT_LIMIT
-      }`;
-    }
-    return `${SERVER_BASE_URL}/articles?offset=${page * DEFAULT_LIMIT}`;
   })()
   const { data, error } = useSWR(fetchURL, fetcher);
   const { articles, articlesCount } = data || {

@@ -131,6 +131,8 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   );
 };
 
+export default ArticlePage;
+
 // Server only.
 
 import { getStaticPathsArticle, getStaticPropsArticle } from "lib/article";
@@ -138,4 +140,3 @@ const configModule = require("../../config");
 
 export const getStaticPaths = getStaticPathsArticle;
 export const getStaticProps = getStaticPropsArticle(configModule.revalidate, true);
-export default ArticlePage;
