@@ -31,27 +31,30 @@ const ArticleList = (props) => {
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
   const isProfilePage = pathname.startsWith(`/profile`);
+  console.error(props);
   let fetchURL = (() => {
-    switch (true) {
-      case !!tag:
-        return `${SERVER_BASE_URL}/articles${asPath}&offset=${
-          page * DEFAULT_LIMIT
-        }`;
-      case isProfilePage && !!favorite:
+    if (isProfilePage) {
+      if (!!favorite) {
         return `${SERVER_BASE_URL}/articles?favorited=${encodeURIComponent(
           String(pid)
         )}&offset=${page * DEFAULT_LIMIT}`;
-      case isProfilePage && !favorite:
+      } else {
         return `${SERVER_BASE_URL}/articles?author=${encodeURIComponent(
           String(pid)
         )}&offset=${page * DEFAULT_LIMIT}`;
-      case props.what === 'feed':
-        return `${SERVER_BASE_URL}/articles/feed?offset=${
-          page * DEFAULT_LIMIT
-        }`;
-      default:
-        return `${SERVER_BASE_URL}/articles?offset=${page * DEFAULT_LIMIT}`;
+      }
     }
+    if (props.what === 'tag') {
+      return `${SERVER_BASE_URL}/articles?tag=${encodeURIComponent(props.tag)}&offset=${
+        page * DEFAULT_LIMIT
+      }`;
+    }
+    if (props.what === 'feed') {
+      return `${SERVER_BASE_URL}/articles/feed?offset=${
+        page * DEFAULT_LIMIT
+      }`;
+    }
+    return `${SERVER_BASE_URL}/articles?offset=${page * DEFAULT_LIMIT}`;
   })()
   const { data, error } = useSWR(fetchURL, fetcher);
   const { articles, articlesCount } = data || {

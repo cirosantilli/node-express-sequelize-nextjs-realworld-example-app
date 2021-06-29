@@ -79,6 +79,7 @@ const IndexPage = () => {
   const { data: currentUser } = useSWR("user", storage);
   const isLoggedIn = checkLogin(currentUser);
   const [tab, setTab] = React.useState(isLoggedIn ? 'feed' : 'global')
+  const [tag, setTag] = React.useState()
   React.useEffect(() => {
     setTab(isLoggedIn ? 'feed' : 'global')
   }, [isLoggedIn])
@@ -99,14 +100,14 @@ const IndexPage = () => {
           <MainContent>
             <ContentContainer>
               <FeedToggle>
-                <TabList tab={tab} setTab={setTab} />
+                <TabList tab={tab} setTab={setTab} tag={tag} />
               </FeedToggle>
-              <ArticleList what={tab}/>
+              <ArticleList what={tab} tag={tag}/>
             </ContentContainer>
             <SidebarContainer>
               <SidebarPresenter>
                 <SidebarTitle>Popular Tags</SidebarTitle>
-                <Tags />
+                <Tags setTab={setTab} setTag={setTag} />
               </SidebarPresenter>
             </SidebarContainer>
           </MainContent>

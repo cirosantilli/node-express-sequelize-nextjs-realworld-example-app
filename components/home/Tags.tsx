@@ -8,7 +8,7 @@ import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import ErrorMessage from "components/common/ErrorMessage";
 
-const Tags = () => {
+const Tags = ({setTab, setTag}) => {
   const setPage = usePageDispatch();
   const handleClick = React.useCallback(() => setPage(0), []);
   const { data, error } = useSWR(`${SERVER_BASE_URL}/tags`, fetcher);
@@ -20,9 +20,10 @@ const Tags = () => {
       {tags?.map((tag) => (
         <CustomLink
           key={tag}
-          href={`/?tag=${tag}`}
-          as={`/?tag=${tag}`}
+          href={``}
+          as={`/`}
           className="tag-default tag-pill"
+          onClick={() => {setTab('tag'); setTag(tag);}}
         >
           <span onClick={handleClick}>{tag}</span>
         </CustomLink>
