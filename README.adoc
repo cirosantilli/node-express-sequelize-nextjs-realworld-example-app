@@ -123,7 +123,7 @@ We aim to make this website look exactly like https://github.com/gothinkster/ang
 
 https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/missing functionality, some notable ones:
 
-* https://github.com/reck1ess/next-realworld-example-app/issues/22 Your Feed not working
+* https://github.com/reck1ess/next-realworld-example-app/issues/22 Your Feed not working. We fixed it at d98637bb10af2bb111f0f2a6ccc72c1de6c8f351.
 
 The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in a few senses:
 
