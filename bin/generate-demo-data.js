@@ -14,7 +14,7 @@ function myParseInt(value, dummyPrevious) {
 }
 
 const commander = require('commander');
-commander.option('-a, --n-articles-per-user <n>', 'n articles per user', myParseInt, 10);
+commander.option('-a, --n-articles-per-user <n>', 'n articles per user', myParseInt, 50);
 commander.option('-c, --n-max-comments-per-article <n>', 'maximum number of comments per article', myParseInt, 3);
 commander.option('-f, --n-follows-per-user <n>', 'n follows per user', myParseInt, 2);
 commander.option('-t, --n-tags <n>', 'n favorites per user', myParseInt, 5);
