@@ -10,6 +10,7 @@ interface CustomLinkProps {
   className?: string;
   onClick?: () => void;
   children: React.ReactNode;
+  shallow: boolean;
 }
 
 const CustomLink = ({
@@ -18,12 +19,16 @@ const CustomLink = ({
   as,
   onClick,
   children,
-}: CustomLinkProps) => (
-  <Link href={href} as={as} passHref>
+  shallow,
+}: CustomLinkProps) => {
+  if (shallow === undefined) {
+    shallow = false;
+  }
+  return (<Link href={href} as={as} passHref shallow={shallow}>
     <a onClick={onClick} className={className || ""}>
       {children}
     </a>
-  </Link>
-);
+  </Link>)
+}
 
 export default CustomLink;

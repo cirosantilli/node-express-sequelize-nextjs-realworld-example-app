@@ -14,7 +14,7 @@ const TabList = ({tab, setTab, tag}) => {
     return (
       <ul className="nav nav-pills outline-active">
         <li className="nav-item">
-          <CustomLink className="nav-link" href="/" as="/">
+          <CustomLink className="nav-link" href="/" shallow>
             Global Feed
           </CustomLink>
         </li>
@@ -23,6 +23,7 @@ const TabList = ({tab, setTab, tag}) => {
             <CustomLink
               href="/"
               className="nav-link active"
+              shallow
             >
               <i className="ion-pound" /> {tag}
             </CustomLink>
@@ -38,6 +39,7 @@ const TabList = ({tab, setTab, tag}) => {
           className={`nav-link${tab === 'feed' ? ' active' : ''}`}
           href="/"
           onClick={() => {setTab('feed')}}
+          shallow
         >
           Your Feed
         </CustomLink>
@@ -46,6 +48,7 @@ const TabList = ({tab, setTab, tag}) => {
         <CustomLink
           className={`nav-link${tab === 'global' ? ' active' : ''}`}
           href="/"
+          shallow
           onClick={() => {
             setTab('global')
           }}
@@ -58,6 +61,7 @@ const TabList = ({tab, setTab, tag}) => {
           <CustomLink
             href={`/`}
             className="nav-link active"
+            shallow
           >
             <i className="ion-pound" /> {tag}
           </CustomLink>
