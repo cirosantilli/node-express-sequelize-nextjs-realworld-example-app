@@ -7,40 +7,20 @@ import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const TabList = ({tab, setTab, tag}) => {
   const loggedInUser = getLoggedInUser()
-  if (!loggedInUser) {
-    return (
-      <ul className="nav nav-pills outline-active">
-        <li className="nav-item">
-          <CustomLink className="nav-link" href="/" shallow>
-            Global Feed
-          </CustomLink>
-        </li>
-        <Maybe test={tab == 'tag'}>
-          <li className="nav-item">
-            <CustomLink
-              href="/"
-              className="nav-link active"
-              shallow
-            >
-              <i className="ion-pound" /> {tag}
-            </CustomLink>
-          </li>
-        </Maybe>
-      </ul>
-    );
-  }
   return (
     <ul className="nav nav-pills outline-active">
-      <li className="nav-item">
-        <CustomLink
-          className={`nav-link${tab === 'feed' ? ' active' : ''}`}
-          href="/"
-          onClick={() => {setTab('feed')}}
-          shallow
-        >
-          Your Feed
-        </CustomLink>
-      </li>
+      <Maybe test={loggedInUser}>
+        <li className="nav-item">
+          <CustomLink
+            className={`nav-link${tab === 'feed' ? ' active' : ''}`}
+            href="/"
+            onClick={() => {setTab('feed')}}
+            shallow
+          >
+            Your Feed
+          </CustomLink>
+        </li>
+      </Maybe>
       <li className="nav-item">
         <CustomLink
           className={`nav-link${tab === 'global' ? ' active' : ''}`}
