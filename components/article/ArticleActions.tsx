@@ -29,6 +29,7 @@ const ArticleActions = ({ article }) => {
   return (
     <>
       <Maybe test={loggedInUser}>
+        <FollowUserButton profile={article.author} />
         <FavoriteArticleButton
           favorited={article.favorited}
           favoritesCount={article.favoritesCount}
