@@ -1,6 +1,5 @@
 /* Helper for a link that accepts parameters such as className */
 
-import styled from "@emotion/styled";
 import Link from "next/link";
 import React from "react";
 

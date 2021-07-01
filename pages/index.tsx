@@ -1,77 +1,12 @@
-import styled from "@emotion/styled";
 import Head from "next/head";
 import React from "react";
 
 import ArticleList from "components/article/ArticleList";
 import Maybe from "components/common/Maybe";
-import Banner from "components/home/Banner";
 import Tags from "components/home/Tags";
 import TabList from "components/home/TabList";
+import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
-
-const IndexPageContainer = styled("div")``;
-
-const IndexPagePresenter = styled("div")`
-  margin: 1.5rem auto 0;
-  padding: 0 15px;
-  @media (min-width: 544px) {
-    max-width: 576px;
-  }
-  @media (min-width: 768px) {
-    max-width: 720px;
-  }
-  @media (min-width: 992px) {
-    max-width: 940px;
-  }
-  @media (min-width: 1200px) {
-    max-width: 1140px;
-  }
-`;
-
-const MainContent = styled("div")`
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: -15px;
-  margin-right: -15px;
-`;
-
-const ContentContainer = styled("div")`
-  width: 100%;
-  @media (min-width: 768px) {
-    position: relative;
-    min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
-    flex: 0 0 75%;
-    max-width: 75%;
-  }
-`;
-
-const FeedToggle = styled("div")`
-  margin-bottom: -1px;
-`;
-
-const SidebarContainer = styled("div")`
-  @media (min-width: 768px) {
-    position: relative;
-    min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
-    flex: 0 0 25%;
-    max-width: 25%;
-  }
-`;
-
-const SidebarPresenter = styled("div")`
-  padding: 5px 10px 10px;
-  background: #f3f3f3;
-  border-radius: 4px;
-`;
-
-const SidebarTitle = styled("p")`
-  margin-top: 0;
-  margin-bottom: 0.2rem;
-`;
 
 const IndexPage = () => {
   const loggedInUser = getLoggedInUser()
@@ -83,33 +18,38 @@ const IndexPage = () => {
   return (
     <>
       <Head>
-        <title>HOME | NEXT REALWORLD</title>
+        <title>{APP_NAME}</title>
         <meta
           name="description"
           content="Next.js + SWR codebase containing realworld examples (CRUD, auth, advanced patterns, etc) that adheres to the realworld spec and API"
         />
       </Head>
-      <IndexPageContainer className="home-page">
+      <div className="home-page">
         <Maybe test={!loggedInUser}>
-          <Banner />
+          <div className="banner">
+            <div className="container">
+              <h1 className="logo-font">{APP_NAME.toLowerCase()}</h1>
+              <p>A place to share your knowledge.</p>
+            </div>
+          </div>
         </Maybe>
-        <IndexPagePresenter>
-          <MainContent>
-            <ContentContainer>
-              <FeedToggle>
+        <div className="container page">
+          <div className="row">
+            <div className="col-md-9">
+              <div className="feed-toggle">
                 <TabList tab={tab} setTab={setTab} tag={tag} />
-              </FeedToggle>
+              </div>
               <ArticleList what={tab} tag={tag}/>
-            </ContentContainer>
-            <SidebarContainer>
-              <SidebarPresenter>
-                <SidebarTitle>Popular Tags</SidebarTitle>
+            </div>
+            <div className="col-md-3">
+              <div className="sidebar">
+                <p>Popular Tags</p>
                 <Tags setTab={setTab} setTag={setTag} />
-              </SidebarPresenter>
-            </SidebarContainer>
-          </MainContent>
-        </IndexPagePresenter>
-      </IndexPageContainer>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   )
 }

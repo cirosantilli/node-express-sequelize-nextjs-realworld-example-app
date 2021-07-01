@@ -33,7 +33,7 @@ npm run start-dev
 
 If you make any changes to the code, at least code under `/pages` for sure, you have to rebuild before they take effect in this mode, as Next.js appears to also run server-only code such as `getStaticPaths` from one of the webpack bundles.
 
-Running `next build` is one very important test of the code, as it builds many of the most important pages of the website, and runs checks such as TypeScript type checking.
+Running `next build` is one very important test of the code, as it builds many of the most important pages of the website, and runs checks such as TypeScript type checking. You should basically run it after every single commit that touches the frontend.
 
 == Heroku deployment
 
@@ -51,7 +51,7 @@ This could lead to amazing article text loading performance, since this is the s
 
 The downside of that is that the user could see a two stage approach which is annoying, especially if there is no clear indication (first download, then wait, then if updates with personal details). This could be made even better by caching things client side, and `userSWR` which we already using likely makes that transparent, so there is hope. Even more amazing would be if it could cache across requests, e.g. from index page to an article! One day, one day, maybe with GraphQL.
 
-Another big ISR limitation is that you can't force a one-off immediate page update after the user edits a post, a manual refresh is generally needed: https://github.com/vercel/next.js/discussions/25677
+Another big ISR limitation is that you can't force a one-off immediate page update after the user edits a post, a manual refresh is generally needed: https://github.com/vercel/next.js/discussions/25677[]. However, this is not noticeable in this website, because in order to show login-specific information, we are already re-fetching the data from the API after every single request, so after a moment it gets updated to the latest version.
 
 Our organizational principle is that all logged-in API data will be fetched from the toplevel element of each page. It will have the exact same form as the static rendering props, which come directly from the database during build rather than indirectly the API.
 
@@ -118,6 +118,7 @@ Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
 We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel, and have the exact same DOM tree.
 
 * reference shows "Your Feed" for logged out user, click leads to login. This just feels wrong, not done anywhere else.
+* https://github.com/gothinkster/angular-realworld-example-app/issues/202 "No articles are here... yet" clearly broken on Angular
 
 == Bugs
 
@@ -128,7 +129,9 @@ https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/mis
 The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in a few senses:
 
 * usage of `useSWR` even for data that can be already pre-rendered by Next.js such are articles. Presumably this is to give some kind of pool based realtime support? Or maybe it is just part of a workaround for the problem described at <<single-url-with-multiple-pages>>. But that is not what other implementations do, and neither should we. We don't want data to update by surprise under a user's feet.
-* uses custom https://github.com/emotion-js/emotion[emotion-js] CSS in addition to the global http://demo.productionready.io/main.css[], which is also required.
+* uses custom https://github.com/emotion-js/emotion[emotion-js] CSS in addition to the global http://demo.productionready.io/main.css[], which is also required since not everything was migrated to emotion.
++
+And also has a global `style.css`.
 +
 While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.
 +
