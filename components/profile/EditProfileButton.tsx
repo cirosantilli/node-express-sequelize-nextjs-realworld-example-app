@@ -4,11 +4,11 @@ import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
 
 interface EditProfileButtonProps {
-  isUser: boolean;
+  isCurrentUser: boolean;
 }
 
-const EditProfileButton = ({ isUser }: EditProfileButtonProps) => (
-  <Maybe test={isUser}>
+const EditProfileButton = ({ isCurrentUser }: EditProfileButtonProps) => (
+  <Maybe test={isCurrentUser}>
     <CustomLink
       href="/settings"
       className="btn btn-sm btn-outline-secondary action-btn"

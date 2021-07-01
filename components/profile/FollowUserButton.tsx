@@ -1,16 +1,36 @@
 import React from "react";
+import useSWR, { mutate } from "swr";
+
+import UserAPI from "lib/api/user";
+import { SERVER_BASE_URL } from "lib/utils/constant";
+import storage from "lib/utils/storage";
+import checkLogin from "lib/utils/checkLogin";
 
 const FollowUserButton = ({
-  isUser,
-  following,
-  username,
-  follow,
-  unfollow,
+  profile,
 }) => {
-  if (isUser) { return null; }
+  const { data: currentUser } = useSWR("user", storage);
+  const isLoggedIn = checkLogin(currentUser);
+  const { username, following } = profile;
+  const isCurrentUser = currentUser && username === currentUser?.username;
+  if (!isLoggedIn || isCurrentUser) { return null; }
   const handleClick = (e) => {
     e.preventDefault();
-    following ? unfollow(username) : follow(username);
+    if (following) {
+      mutate(
+        `${SERVER_BASE_URL}/profiles/${username}`,
+        { profile: { ...profile, following: false } },
+        false
+      );
+      UserAPI.unfollow(username);
+    } else {
+      mutate(
+        `${SERVER_BASE_URL}/profiles/${username}`,
+        { profile: { ...profile, following: true } },
+        false
+      );
+      UserAPI.follow(username);
+    }
   };
   return (
     <button

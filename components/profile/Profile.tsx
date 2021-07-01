@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR, { mutate, trigger } from "swr";
+import useSWR  from "swr";
 
 import ArticleList from "components/article/ArticleList";
 import CustomLink from "components/common/CustomLink";
@@ -10,12 +10,9 @@ import LoadingSpinner from "components/common/LoadingSpinner";
 import Maybe from "components/common/Maybe";
 import EditProfileButton from "components/profile/EditProfileButton";
 import FollowUserButton from "components/profile/FollowUserButton";
-import UserAPI from "lib/api/user";
-import { usePageDispatch } from "lib/context/PageContext";
-import checkLogin from "lib/utils/checkLogin";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
-import storage from "lib/utils/storage";
+import getCurrentUser from "lib/utils/getCurrentUser";
 
 const ProfileHoc = (tab) => {
   return ({ profile }) => {
@@ -25,31 +22,9 @@ const ProfileHoc = (tab) => {
     if (profileApi !== undefined) {
       profile = profileApi.profile
     }
-    const setPage = usePageDispatch();
-    const { query: { pid } } = router;
-    const { username, bio, image, following } = profile;
-    const { data: currentUser } = useSWR("user", storage);
-    const isLoggedIn = checkLogin(currentUser);
-    const isUser = currentUser && username === currentUser?.username;
-    const handleFollow = async () => {
-      // This is what makes the render re-trigger and changes button state.
-      mutate(
-        `${SERVER_BASE_URL}/profiles/${pid}`,
-        { profile: { ...profile, following: true } },
-        // No need to actually fetch the updated value from the server,
-        // we can just calculate it locally from the user's action.
-        false
-      );
-      await UserAPI.follow(pid);
-    };
-    const handleUnfollow = async () => {
-      mutate(
-        `${SERVER_BASE_URL}/profiles/${pid}`,
-        { profile: { ...profile, following: false } },
-        false
-      );
-      await UserAPI.unfollow(pid);
-    };
+    const { username, bio, image } = profile;
+    const currentUser = getCurrentUser()
+    const isCurrentUser = currentUser && username === currentUser?.username;
     return (
       <div className="profile-page">
         <div className="user-info">
@@ -63,16 +38,8 @@ const ProfileHoc = (tab) => {
                 />
                 <h4>{username}</h4>
                 <p>{bio}</p>
-                <EditProfileButton isUser={isUser} />
-                <Maybe test={isLoggedIn}>
-                  <FollowUserButton
-                    isUser={isUser}
-                    username={username}
-                    following={following}
-                    follow={handleFollow}
-                    unfollow={handleUnfollow}
-                  />
-                </Maybe>
+                <EditProfileButton isCurrentUser={isCurrentUser} />
+                <FollowUserButton profile={profile} />
               </div>
             </div>
           </div>
@@ -97,7 +64,7 @@ const ProfileHoc = (tab) => {
                       as={`/profile/${encodeURIComponent(username)}/favorites`}
                       className={`nav-link${tab === 'favorites' ? ' active' : ''}`}
                     >
-                      <span onClick={() => setPage(0)}>Favorited Posts</span>
+                      Favorited Posts
                     </CustomLink>
                   </li>
                 </ul>

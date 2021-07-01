@@ -10,7 +10,7 @@ interface CustomLinkProps {
   className?: string;
   onClick?: () => void;
   children: React.ReactNode;
-  shallow: boolean;
+  shallow?: boolean;
 }
 
 const CustomLink = ({
