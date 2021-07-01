@@ -24,7 +24,6 @@ function PaginationItem(props) {
   } else {
     className = ''
   }
-  console.error(className);
   return (
     <li className={`page-item${className}`} {...newProps}>
       <a className="page-link">{props.children}</a>
