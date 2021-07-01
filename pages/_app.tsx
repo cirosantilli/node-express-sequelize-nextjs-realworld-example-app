@@ -4,7 +4,7 @@ import React from "react";
 import Footer from "components/common/Footer";
 import Navbar from "components/common/Navbar";
 import ContextProvider from "lib/context";
-import "styles.css";
+import "styles.scss";
 
 if (typeof window !== "undefined") {
   require("lazysizes/plugins/attrchange/ls.attrchange.js");
