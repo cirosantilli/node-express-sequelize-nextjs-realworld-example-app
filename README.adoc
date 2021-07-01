@@ -152,6 +152,8 @@ The implementation of `reck1ess/next-realworld-example-app` felt a bit quirky in
 * usage of `useSWR` even for data that can be already pre-rendered by Next.js such are articles. Presumably this is to give some kind of pool based realtime support? Or maybe it is just part of a workaround for the problem described at <<single-url-with-multiple-pages>>. But that is not what other implementations do, and neither should we. We don't want data to update by surprise under a user's feet.
 * uses custom https://github.com/emotion-js/emotion[emotion-js] CSS in addition to the global http://demo.productionready.io/main.css[], which is also required since not everything was migrated to emotion.
 +
+We later completely removed motion from this repository.
++
 And also has a global `style.css`.
 +
 While this is good to illustrate that library, it also means that a lot of reimplementation is needed, and it is hard to be accurate at times.

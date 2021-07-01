@@ -1,5 +1,3 @@
-import { CacheProvider } from "@emotion/core";
-import { cache } from "emotion";
 import Head from "next/head";
 import React from "react";
 
@@ -22,13 +20,11 @@ const MyApp = ({ Component, pageProps }) => (
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
     </Head>
-    <CacheProvider value={cache}>
-      <ContextProvider>
-        <Navbar />
-        <Component {...pageProps} />
-        <Footer />
-      </ContextProvider>
-    </CacheProvider>
+    <ContextProvider>
+      <Navbar />
+      <Component {...pageProps} />
+      <Footer />
+    </ContextProvider>
   </>
 );
 

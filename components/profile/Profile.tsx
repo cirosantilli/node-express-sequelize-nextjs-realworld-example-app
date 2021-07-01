@@ -5,7 +5,6 @@ import useSWR  from "swr";
 import ArticleList from "components/article/ArticleList";
 import CustomLink from "components/common/CustomLink";
 import CustomImage from "components/common/CustomImage";
-import ErrorMessage from "components/common/ErrorMessage";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import Maybe from "components/common/Maybe";
 import EditProfileButton from "components/profile/EditProfileButton";
