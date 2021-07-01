@@ -115,10 +115,31 @@ Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
 
 == Known divergences
 
-We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel, and have the exact same DOM tree.
+We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel which we call "our reference implementation:, and have the exact same DOM tree.
+
+Some known divergences:
 
 * reference shows "Your Feed" for logged out user, click leads to login. This just feels wrong, not done anywhere else.
 * https://github.com/gothinkster/angular-realworld-example-app/issues/202 "No articles are here... yet" clearly broken on Angular
+* `reck1ess` had implmented pagination really well with limits and previous/first/next/last, it would be a shame to revert that: https://github.com/gothinkster/realworld/issues/684
+
+Error messages due to API failures are too inconsistent across implementations to determine what is the correct behaviour, e.g. if you patch:
+
+....
+--- a/routes/api/articles.js
++++ b/routes/api/articles.js
+@@ -104,6 +104,7 @@ router.get('/', auth.optional, async function(req, res, next) {
+
+ router.get('/feed', auth.required, async function(req, res, next) {
+   try {
++    asdf
+     let limit = 20
+     let offset = 0
+     if (typeof req.query.limit !== 'undefined') {
+....
+
+* reference: shows "Loading articles..." forever, does not inform user about error
+* https://github.com/gothinkster/react-redux-realworld-example-app just throws an exception
 
 == Bugs
 

@@ -57,7 +57,7 @@ const ArticleList = (props) => {
     setPageCount(articlesCount);
   }, [articlesCount]);
   if (error) return <ErrorMessage message="Cannot load recent articles..." />;
-  if (!data) return <LoadingSpinner />;
+  if (!data) return <div className="article-preview">Loading articles...</div>;
   if (articles?.length === 0) {
     return (<div className="article-preview">No articles are here... yet.</div>);
   }
