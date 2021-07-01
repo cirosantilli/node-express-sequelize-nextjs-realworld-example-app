@@ -62,10 +62,45 @@ async function generateDemoData(params) {
     const articleArg = {
       title: `My title ${i}`,
       description: `My description ${i}`,
-      body: `My **body** ${i}`,
       authorId: users[userIdx].id,
       createdAt: date,
       updatedAt: date,
+      body: `# h1
+
+## h2
+
+### h3
+
+#### h4
+
+##### h5
+
+###### h6
+
+*Italic*
+
+**Bold**
+
+[Link](http://example.com)
+
+Code block:
+
+    function myFunc() {
+      return 1;
+    }
+
+Block quote:
+
+> To be or not to be.
+>
+> That is the question.
+
+List:
+
+- item 1
+- item 2
+- item 3
+`,
     }
     articleArgs.push(articleArg)
   }
