@@ -29,13 +29,15 @@ const ArticleActions = ({ article }) => {
   return (
     <>
       <Maybe test={loggedInUser}>
-        <FollowUserButton profile={article.author} />
-        <FavoriteArticleButton
-          favorited={article.favorited}
-          favoritesCount={article.favoritesCount}
-          slug={article.slug}
-          showText={true}
-        />
+        <span>
+          <FollowUserButton profile={article.author} />
+          <FavoriteArticleButton
+            favorited={article.favorited}
+            favoritesCount={article.favoritesCount}
+            slug={article.slug}
+            showText={true}
+          />
+        </span>
       </Maybe>
       <Maybe test={canModify}>
         <span>

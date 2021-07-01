@@ -23,7 +23,7 @@ const FavoriteArticleButton = (props) => {
     } else {
       buttonText = 'Favorite'
     }
-    buttonText += ' Article'
+    buttonText = ' ' + buttonText + ' Article '
   } else {
     buttonText = ''
   }
@@ -57,6 +57,10 @@ const FavoriteArticleButton = (props) => {
       setFavoritesCount(favoritesCount + (favorited ? 1 : -1))
     }
   };
+  let count = favoritesCount;
+  if (props.showText) {
+    count = (<span class="counter">({count})</span>)
+  }
   return (
     <button
       className={
@@ -64,7 +68,8 @@ const FavoriteArticleButton = (props) => {
       }
       onClick={() => handleClickFavorite()}
     >
-      <i className="ion-heart" />{props.showText ? ' ' : ''}{buttonText} {props.showText ? '(' : ''}{favoritesCount}{props.showText ? ')' : ''}
+      <i className="ion-heart" />{props.showText ? ' ' : ''}{buttonText}
+      {' '}{count}
     </button>
   )
 }
