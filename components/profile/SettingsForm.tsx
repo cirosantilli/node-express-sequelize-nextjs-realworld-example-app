@@ -1,12 +1,11 @@
 import axios from "axios";
 import Router from "next/router";
 import React from "react";
-import useSWR, { mutate } from "swr";
+import { mutate } from "swr";
 
-import ListErrors from "../common/ListErrors";
-import checkLogin from "../../lib/utils/checkLogin";
-import { SERVER_BASE_URL } from "../../lib/utils/constant";
-import storage from "../../lib/utils/storage";
+import ListErrors from "components/common/ListErrors";
+import { SERVER_BASE_URL } from "lib/utils/constant";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const SettingsForm = () => {
   const [isLoading, setLoading] = React.useState(false);
@@ -18,12 +17,11 @@ const SettingsForm = () => {
     email: "",
     password: "",
   });
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
+  const loggedInUser = getLoggedInUser()
   React.useEffect(() => {
-    if (!isLoggedIn) return;
-    setUserInfo({ ...userInfo, ...currentUser });
-  }, [currentUser]);
+    if (!loggedInUser) return;
+    setUserInfo({ ...userInfo, ...loggedInUser });
+  }, [loggedInUser]);
   const updateState = (field) => (e) => {
     const state = userInfo;
     const newState = { ...state, [field]: e.target.value };
@@ -42,7 +40,7 @@ const SettingsForm = () => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${currentUser?.token}`,
+          Authorization: `Token ${loggedInUser?.token}`,
         },
       }
     );

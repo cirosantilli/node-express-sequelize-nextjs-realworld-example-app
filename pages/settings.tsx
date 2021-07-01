@@ -1,6 +1,6 @@
 import Router from "next/router";
 import React from "react";
-import useSWR, { mutate, trigger } from "swr";
+import { mutate, trigger } from "swr";
 
 import SettingsForm from "components/profile/SettingsForm";
 import checkLogin from "lib/utils/checkLogin";
@@ -8,8 +8,8 @@ import storage from "lib/utils/storage";
 
 const Settings = () => {
   React.useEffect(() => {
-    storage("user").then(currentUser => {
-      const isLoggedIn = checkLogin(currentUser);
+    storage("user").then(loggedInUser => {
+      const isLoggedIn = checkLogin(loggedInUser);
       if (!isLoggedIn) {
         Router.push(`/`);
       }

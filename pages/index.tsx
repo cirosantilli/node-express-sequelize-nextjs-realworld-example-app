@@ -1,15 +1,13 @@
 import styled from "@emotion/styled";
 import Head from "next/head";
 import React from "react";
-import useSWR from "swr";
 
 import ArticleList from "components/article/ArticleList";
 import Maybe from "components/common/Maybe";
 import Banner from "components/home/Banner";
 import Tags from "components/home/Tags";
 import TabList from "components/home/TabList";
-import checkLogin from "lib/utils/checkLogin";
-import storage from "lib/utils/storage";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const IndexPageContainer = styled("div")``;
 
@@ -76,13 +74,12 @@ const SidebarTitle = styled("p")`
 `;
 
 const IndexPage = () => {
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
-  const [tab, setTab] = React.useState(isLoggedIn ? 'feed' : 'global')
+  const loggedInUser = getLoggedInUser()
+  const [tab, setTab] = React.useState(loggedInUser ? 'feed' : 'global')
   const [tag, setTag] = React.useState()
   React.useEffect(() => {
-    setTab(isLoggedIn ? 'feed' : 'global')
-  }, [isLoggedIn])
+    setTab(loggedInUser ? 'feed' : 'global')
+  }, [loggedInUser])
   return (
     <>
       <Head>
@@ -93,7 +90,7 @@ const IndexPage = () => {
         />
       </Head>
       <IndexPageContainer className="home-page">
-        <Maybe test={!isLoggedIn}>
+        <Maybe test={!loggedInUser}>
           <Banner />
         </Maybe>
         <IndexPagePresenter>

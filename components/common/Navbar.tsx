@@ -3,15 +3,13 @@ import { css } from '@emotion/react'
 import styled from "@emotion/styled";
 import React from "react";
 import Link from "next/link";
-import useSWR from "swr";
 
 import CustomImage from "components/common/CustomImage";
 import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
 import NavLink from "components/common/NavLink";
 import { usePageDispatch } from "lib/context/PageContext";
-import checkLogin from "lib/utils/checkLogin";
-import storage from "lib/utils/storage";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const NavbarItem = ({ children }) => (
   <li className="nav-item">{children}</li>
@@ -19,8 +17,7 @@ const NavbarItem = ({ children }) => (
 
 const Navbar = () => {
   const setPage = usePageDispatch();
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
+  const loggedInUser = getLoggedInUser()
   const handleClick = React.useCallback(() => setPage(0), []);
   return (
     <nav className="navbar navbar-light">
@@ -34,7 +31,7 @@ const Navbar = () => {
               Home
             </NavLink>
           </NavbarItem>
-          <Maybe test={isLoggedIn}>
+          <Maybe test={loggedInUser}>
             <NavbarItem>
               <NavLink href="/editor" as="/editor">
                 <i className="ion-compose" />
@@ -49,20 +46,20 @@ const Navbar = () => {
             </NavbarItem>
             <NavbarItem>
               <NavLink
-                href={`/profile/${currentUser?.username}`}
-                as={`/profile/${currentUser?.username}`}
+                href={`/profile/${loggedInUser?.username}`}
+                as={`/profile/${loggedInUser?.username}`}
                 onClick={handleClick}
               >
                 <CustomImage
                   className="user-pic"
-                  src={currentUser?.effectiveImage}
+                  src={loggedInUser?.effectiveImage}
                   alt="Comment author's profile image"
                 />
-                {currentUser?.username}
+                {loggedInUser?.username}
               </NavLink>
             </NavbarItem>
           </Maybe>
-          <Maybe test={!isLoggedIn}>
+          <Maybe test={!loggedInUser}>
             <NavbarItem>
               <NavLink href="/user/login" as="/user/login">
                 Sign in

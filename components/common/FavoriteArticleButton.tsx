@@ -1,18 +1,15 @@
 import axios from "axios";
 import React from "react";
 import Router from "next/router";
-import useSWR from "swr";
 
-import checkLogin from "../../lib/utils/checkLogin";
-import { SERVER_BASE_URL } from "../../lib/utils/constant";
-import storage from "../../lib/utils/storage";
+import { SERVER_BASE_URL } from "lib/utils/constant";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const FAVORITED_CLASS = "btn btn-sm btn-primary";
 const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
 
 const FavoriteArticleButton = (props) => {
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
+  const loggedInUser = getLoggedInUser()
   const [favorited, setFavorited] = React.useState(props.favorited);
   const [favoritesCount, setFavoritesCount] = React.useState(props.favoritesCount);
   React.useEffect(() => {
@@ -31,7 +28,7 @@ const FavoriteArticleButton = (props) => {
     buttonText = ''
   }
   const handleClickFavorite = async () => {
-    if (!isLoggedIn) {
+    if (!loggedInUser) {
       Router.push(`/user/login`);
       return;
     }
@@ -41,7 +38,7 @@ const FavoriteArticleButton = (props) => {
       if (favorited) {
         await axios.delete(`${SERVER_BASE_URL}/articles/${props.slug}/favorite`, {
           headers: {
-            Authorization: `Token ${currentUser?.token}`,
+            Authorization: `Token ${loggedInUser?.token}`,
           },
         });
       } else {
@@ -50,7 +47,7 @@ const FavoriteArticleButton = (props) => {
           {},
           {
             headers: {
-              Authorization: `Token ${currentUser?.token}`,
+              Authorization: `Token ${loggedInUser?.token}`,
             },
           }
         );

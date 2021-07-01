@@ -1,18 +1,15 @@
 import React from "react";
-import useSWR from "swr";
 
 import CustomLink from "components/common/CustomLink";
 import CustomImage from "components/common/CustomImage";
 import Maybe from "components/common/Maybe";
 import DeleteButton from "components/comment/DeleteButton";
-import checkLogin from "lib/utils/checkLogin";
-import storage from "lib/utils/storage";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const Comment = ({ comment }) => {
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
+  const loggedInUser = getLoggedInUser()
   const canModify =
-    isLoggedIn && currentUser?.username === comment?.author?.username;
+    loggedInUser && loggedInUser?.username === comment?.author?.username;
   return (
     <div className="card">
       <div className="card-block">

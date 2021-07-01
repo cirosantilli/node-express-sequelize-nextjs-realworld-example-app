@@ -12,7 +12,7 @@ import EditProfileButton from "components/profile/EditProfileButton";
 import FollowUserButton from "components/profile/FollowUserButton";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
-import getCurrentUser from "lib/utils/getCurrentUser";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const ProfileHoc = (tab) => {
   return ({ profile }) => {
@@ -23,8 +23,8 @@ const ProfileHoc = (tab) => {
       profile = profileApi.profile
     }
     const { username, bio, image } = profile;
-    const currentUser = getCurrentUser()
-    const isCurrentUser = currentUser && username === currentUser?.username;
+    const loggedInUser = getLoggedInUser()
+    const isCurrentUser = loggedInUser && username === loggedInUser?.username;
     return (
       <div className="profile-page">
         <div className="user-info">

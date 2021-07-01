@@ -1,36 +1,34 @@
 import Router, { useRouter } from "next/router";
 import React from "react";
-import useSWR, { trigger } from "swr";
+import { trigger } from "swr";
 
 import FavoriteArticleButton from "components/common/FavoriteArticleButton";
 import FollowUserButton from "components/profile/FollowUserButton";
 import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
-import checkLogin from "lib/utils/checkLogin";
 import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import storage from "lib/utils/storage";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const ArticleActions = ({ article }) => {
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
+  const loggedInUser = getLoggedInUser()
   const router = useRouter();
   const {
     query: { pid },
   } = router;
   const handleDelete = async () => {
-    if (!isLoggedIn) return;
+    if (!loggedInUser) return;
     const result = window.confirm("Do you really want to delete it?");
     if (!result) return;
-    await ArticleAPI.delete(pid, currentUser?.token);
+    await ArticleAPI.delete(pid, loggedInUser?.token);
     trigger(`${SERVER_BASE_URL}/articles/${pid}`);
     Router.push(`/`);
   };
   const canModify =
-    isLoggedIn && currentUser?.username === article?.author?.username;
+    loggedInUser && loggedInUser?.username === article?.author?.username;
   return (
     <>
-      <Maybe test={isLoggedIn}>
+      <Maybe test={loggedInUser}>
         <FavoriteArticleButton
           favorited={article.favorited}
           favoritesCount={article.favoritesCount}

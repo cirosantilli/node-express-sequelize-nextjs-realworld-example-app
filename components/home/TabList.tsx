@@ -1,16 +1,13 @@
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR from "swr";
 
 import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
-import checkLogin from "lib/utils/checkLogin";
-import storage from "lib/utils/storage";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const TabList = ({tab, setTab, tag}) => {
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
-  if (!isLoggedIn) {
+  const loggedInUser = getLoggedInUser()
+  if (!loggedInUser) {
     return (
       <ul className="nav nav-pills outline-active">
         <li className="nav-item">

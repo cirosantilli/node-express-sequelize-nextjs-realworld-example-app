@@ -1,17 +1,15 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR, { trigger } from "swr";
+import { trigger } from "swr";
 
 import CustomImage from "components/common/CustomImage";
 import CustomLink from "components/common/CustomLink";
-import checkLogin from "lib/utils/checkLogin";
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import storage from "lib/utils/storage";
+import getLoggedInUser from "lib/utils/getLoggedInUser";
 
 const CommentInput = () => {
-  const { data: currentUser } = useSWR("user", storage);
-  const isLoggedIn = checkLogin(currentUser);
+  const loggedInUser = getLoggedInUser()
   const router = useRouter();
   const {
     query: { pid },
@@ -34,7 +32,7 @@ const CommentInput = () => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${encodeURIComponent(currentUser?.token)}`,
+          Authorization: `Token ${encodeURIComponent(loggedInUser?.token)}`,
         },
       }
     );
@@ -43,7 +41,7 @@ const CommentInput = () => {
     trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`);
   };
 
-  if (!isLoggedIn) {
+  if (!loggedInUser) {
     return (
       <p>
         <CustomLink href="/user/login" as="/user/login">
@@ -73,7 +71,7 @@ const CommentInput = () => {
       <div className="card-footer">
         <CustomImage
           className="comment-author-img"
-          src={currentUser.effectiveImage}
+          src={loggedInUser.effectiveImage}
           alt="Comment author's profile image"
         />
         <button className="btn btn-sm btn-primary" type="submit">
