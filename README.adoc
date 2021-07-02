@@ -35,7 +35,7 @@ If you make any changes to the code, at least code under `/pages` for sure, you 
 
 Running `next build` is one very important test of the code, as it builds many of the most important pages of the website, and runs checks such as TypeScript type checking. You should basically run it after every single commit that touches the frontend.
 
-== Local run as identical to deployment as possible
+=== Local run as identical to deployment as possible
 
 First setup the database as described at: https://github.com/cirosantilli/node-express-sequelize-realworld-example-app#local-run-as-identical-to-deployment-as-possible
 

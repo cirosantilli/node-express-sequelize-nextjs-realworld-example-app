@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "back-test": "NODE_ENV=test npm run dev",
-    "build": "next build",
-    "build-dev": "NODE_ENV_OVERRIDE=development npm run build",
+    "build": "./bin/sync-db.js && next build",
+    "build-dev": "./bin/sync-db.js && NODE_ENV_OVERRIDE=development npm run build",
     "deploy": "git push heroku-next next:master",
     "dev": "nodemon ./app.js",
     "start": "node --unhandled-rejections=strict ./app.js",
