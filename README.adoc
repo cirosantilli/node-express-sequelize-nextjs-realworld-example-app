@@ -51,10 +51,16 @@ npm run start-prod
 The setup is analogous to: https://github.com/cirosantilli/node-express-sequelize-realworld-example-app#heroku-deployment but instead of `heroku git:remote -a cirosantilli-realworld-express` you should use:
 
 ....
-git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-express.git
+git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-next.git
 ....
 
 This is done because this repository is normally developped as a branch of that one, which would lead to a conflicting name for the branch `heroku`.
+
+You then have to add `--app cirosantilli-realworld-next` to allow heroku to differentiate between them, e.g.:
+
+....
+heroku run --app cirosantilli-realworld-next bash
+....
 
 We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
 
