@@ -59,7 +59,7 @@ const FavoriteArticleButton = (props) => {
   };
   let count = favoritesCount;
   if (props.showText) {
-    count = (<span class="counter">({count})</span>)
+    count = (<span className="counter">({count})</span>)
   }
   return (
     <button
