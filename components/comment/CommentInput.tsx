@@ -43,44 +43,48 @@ const CommentInput = () => {
 
   if (!loggedInUser) {
     return (
-      <p>
+      <>
         <CustomLink href="/user/login" as="/user/login">
           Sign in
         </CustomLink>
-        &nbsp;or&nbsp;
+        {' '}or{' '}
         <CustomLink href="/user/register" as="/user/register">
           sign up
         </CustomLink>
-        &nbsp;to add comments on this article.
-      </p>
+        {' '}to add comments on this article.
+      </>
     );
   }
 
   return (
-    <form className="card comment-form" onSubmit={handleSubmit}>
-      <fieldset>
-        <div className="card-block">
-          <textarea
-            rows={3}
-            className="form-control"
-            placeholder="Write a comment..."
-            value={content}
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-        <div className="card-footer">
-          <CustomImage
-            className="comment-author-img"
-            src={loggedInUser.effectiveImage}
-            alt="Comment author's profile image"
-          />
-          <button className="btn btn-sm btn-primary" type="submit">
-            Post Comment
-          </button>
-        </div>
-      </fieldset>
-    </form>
+    <>
+      <ul className="error-messages">{/* TODO. Reference does not handle those errors either right now.
+        but the unconditional (and likely buggy) presence of this is visible. */}</ul>
+      <form className="card comment-form" onSubmit={handleSubmit}>
+        <fieldset>
+          <div className="card-block">
+            <textarea
+              rows={3}
+              className="form-control"
+              placeholder="Write a comment..."
+              value={content}
+              onChange={handleChange}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="card-footer">
+            <CustomImage
+              className="comment-author-img"
+              src={loggedInUser.effectiveImage}
+              alt="Comment author's profile image"
+            />
+            <button className="btn btn-sm btn-primary" type="submit">
+              Post Comment
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </>
   );
 };
 

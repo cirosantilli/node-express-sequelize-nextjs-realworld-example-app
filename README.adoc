@@ -115,7 +115,9 @@ Use a markdown sanitizer, the `marked` library `sanitize` option was deprecated.
 
 == Known divergences
 
-We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel which we call "our reference implementation:, and have the exact same DOM tree.
+We aim to make this website look exactly like https://github.com/gothinkster/angular-realworld-example-app/tree/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f pixel by pixel which we call "our reference implementation, and have the exact same DOM tree as much as possible, although that is hard because Angular adds a gazillion of fake nodes to the DOM it seems.
+
+We test this by running this front/backend, and then also running angular in another browser tab. We then switch between browser tabs quickly back and forth which allows us to see even very small divergences on the UI.
 
 Some known divergences:
 
