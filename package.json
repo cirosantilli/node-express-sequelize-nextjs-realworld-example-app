@@ -7,7 +7,7 @@
     "back-test": "NODE_ENV=test npm run dev",
     "build": "next build",
     "build-dev": "NODE_ENV_OVERRIDE=development npm run build",
-    "deploy": "git push heroku master",
+    "deploy": "git push heroku-next next",
     "dev": "nodemon ./app.js",
     "start": "node --unhandled-rejections=strict ./app.js",
     "start-dev": "NODE_ENV_OVERRIDE=development NODE_ENV_NEXT=production node --unhandled-rejections=strict ./app.js",
