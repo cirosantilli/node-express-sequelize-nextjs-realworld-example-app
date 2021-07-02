@@ -9,9 +9,7 @@ interface CustomImageProps {
 
 const CustomImage = ({ src, alt, className }: CustomImageProps) => (
   <img
-    data-sizes="auto"
-    data-src={src}
-    src={DEFAULT_IMAGE_SOURCE}
+    src={src}
     alt={alt}
     className={className ? `${className}` : ``}
     onError={handleBrokenImage}
