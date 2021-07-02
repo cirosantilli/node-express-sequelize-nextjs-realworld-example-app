@@ -144,7 +144,13 @@ heroku run bash
 and then run in that shell:
 
 ....
-./bin/generate-demo-data.js --force-production
+bin/generate-demo-data.js --force-production
+....
+
+or you can do it in one go with:
+
+....
+heroku run bin/generate-demo-data.js --force-production
 ....
 
 We have to run `heroku run bash` instead of `heroku ps:exec` because the second command does not set `DATABASE_URL`:
