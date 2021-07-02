@@ -102,6 +102,17 @@ To <<generate-demo-data>> for this instance run:
 NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' ./bin/generate-demo-data.js --force-production
 ....
 
+== Local run as identical to deployment as possible
+
+First setup the database as described at: https://github.com/cirosantilli/node-express-sequelize-realworld-example-app#local-run-as-identical-to-deployment-as-possible
+
+Then run with:
+
+....
+npm run build-dev
+npm run start-prod
+....
+
 == Heroku deployment
 
 First time setup:
