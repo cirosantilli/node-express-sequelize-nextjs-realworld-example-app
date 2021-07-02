@@ -13,7 +13,7 @@ const CustomImage = ({ src, alt, className }: CustomImageProps) => (
     data-src={src}
     src={DEFAULT_IMAGE_SOURCE}
     alt={alt}
-    className={className ? `${className} lazyload` : `lazyload`}
+    className={className ? `${className}` : ``}
     onError={handleBrokenImage}
   />
 );

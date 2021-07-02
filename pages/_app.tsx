@@ -6,12 +6,6 @@ import Navbar from "components/common/Navbar";
 import ContextProvider from "lib/context";
 import "style.scss";
 
-if (typeof window !== "undefined") {
-  require("lazysizes/plugins/attrchange/ls.attrchange.js");
-  require("lazysizes/plugins/respimg/ls.respimg.js");
-  require("lazysizes");
-}
-
 const MyApp = ({ Component, pageProps }) => (
   <>
     <Head>
