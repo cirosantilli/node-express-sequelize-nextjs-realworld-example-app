@@ -28,7 +28,7 @@ const ArticleActions = ({ article }) => {
     loggedInUser && loggedInUser?.username === article?.author?.username;
   return (
     <>
-      <Maybe test={loggedInUser}>
+      <Maybe test={!canModify}>
         <span>
           <FollowUserButton profile={article.author} />
           <FavoriteArticleButton
