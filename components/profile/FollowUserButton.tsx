@@ -5,30 +5,24 @@ import UserAPI from "lib/api/user";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 
+export const FollowUserButtonContext = React.createContext(undefined);
+
 const FollowUserButton = ({
   profile,
 }) => {
   const loggedInUser = getLoggedInUser()
-  const { username, following } = profile;
+  const {following, setFollowing} = React.useContext(FollowUserButtonContext);
+  const { username } = profile;
   const isCurrentUser = loggedInUser && username === loggedInUser?.username;
   if (!loggedInUser || isCurrentUser) { return null; }
   const handleClick = (e) => {
     e.preventDefault();
     if (following) {
-      mutate(
-        `${SERVER_BASE_URL}/profiles/${username}`,
-        { profile: { ...profile, following: false } },
-        false
-      );
       UserAPI.unfollow(username);
     } else {
-      mutate(
-        `${SERVER_BASE_URL}/profiles/${username}`,
-        { profile: { ...profile, following: true } },
-        false
-      );
       UserAPI.follow(username);
     }
+    setFollowing(!following)
   };
   return (
     <button

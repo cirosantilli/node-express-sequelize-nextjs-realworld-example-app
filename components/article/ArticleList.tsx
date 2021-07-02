@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import ArticlePreview from "components/article/ArticlePreview";
 import ErrorMessage from "components/common/ErrorMessage";
+import { FavoriteArticleButtonContext } from "components/common/FavoriteArticleButton";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import Maybe from "components/common/Maybe";
 import Pagination from "components/common/Pagination";
@@ -56,6 +57,23 @@ const ArticleList = (props) => {
   React.useEffect(() => {
     setPageCount(articlesCount);
   }, [articlesCount]);
+
+  // Favorite article button state.
+  const favorited = []
+  const setFavorited = []
+  const favoritesCount = []
+  const setFavoritesCount = []
+  for (let i = 0; i < DEFAULT_LIMIT; i++) {
+    [favorited[i], setFavorited[i]] = React.useState(false);
+    [favoritesCount[i], setFavoritesCount[i]] = React.useState(0);
+  }
+  React.useEffect(() => {
+    for (let i = 0; i < articles.length; i++) {
+      setFavorited[i](articles[i].favorited);
+      setFavoritesCount[i](articles[i].favoritesCount);
+    }
+  }, [articles])
+
   if (error) return <ErrorMessage message="Cannot load recent articles..." />;
   if (!data) return <div className="article-preview">Loading articles...</div>;
   if (articles?.length === 0) {
@@ -63,9 +81,18 @@ const ArticleList = (props) => {
   }
   return (
     <>
-      {articles?.map((article) => (
-        <ArticlePreview key={article.slug} article={article} />
-      ))}
+      {articles?.map((article, i) => {
+        return (
+          <FavoriteArticleButtonContext.Provider key={article.slug} value={{
+            favorited: favorited[i],
+            setFavorited: setFavorited[i],
+            favoritesCount: favoritesCount[i],
+            setFavoritesCount: setFavoritesCount[i],
+          }}>
+            <ArticlePreview key={article.slug} article={article} />
+          </FavoriteArticleButtonContext.Provider>
+        )
+      })}
       <Maybe test={articlesCount && articlesCount > DEFAULT_LIMIT}>
         <Pagination
           total={pageCount}

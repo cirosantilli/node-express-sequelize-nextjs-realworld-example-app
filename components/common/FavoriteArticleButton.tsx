@@ -8,14 +8,11 @@ import getLoggedInUser from "lib/utils/getLoggedInUser";
 const FAVORITED_CLASS = "btn btn-sm btn-primary";
 const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
 
+export const FavoriteArticleButtonContext = React.createContext(undefined);
+
 const FavoriteArticleButton = (props) => {
   const loggedInUser = getLoggedInUser()
-  const [favorited, setFavorited] = React.useState(props.favorited);
-  const [favoritesCount, setFavoritesCount] = React.useState(props.favoritesCount);
-  React.useEffect(() => {
-    setFavorited(props.favorited);
-    setFavoritesCount(props.favoritesCount);
-  }, [props.favorited, props.favoritesCount])
+  const {favorited, setFavorited, favoritesCount, setFavoritesCount} = React.useContext(FavoriteArticleButtonContext);
   let buttonText;
   if (props.showText) {
     if (favorited) {

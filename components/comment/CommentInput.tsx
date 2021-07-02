@@ -58,26 +58,28 @@ const CommentInput = () => {
 
   return (
     <form className="card comment-form" onSubmit={handleSubmit}>
-      <div className="card-block">
-        <textarea
-          rows={3}
-          className="form-control"
-          placeholder="Write a comment..."
-          value={content}
-          onChange={handleChange}
-          disabled={isLoading}
-        />
-      </div>
-      <div className="card-footer">
-        <CustomImage
-          className="comment-author-img"
-          src={loggedInUser.effectiveImage}
-          alt="Comment author's profile image"
-        />
-        <button className="btn btn-sm btn-primary" type="submit">
-          Post Comment
-        </button>
-      </div>
+      <fieldset>
+        <div className="card-block">
+          <textarea
+            rows={3}
+            className="form-control"
+            placeholder="Write a comment..."
+            value={content}
+            onChange={handleChange}
+            disabled={isLoading}
+          />
+        </div>
+        <div className="card-footer">
+          <CustomImage
+            className="comment-author-img"
+            src={loggedInUser.effectiveImage}
+            alt="Comment author's profile image"
+          />
+          <button className="btn btn-sm btn-primary" type="submit">
+            Post Comment
+          </button>
+        </div>
+      </fieldset>
     </form>
   );
 };

@@ -8,7 +8,7 @@ import CustomImage from "components/common/CustomImage";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import Maybe from "components/common/Maybe";
 import EditProfileButton from "components/profile/EditProfileButton";
-import FollowUserButton from "components/profile/FollowUserButton";
+import FollowUserButton, { FollowUserButtonContext } from "components/profile/FollowUserButton";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
@@ -24,6 +24,10 @@ const ProfileHoc = (tab) => {
     const { username, bio, image } = profile;
     const loggedInUser = getLoggedInUser()
     const isCurrentUser = loggedInUser && username === loggedInUser?.username;
+    const [following, setFollowing] = React.useState(false)
+    React.useEffect(() => {
+      setFollowing(profile.following)
+    }, [profile.following])
     return (
       <div className="profile-page">
         <div className="user-info">
@@ -38,7 +42,9 @@ const ProfileHoc = (tab) => {
                 <h4>{username}</h4>
                 <p>{bio}</p>
                 <EditProfileButton isCurrentUser={isCurrentUser} />
-                <FollowUserButton profile={profile} />
+                <FollowUserButtonContext.Provider value={{following, setFollowing}}>
+                  <FollowUserButton profile={profile} />
+                </FollowUserButtonContext.Provider>
               </div>
             </div>
           </div>
