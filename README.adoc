@@ -1,4 +1,4 @@
-= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + Next.js fullstack static/SSR/ISG Example Realworld App
+= Node.js + Express.js + Sequelize + SQLite/PostgreSQL + Next.js fullstack static/SSR/SSG/ISG Example Realworld App
 :idprefix:
 :idseparator: -
 :sectanchors:
@@ -17,11 +17,15 @@ Any information that applies to both repositories will be kept in that README on
 
 Ideally we would like to have both demos on the same tree as they share all backend code, but Next.js and NPM impose too many restrictions which we don't have the time to work around.
 
-The frontend part of this repository is a fork of https://github.com/reck1ess/next-realworld-example-app/tree/66003772a42bf71c7b2771119121d4c9cf4b07d4 which was SSR only via API, not ISG. We decided to merge it in-tree rather than keep it a separate submodule because the fullstack implementation means that the barrier between front-end and back-end becomes is quite blurred, e.g. "front-end" files under `/pages` also contain functions with direct backend database access without going through the API.
+The frontend part of this repository is a fork of https://github.com/reck1ess/next-realworld-example-app/tree/66003772a42bf71c7b2771119121d4c9cf4b07d4 which was SSR only via API, not SSG/ISG.
 
-Both Next.js and the backend API run on the same express server via a https://nextjs.org/docs/advanced-features/custom-server[Next.js custom server].
+We decided to merge it in-tree with the API rather than keep it a separate submodule because the fullstack implementation means that the barrier between front-end and back-end becomes is quite blurred, e.g. "front-end" files under `/pages` also contain functions with direct backend database access without going through the API.
 
-The design goals are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSR.
+Both Next.js and the backend API run on the same Express.js server via a https://nextjs.org/docs/advanced-features/custom-server[Next.js custom server].
+
+User-specific information such as "do I follow this article or not" is fetched by the client after it receives the user-agnostic statically generated page. The client then patches that page with this new user-specific information. See also: <<what-works-with-javascript-turned-off>>.
+
+The design goals of this repository are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSR.
 
 toc::[]
 
@@ -101,9 +105,9 @@ It is true that the pass-down approach goes a bit against the phylosophy of `use
 
 Due to ISR/SSR, <<single-url-with-multiple-pages,all pages of the website that have distinct URLs>>, which includes e.g. articles and profiles but not "Your Feed" vs "Global Feed, look exactly the same with and without JavaScript for a logged out user.
 
-For the pages without distinct URLs, we don't know how to do this, the only way we can do it is by fetching.
+For the pages without distinct URLs, we don't know how to do this, the only way we can do it is by fetching the API with JavaScript.
 
-SSR would require `a` to send custom headers, so that URLs won't be changed, which is impossible:
+SSR would require `<a href` elements to send custom headers, so that URLs won't be changed, which is impossible:
 
 * https://stackoverflow.com/questions/15835783/adding-http-request-header-to-a-a-href-link
 * https://stackoverflow.com/questions/374885/can-i-change-the-headers-of-the-http-request-sent-by-the-browser
