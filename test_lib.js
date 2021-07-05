@@ -36,6 +36,9 @@ async function generateDemoData(params) {
       username: `user${i}`,
       email: `user${i}@mail.com`,
     }
+    if (i % 2 === 0) {
+      userArg.bio = `My bio ${i}`
+    }
     sequelize.models.User.setPassword(userArg, 'asdf')
     userArgs.push(userArg)
   }
