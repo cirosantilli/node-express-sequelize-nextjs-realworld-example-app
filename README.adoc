@@ -1,4 +1,13 @@
 = Node.js + Express.js + Sequelize + SQLite/PostgreSQL + Next.js fullstack static/SSR/ISG Example Realworld App
+:idprefix:
+:idseparator: -
+:sectanchors:
+:sectlinks:
+:sectnumlevels: 6
+:sectnums:
+:toc: macro
+:toclevels: 6
+:toc-title:
 
 Got it running on Heroku as of April 2021 at https://cirosantilli-realworld-next.herokuapp.com/
 
@@ -13,6 +22,8 @@ The frontend part of this repository is a fork of https://github.com/reck1ess/ne
 Both Next.js and the backend API run on the same express server via a https://nextjs.org/docs/advanced-features/custom-server[Next.js custom server].
 
 The design goals are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSR.
+
+toc::[]
 
 == Local development with SQLite
 
@@ -200,3 +211,7 @@ which leads to a much easier to read DOM tree, and less identifiers flying every
 It must be said that the port to emotion was made in a way that closely mimicks the original class/CSS structure. But still, it is just too much work, and mistakes popped up inevitably.
 
 These are all points that we have or would like to address in this fork.
+
+== Alternatives
+
+* https://github.com/lifeiscontent/realworld[]: Rails backend is a downside, as it adds another language to the mix besides JavaScript. But it has graphql, which is really really awesome technology.
