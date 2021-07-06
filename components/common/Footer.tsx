@@ -1,11 +1,11 @@
 import CustomLink from "components/common/CustomLink";
-import React from "react";
+import { APP_NAME } from "lib/utils/constant";
 
 const Footer = () => (
   <footer>
     <div className="container">
       <CustomLink href="/" className="logo-font">
-        conduit
+        {APP_NAME.toLowerCase()}
       </CustomLink>
       <span className="attribution">
         {" "}© 2021. An interactive learning project from{" "}
