@@ -51,7 +51,7 @@ const Navbar = () => {
                 <CustomImage
                   className="user-pic"
                   src={loggedInUser?.effectiveImage}
-                  alt="Comment author's profile image"
+                  alt="your profile image"
                 />
                 {loggedInUser?.username}
               </NavLink>

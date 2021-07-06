@@ -15,7 +15,7 @@ const ArticleMeta = ({ article }) => {
       >
         <CustomImage
           src={article.author?.image}
-          alt="author-profile-image"
+          alt="author profile image"
         />
       </CustomLink>
       <div className="info">

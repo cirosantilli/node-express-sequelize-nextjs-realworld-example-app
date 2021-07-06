@@ -23,7 +23,7 @@ const Comment = ({ comment }) => {
         >
           <img
             src={comment.author.image}
-            alt="Comment author's profile image"
+            alt="author profile image"
             className="comment-author-img"
           />
         </CustomLink>
