@@ -33,7 +33,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   }
   // We fetch comments so that the new posted comment will appear immediately after posted.
   // Note that we cannot calculate the exact new coment element because we need the server datetime.
-  const { data: commentApi, commentError } = useSWR(`${SERVER_BASE_URL}/articles/${article.slug}/comments`, fetcher);
+  const { data: commentApi, error: commentError } = useSWR(`${SERVER_BASE_URL}/articles/${article.slug}/comments`, fetcher);
   if (commentApi !== undefined) {
     comments = commentApi.comments
   }
