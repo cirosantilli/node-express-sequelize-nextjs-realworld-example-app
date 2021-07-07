@@ -1,6 +1,6 @@
 import marked from "marked";
-import React from "react";
 import { useRouter } from 'next/router'
+import React from "react";
 import useSWR  from "swr";
 
 import ArticleMeta from "components/article/ArticleMeta";
@@ -24,9 +24,18 @@ interface ArticlePageProps {
 const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   const router = useRouter();
   if (router.isFallback) { return <LoadingSpinner />; }
+
+  // Fetch user-specific data.
+  // Article determines if the curent user favorited the article or not
   const { data: articleApi, error } = useSWR(`${SERVER_BASE_URL}/articles/${article.slug}`, fetcher);
   if (articleApi !== undefined) {
     article = articleApi.article
+  }
+  // We fetch comments so that the new posted comment will appear immediately after posted.
+  // Note that we cannot calculate the exact new coment element because we need the server datetime.
+  const { data: commentApi, commentError } = useSWR(`${SERVER_BASE_URL}/articles/${article.slug}/comments`, fetcher);
+  if (commentApi !== undefined) {
+    comments = commentApi.comments
   }
 
   // TODO it is not ideal to have to setup state on every parent of FavoriteUserButton/FollowUserButton,
