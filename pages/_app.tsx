@@ -4,6 +4,7 @@ import React from "react";
 import Footer from "components/common/Footer";
 import Navbar from "components/common/Navbar";
 import ContextProvider from "lib/context";
+import "ionicons/css/ionicons.min.css";
 import "style.scss";
 
 const MyApp = ({ Component, pageProps }) => (
