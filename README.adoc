@@ -170,8 +170,8 @@ Some known divergences:
 Error messages due to API failures are too inconsistent across implementations to determine what is the correct behaviour, e.g. if you patch:
 
 ....
---- a/routes/api/articles.js
-+++ b/routes/api/articles.js
+--- a/api/articles.js
++++ b/api/articles.js
 @@ -104,6 +104,7 @@ router.get('/', auth.optional, async function(req, res, next) {
 
  router.get('/feed', auth.required, async function(req, res, next) {
