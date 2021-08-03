@@ -93,6 +93,9 @@ module.exports = (sequelize) => {
     let data = {
       username: this.username,
       bio: this.bio === undefined ? '' : this.bio,
+      // This one returns the default image if empty, unlike toAuthJSON which returns nothing.
+      // Therefore, this one is what you want when viewing profiles, and toAuthJSON is what
+      // you want when loading profile settings forms for which we want an empty field.
       image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
       following: user ? (await user.hasFollow(this.id)) : false
     }

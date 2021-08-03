@@ -27,6 +27,8 @@ User-specific information such as "do I follow this article or not" is fetched b
 
 The design goals of this repository are similar to https://dev.to/givehug/next-js-apollo-client-and-server-on-a-single-express-app-55l6 except that we are trying to implement the Realworld App :-) GraphQL would be ideal, but its need is greatly diminished by SSR.
 
+This repository is a baseline for the more realworld/advanced/specialized: https://github.com/cirosantilli/cirodown/tree/master/web We are trying to port back any problems that are noticed in that repository here. Some features will only be present there because of our constraint of not diverging from the Realworld spec.
+
 toc::[]
 
 == Local development with SQLite

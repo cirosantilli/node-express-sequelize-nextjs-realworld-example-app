@@ -8,9 +8,7 @@ router.param('username', function(req, res, next, username) {
       if (!user) {
         return res.sendStatus(404)
       }
-
       req.profile = user
-
       return next()
     })
     .catch(next)
