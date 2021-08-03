@@ -71,9 +71,9 @@ The setup is analogous to: https://github.com/cirosantilli/node-express-sequeliz
 git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-next.git
 ....
 
-This is done because this repository is normally developped as a branch of that one, which would lead to a conflicting name for the branch `heroku`.
+This is done because this repository is normally developed as a branch of that one, which would lead to a conflicting name for the branch `heroku`.
 
-You then have to add `--app cirosantilli-realworld-next` to allow heroku to differentiate between them, e.g.:
+You then have to add `--app cirosantilli-realworld-next` to allow Heroku to differentiate between them, e.g.:
 
 ....
 heroku run --app cirosantilli-realworld-next bash
