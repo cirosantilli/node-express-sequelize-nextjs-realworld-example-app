@@ -29,10 +29,7 @@ const makeLoginPage = ({ register = false }) => {
               </h1>
               <p className="text-xs-center">
                 <CustomLink href={register ? "/user/login" : "/user/register" } >
-                  {register
-                    ? <>Have an account?</>
-                    : <>Need an account?</>
-                  }
+                  {`${register ? 'Have' : 'Need' }`} an account?
                 </CustomLink>
               </p>
               <LoginForm register={register} />

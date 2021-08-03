@@ -1,10 +1,12 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
+
+import { prerenderAll } from "config";
 import sequelize from "lib/db";
 
 export const getStaticPathsArticle: GetStaticPaths = async () => {
-  return {
-    fallback: true,
-    paths: (await sequelize.models.Article.findAll()).map(
+  let paths;
+  if (prerenderAll) {
+    paths = (await sequelize.models.Article.findAll()).map(
       article => {
         return {
           params: {
@@ -12,7 +14,13 @@ export const getStaticPathsArticle: GetStaticPaths = async () => {
           }
         }
       }
-    ),
+    )
+  } else {
+    paths = []
+  }
+  return {
+    fallback: true,
+    paths,
   }
 }
 
