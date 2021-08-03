@@ -42,8 +42,7 @@ const ArticleActions = ({ article }) => {
       <Maybe test={canModify}>
         <span>
           <CustomLink
-            href="/editor/[pid]"
-            as={`/editor/${article.slug}`}
+            href={`/editor/${article.slug}`}
             className="btn btn-outline-secondary btn-sm"
           >
             <i className="ion-edit" /> Edit Article

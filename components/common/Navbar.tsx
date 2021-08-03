@@ -20,24 +20,24 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <CustomLink href="/" as="/" onClick={handleClick} className="navbar-brand">
+        <CustomLink href="/" onClick={handleClick} className="navbar-brand">
           {APP_NAME.toLowerCase()}
         </CustomLink>
         <ul className="nav navbar-nav pull-xs-right">
           <NavbarItem>
-            <NavLink href="/" as="/" onClick={handleClick}>
+            <NavLink href="/" onClick={handleClick}>
               Home
             </NavLink>
           </NavbarItem>
           <Maybe test={loggedInUser}>
             <NavbarItem>
-              <NavLink href="/editor" as="/editor">
+              <NavLink href="/editor">
                 <i className="ion-compose" />
                 &nbsp;New Article
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href="/settings" as="/settings">
+              <NavLink href="/settings">
                 <i className="ion-gear-a" />
                 &nbsp;Settings
               </NavLink>
@@ -45,7 +45,6 @@ const Navbar = () => {
             <NavbarItem>
               <NavLink
                 href={`/profile/${loggedInUser?.username}`}
-                as={`/profile/${loggedInUser?.username}`}
                 onClick={handleClick}
               >
                 <CustomImage
@@ -59,12 +58,12 @@ const Navbar = () => {
           </Maybe>
           <Maybe test={!loggedInUser}>
             <NavbarItem>
-              <NavLink href="/user/login" as="/user/login">
+              <NavLink href="/user/login">
                 Sign in
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href="/user/register" as="/user/register">
+              <NavLink href="/user/register">
                 Sign up
               </NavLink>
             </NavbarItem>

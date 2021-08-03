@@ -58,8 +58,7 @@ const ProfileHoc = (tab) => {
                 <ul className="nav nav-pills outline-active">
                   <li className="nav-item">
                     <CustomLink
-                      href="/profile/[pid]"
-                      as={`/profile/${encodeURIComponent(username)}`}
+                      href={`/profile/${encodeURIComponent(username)}`}
                       className={`nav-link${tab === 'my-posts' ? ' active' : ''}`}
                     >
                       My Posts
@@ -67,8 +66,7 @@ const ProfileHoc = (tab) => {
                   </li>
                   <li className="nav-item">
                     <CustomLink
-                      href="/profile/[pid]/favorites"
-                      as={`/profile/${encodeURIComponent(username)}/favorites`}
+                      href={`/profile/${encodeURIComponent(username)}/favorites`}
                       className={`nav-link${tab === 'favorites' ? ' active' : ''}`}
                     >
                       Favorited Posts

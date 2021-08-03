@@ -10,8 +10,7 @@ const ArticleMeta = ({ article }) => {
   return (
     <div className="article-meta">
       <CustomLink
-        href="/profile/[pid]"
-        as={`/profile/${encodeURIComponent(article.author?.username)}`}
+        href={`/profile/${encodeURIComponent(article.author?.username)}`}
       >
         <CustomImage
           src={article.author?.image}
@@ -20,8 +19,7 @@ const ArticleMeta = ({ article }) => {
       </CustomLink>
       <div className="info">
         <CustomLink
-          href="/profile/[pid]"
-          as={`/profile/${encodeURIComponent(article.author?.username)}`}
+          href={`/profile/${encodeURIComponent(article.author?.username)}`}
           className="author"
         >
           {article.author?.username}

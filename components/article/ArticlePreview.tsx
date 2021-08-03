@@ -17,8 +17,7 @@ const ArticlePreview = ({ article }) => {
     <div className="article-preview">
       <div className="article-meta">
         <CustomLink
-          href="/profile/[pid]"
-          as={`/profile/${preview.author.username}`}
+          href={`/profile/${preview.author.username}`}
         >
           <CustomImage
             src={preview.author.image}
@@ -27,8 +26,7 @@ const ArticlePreview = ({ article }) => {
         </CustomLink>
         <div className="info">
           <CustomLink
-            href="/profile/[pid]"
-            as={`/profile/${preview.author.username}`}
+            href={`/profile/${preview.author.username}`}
             className="author"
           >
             <span onClick={() => setPage(0)}>{preview.author.username}</span>
@@ -45,8 +43,7 @@ const ArticlePreview = ({ article }) => {
         </div>
       </div>
       <CustomLink
-        href="/article/[pid]"
-        as={`/article/${preview.slug}`}
+        href={`/article/${preview.slug}`}
         className="preview-link"
       >
         <h1>{preview.title}</h1>
@@ -55,7 +52,7 @@ const ArticlePreview = ({ article }) => {
         <ul className="tag-list">
           {preview.tagList.map((tag, index) => {
             return (
-              <Link href={`/?tag=${tag}`} as={`/?tag=${tag}`} key={index}>
+              <Link href={`/?tag=${tag}`} key={index}>
                 <li
                   className="tag-default tag-pill tag-outline"
                   onClick={(e) => e.stopPropagation()}

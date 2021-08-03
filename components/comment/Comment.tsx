@@ -18,8 +18,7 @@ const Comment = ({ comment }) => {
       </div>
       <div className="card-footer">
         <CustomLink
-          href="profile/[pid]"
-          as={`/profile/${comment.author.username}`}
+          href={`/profile/${comment.author.username}`}
           className="comment-author"
         >
           <img
@@ -30,8 +29,7 @@ const Comment = ({ comment }) => {
         </CustomLink>
         &nbsp;
         <CustomLink
-          href="profile/[pid]"
-          as={`/profile/${comment.author.username}`}
+          href={`/profile/${comment.author.username}`}
           className="comment-author"
         >
           {comment.author.username}

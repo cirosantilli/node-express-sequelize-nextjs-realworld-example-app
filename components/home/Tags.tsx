@@ -21,7 +21,6 @@ const Tags = ({setTab, setTag}) => {
         <CustomLink
           key={tag}
           href={``}
-          as={`/`}
           className="tag-default tag-pill"
           onClick={() => {setTab('tag'); setTag(tag);}}
         >
