@@ -6,6 +6,7 @@ import { mutate } from "swr";
 import ListErrors from "components/common/ListErrors";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import UserAPI from "lib/api/user";
 
 const SettingsForm = () => {
   const [isLoading, setLoading] = React.useState(false);
@@ -49,9 +50,11 @@ const SettingsForm = () => {
       setErrors(data.errors.body);
     }
     if (data?.user) {
-      if (data.user?.image) {
-        data.user.effectiveImage = data.user.image;
+      const { data: profileData, status: profileStatus } = await UserAPI.get(data.user.username);
+      if (profileStatus !== 200) {
+        setErrors(profileData.errors);
       }
+      data.user.effectiveImage = profileData.profile.image;
       window.localStorage.setItem("user", JSON.stringify(data.user));
       mutate("user", data.user);
       Router.push(`/profile/${user.username}`);
@@ -67,7 +70,7 @@ const SettingsForm = () => {
               className="form-control"
               type="text"
               placeholder="URL of profile picture"
-              value={userInfo.image}
+              value={userInfo.image ? userInfo.image : ""}
               onChange={updateState("image")}
             />
           </fieldset>
