@@ -7,7 +7,7 @@
     "back-test": "NODE_ENV=test npm run dev",
     "build": "./bin/sync-db.js && next build",
     "build-dev": "./bin/sync-db.js && NODE_ENV_OVERRIDE=development npm run build",
-    "deploy": "git push heroku-next next:master",
+    "deploy": "git push -f heroku-next next:master",
     "dev": "NODE_OPTIONS='--unhandled-rejections=strict' nodemon ./app.js",
     "start": "node --unhandled-rejections=strict ./app.js",
     "start-dev": "NODE_ENV_OVERRIDE=development NODE_ENV_NEXT=production node --unhandled-rejections=strict ./app.js",
