@@ -23,7 +23,7 @@ class MyDocument extends Document<IProps> {
               __html: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'UA-47867706-3');
+gtag('config', 'UA-47867706-3', { page_path: window.location.pathname });
 `,
             }}
           />
