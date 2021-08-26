@@ -7,6 +7,7 @@ if (process.env.NODE_ENV_OVERRIDE === undefined) {
 module.exports = {
   apiPath: '/api',
   databaseUrl: process.env.DATABASE_URL || '',
+  googleAnalyticsId: 'UA-47867706-3',
   isProduction: isProduction,
   isProductionNext: process.env.NODE_ENV_NEXT === undefined ?
     (isProduction) :

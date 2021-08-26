@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import React from "react";
+import { googleAnalyticsId, isProduction } from "config";
 
 interface IProps {
   css: any;
@@ -17,16 +18,20 @@ class MyDocument extends Document<IProps> {
     return (
       <Html lang="en">
         <Head>
-          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-47867706-3"></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.dataLayer = window.dataLayer || [];
+          {isProduction &&
+            <>
+              <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'UA-47867706-3', { page_path: window.location.pathname });
+gtag('config', '${googleAnalyticsId}', { page_path: window.location.pathname });
 `,
-            }}
-          />
+                }}
+              />
+            </>
+          }
           <link rel="stylesheet" href="//demo.productionready.io/main.css" />
           <link
             rel="stylesheet"
