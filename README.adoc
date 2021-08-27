@@ -73,10 +73,20 @@ git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-next.gi
 
 This is done because this repository is normally developed as a branch of that one, which would lead to a conflicting name for the branch `heroku`.
 
-You then have to add `--app cirosantilli-realworld-next` to allow Heroku to differentiate between them, e.g.:
+You then have to add `--app cirosantilli-realworld-next` to any raw `heroku` commands to allow Heroku to differentiate between them, e.g.:
 
 ....
 heroku run --app cirosantilli-realworld-next bash
+....
+
+for which we have the helper:
+
+....
+npm run heroku bash
+....
+
+....
+heroku run bin/generate-demo-data.js --force-production
 ....
 
 We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
