@@ -11,6 +11,7 @@
     "deploy": "git push heroku master",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
     "front": "cd react-redux-realworld-example-app && npm start",
+    "heroku": "heroku run --app cirosantilli-realworld-express",
     "preinstall": "cd react-redux-realworld-example-app && npm install",
     "start": "node --unhandled-rejections=strict ./app.js",
     "start-prod": "env $(cat .env | xargs) NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' npm start",
