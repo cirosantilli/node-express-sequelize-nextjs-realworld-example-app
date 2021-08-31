@@ -128,6 +128,8 @@ heroku config:set DISABLE_ESLINT_PLUGIN=true
 # Notably to skip ultra-slow sqlite native build.
 heroku config:set NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
 heroku config:set SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
+# Optional. If set, enables demo mode.
+heroku config:set CIROSANTILLI_DEMO=true
 ....
 
 Every update:
@@ -135,6 +137,14 @@ Every update:
 ....
 npm run deploy
 ....
+
+=== Demo mode
+
+If `CIROSANTILLI_DEMO=true` is set, then the app runs in demo mode.
+
+This has the following effects:
+
+* block posts with tags given at `blacklistTags` of `config.js` The initial motivation for this was to block automated "Cypress Automation" spam that is likely setup by some bastard on all published implementations via the backend: https://archive.ph/wip/n4Jlx
 
 === Heroku instance management
 
