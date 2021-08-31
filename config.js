@@ -8,6 +8,7 @@ module.exports = {
   apiPath: '/api',
   databaseUrl: process.env.DATABASE_URL || '',
   googleAnalyticsId: 'UA-47867706-3',
+  isDemo: process.env.CIROSANTILLI_DEMO === 'true',
   isProduction: isProduction,
   isProductionNext: process.env.NODE_ENV_NEXT === undefined ?
     (isProduction) :
@@ -19,4 +20,7 @@ module.exports = {
   revalidate: 10,
   secret: isProduction ? process.env.SECRET : 'secret',
   verbose: process.env.VERBOSE,
+  blacklistTags: new Set([
+    'cypress',
+  ])
 }

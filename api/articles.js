@@ -2,6 +2,28 @@ const router = require('express').Router()
 const auth = require('../auth')
 const Op = require('sequelize').Op
 
+const config = require('../config.js')
+
+// https://stackoverflow.com/questions/14382725/how-to-get-the-correct-ip-address-of-a-client-into-a-node-socket-io-app-hosted-o/14382990#14382990
+function getClientIp(req) {
+  var ipAddress;
+  // Amazon EC2 / Heroku workaround to get real client IP
+  var forwardedIpsStr = req.header('x-forwarded-for');
+  if (forwardedIpsStr) {
+    // 'x-forwarded-for' header may return multiple IP addresses in
+    // the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
+    // the first one
+    var forwardedIps = forwardedIpsStr.split(',');
+    ipAddress = forwardedIps[0];
+  }
+  if (!ipAddress) {
+    // Ensure getting client IP address still works in
+    // development environment
+    ipAddress = req.connection.remoteAddress;
+  }
+  return ipAddress;
+};
+
 async function setArticleTags(req, article, tagList) {
   return req.app.get('sequelize').models.Tag.bulkCreate(
     tagList.map((tag) => {return {name: tag}}),
@@ -15,6 +37,24 @@ async function setArticleTags(req, article, tagList) {
       return article.setTags(tags)
     })
   })
+}
+
+function validateArticle(req, res, article, tagList) {
+  let ret;
+  if (typeof tagList !== 'undefined') {
+    if (config.isDemo) {
+      for (tag of tagList) {
+        if (config.blacklistTags.has(tag.toLowerCase())) {
+          ret = `blacklisted tag: ${tag}`;
+        }
+      }
+    }
+  }
+  if (ret) {
+    console.log(`${ret} ${getClientIp(req)}`);
+    return res.sendStatus(422)
+  }
+  return ret;
 }
 
 // Preload article objects on routes with ':article'
@@ -138,6 +178,7 @@ router.post('/', auth.required, async function(req, res, next) {
     let article = new (req.app.get('sequelize').models.Article)(req.body.article)
     article.authorId = user.id
     const tagList = req.body.article.tagList
+    if (validateArticle(req, res, article, tagList)) return
     await Promise.all([
       (typeof tagList === 'undefined')
         ? null
@@ -181,6 +222,7 @@ router.put('/:article', auth.required, async function(req, res, next) {
       }
       const article = req.article
       const tagList = req.body.article.tagList
+      if (validateArticle(req, res, article, tagList)) return
       await Promise.all([
         (typeof tagList === 'undefined')
           ? null
