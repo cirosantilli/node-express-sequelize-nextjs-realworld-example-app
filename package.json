@@ -9,7 +9,6 @@
     "build-dev": "./bin/sync-db.js && NODE_ENV_OVERRIDE=development npm run build",
     "deploy": "git push -f heroku-next next:master",
     "dev": "NODE_OPTIONS='--unhandled-rejections=strict' nodemon ./app.js",
-    "heroku": "heroku run --app cirosantilli-realworld-next",
     "start": "node --unhandled-rejections=strict ./app.js",
     "start-dev": "NODE_ENV_OVERRIDE=development NODE_ENV_NEXT=production node --unhandled-rejections=strict ./app.js",
     "start-prod": "env $(cat .env | xargs) NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' npm start",
