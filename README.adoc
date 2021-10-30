@@ -69,6 +69,13 @@ The setup is analogous to: https://github.com/cirosantilli/node-express-sequeliz
 
 ....
 git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-next.git
+heroku config:set --app cirosantilli-realworld-next NEXT_PUBLIC_DEMO=true addons:create heroku-postgresql:hobby-dev
+heroku config:set --app cirosantilli-realworld-next DISABLE_ESLINT_PLUGIN=true
+heroku config:set --app cirosantilli-realworld-next NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
+heroku config:set --app cirosantilli-realworld-next SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
+# Optional. If set, enables demo mode. We must use the NEXT_PUBLIC_* prefix for the variable name,
+# otherwise it is not visible in the page renders.
+heroku config:set --app cirosantilli-realworld-next NEXT_PUBLIC_DEMO=true
 ....
 
 This is done because this repository is normally developed as a branch of that one, which would lead to a conflicting name for the branch `heroku`.

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import Footer from "components/common/Footer";
 import Navbar from "components/common/Navbar";
-import { googleAnalyticsId, isProduction } from "config";
+import { googleAnalyticsId, isDemo, isProduction } from "config";
 import ContextProvider from "lib/context";
 import "ionicons/css/ionicons.min.css";
 import "style.scss";
@@ -36,6 +36,11 @@ const MyApp = ({ Component, pageProps }) => {
       </Head>
       <ContextProvider>
         <Navbar />
+        {isDemo && (
+          <div className="container">
+            Source code of this website at: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
+          </div>
+        )}
         <Component {...pageProps} />
         <Footer />
       </ContextProvider>

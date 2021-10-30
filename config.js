@@ -8,7 +8,7 @@ module.exports = {
   apiPath: '/api',
   databaseUrl: process.env.DATABASE_URL || '',
   googleAnalyticsId: 'UA-47867706-3',
-  isDemo: process.env.CIROSANTILLI_DEMO === 'true',
+  isDemo: process.env.NEXT_PUBLIC_DEMO === 'true',
   isProduction: isProduction,
   isProductionNext: process.env.NODE_ENV_NEXT === undefined ?
     (isProduction) :
