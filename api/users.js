@@ -1,47 +1,50 @@
 const router = require('express').Router()
 const passport = require('passport')
-const auth = require('../auth')
 
-router.get('/user', auth.required, function(req, res, next) {
-  req.app.get('sequelize').models.User.findByPk(req.payload.id)
-    .then(function(user) {
-      if (!user) {
-        return res.sendStatus(401)
-      }
-      return res.json({ user: user.toAuthJSON() })
-    })
-    .catch(next)
+const auth = require('../auth')
+const config = require('../config.js')
+
+router.get('/user', auth.required, async function(req, res, next) {
+  try {
+    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    if (!user) {
+      return res.sendStatus(401)
+    }
+    return res.json({ user: user.toAuthJSON() })
+  } catch(error) {
+    next(error);
+  }
 })
 
-router.put('/user', auth.required, function(req, res, next) {
-  req.app.get('sequelize').models.User.findByPk(req.payload.id)
-    .then(function(user) {
-      if (!user) {
-        return res.sendStatus(401)
-      }
+router.put('/user', auth.required, async function(req, res, next) {
+  try {
+    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    if (!user) {
+      return res.sendStatus(401)
+    }
 
-      // only update fields that were actually passed...
-      if (typeof req.body.user.username !== 'undefined') {
-        user.username = req.body.user.username
-      }
-      if (typeof req.body.user.email !== 'undefined') {
-        user.email = req.body.user.email
-      }
-      if (typeof req.body.user.bio !== 'undefined') {
-        user.bio = req.body.user.bio
-      }
-      if (typeof req.body.user.image !== 'undefined') {
-        user.image = req.body.user.image
-      }
-      if (typeof req.body.user.password !== 'undefined') {
-        req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
-      }
+    // Only update fields that were actually passed.
+    if (typeof req.body.user.username !== 'undefined') {
+      user.username = req.body.user.username
+    }
+    if (typeof req.body.user.email !== 'undefined') {
+      user.email = req.body.user.email
+    }
+    if (typeof req.body.user.bio !== 'undefined') {
+      user.bio = req.body.user.bio
+    }
+    if (typeof req.body.user.image !== 'undefined') {
+      user.image = req.body.user.image
+    }
+    if (typeof req.body.user.password !== 'undefined') {
+      req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
+    }
 
-      return user.save().then(function() {
-        return res.json({ user: user.toAuthJSON() })
-      })
-    })
-    .catch(next)
+    await user.save()
+    return res.json({ user: user.toAuthJSON() })
+  } catch(error) {
+    next(error);
+  }
 })
 
 router.post('/users/login', function(req, res, next) {
@@ -64,20 +67,29 @@ router.post('/users/login', function(req, res, next) {
   })(req, res, next)
 })
 
-router.post('/users', function(req, res, next) {
-  let user = new (req.app.get('sequelize').models.User)()
-  user.username = req.body.user.username
-  user.email = req.body.user.email
-  req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
-  user
-    .save()
-    .then(function() {
-      return res.json({ user: user.toAuthJSON() })
-    })
-    .catch((error) => {
-      console.error(error);
-      next();
-    });
+router.post('/users', async function(req, res, next) {
+  try {
+    let user = new (req.app.get('sequelize').models.User)()
+    user.username = req.body.user.username
+    user.email = req.body.user.email
+    req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
+    await user.save()
+    if (config.isDemo) {
+      // TODO delete oldest user when new one is created. Failing with:
+      //
+      // sequelize:sql:sqlite Executed (default): DELETE FROM `User` WHERE `id` = 1 +10ms
+      // SequelizeForeignKeyConstraintError: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed 
+      //
+      // so need to setup some cascades better most likely. Attempt:
+      //
+      //if ((await req.app.get('sequelize').models.User.count()) > 10) {
+      //  await (await req.app.get('sequelize').models.User.findOne({order: [['createdAt', 'ASC']]})).destroy()
+      //}
+    }
+    return res.json({ user: user.toAuthJSON() })
+  } catch(error) {
+    next(error);
+  }
 })
 
 module.exports = router

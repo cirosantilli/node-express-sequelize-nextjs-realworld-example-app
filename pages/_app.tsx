@@ -37,8 +37,8 @@ const MyApp = ({ Component, pageProps }) => {
       <ContextProvider>
         <Navbar />
         {isDemo && (
-          <div className="container">
-            Source code of this website at: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
+          <div className="container" style={{'marginBottom': '20px'}}>
+            Source code for this website: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
           </div>
         )}
         <Component {...pageProps} />

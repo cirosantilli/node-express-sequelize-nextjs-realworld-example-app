@@ -81,7 +81,7 @@ module.exports = (toplevelDir, toplevelBasename) => {
     foreignKey: {
       name: 'authorId',
       allowNull: false
-    }
+    },
   })
   User.hasMany(Article, {as: 'authoredArticles', foreignKey: 'authorId'})
 

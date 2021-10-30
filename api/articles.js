@@ -43,6 +43,9 @@ function validateArticle(req, res, article, tagList) {
   let ret;
   if (typeof tagList !== 'undefined') {
     if (config.isDemo) {
+      if (tagList.length > 10) {
+        ret = `too many tags: ${tagList.length}`;
+      }
       for (tag of tagList) {
         if (config.blacklistTags.has(tag.toLowerCase())) {
           ret = `blacklisted tag: ${tag}`;
@@ -169,6 +172,7 @@ router.get('/feed', auth.required, async function(req, res, next) {
   }
 })
 
+// create article
 router.post('/', auth.required, async function(req, res, next) {
   try {
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
@@ -179,12 +183,15 @@ router.post('/', auth.required, async function(req, res, next) {
     article.authorId = user.id
     const tagList = req.body.article.tagList
     if (validateArticle(req, res, article, tagList)) return
-    await Promise.all([
-      (typeof tagList === 'undefined')
-        ? null
-        : setArticleTags(req, article, tagList),
-      article.save()
-    ])
+    // TODO these should be in a transaction
+    await article.save()
+    await setArticleTags(req, article, tagList)
+    if (config.isDemo) {
+      // Delete the oldest post to keep data size limited.
+      if ((await req.app.get('sequelize').models.Article.count()) > 1000) {
+        await (await req.app.get('sequelize').models.Article.findOne({order: [['createdAt', 'ASC']]})).destroy()
+      }
+    }
     article.author = user
     return res.json({ article: await article.toJSONFor(user) })
   } catch(error) {
@@ -192,7 +199,7 @@ router.post('/', auth.required, async function(req, res, next) {
   }
 })
 
-// return a article
+// get article
 router.get('/:article', auth.optional, async function(req, res, next) {
   try {
     const results = await Promise.all([
@@ -239,22 +246,22 @@ router.put('/:article', auth.required, async function(req, res, next) {
 })
 
 // delete article
-router.delete('/:article', auth.required, function(req, res, next) {
-  req.app.get('sequelize').models.User.findByPk(req.payload.id)
-    .then(function(user) {
-      if (!user) {
-        return res.sendStatus(401)
-      }
-
-      if (req.article.author.id.toString() === req.payload.id.toString()) {
-        return req.article.destroy().then(function() {
-          return res.sendStatus(204)
-        })
-      } else {
-        return res.sendStatus(403)
-      }
-    })
-    .catch(next)
+router.delete('/:article', auth.required, async function(req, res, next) {
+  try {
+    const user = req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    if (!user) {
+      return res.sendStatus(401)
+    }
+    if (req.article.author.id.toString() === req.payload.id.toString()) {
+      await req.article.destroy()
+      return res.sendStatus(204)
+      // TODO remove tags that don´t have any articles.
+    } else {
+      return res.sendStatus(403)
+    }
+  } catch(error) {
+    next(error);
+  }
 })
 
 // Favorite an article
