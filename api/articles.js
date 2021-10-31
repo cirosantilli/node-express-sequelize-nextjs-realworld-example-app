@@ -339,8 +339,14 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
     const comment = await req.app.get('sequelize').models.Comment.create(
       Object.assign({}, req.body.comment, { articleId: req.article.id, authorId: user.id })
     )
+    if (config.isDemo) {
+      // Delete the oldest comment to keep data size limited.
+      if ((await req.app.get('sequelize').models.Comment.count()) > 10) {
+        await (await req.app.get('sequelize').models.Comment.findOne({order: [['createdAt', 'ASC']]})).destroy()
+      }
+    }
     comment.author = user
-    res.json({ comment: await comment.toJSONFor(user) })
+    return res.json({ comment: await comment.toJSONFor(user) })
   } catch(error) {
     next(error);
   }

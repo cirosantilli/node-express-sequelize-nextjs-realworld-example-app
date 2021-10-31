@@ -100,6 +100,14 @@ e.g. to delete, recreate and reseed the database:
 
 We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
 
+=== Demo mode
+
+Activated with `NEXT_PUBLID_DEMO=true` or:
+
+....
+npm run dev-demo
+....
+
 == ISR vs SSR
 
 ISR is very tempting, but is has some possibly drawbacks. Part of the goal of this repository is to decide if it is worth already or not.
