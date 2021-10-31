@@ -188,7 +188,7 @@ router.post('/', auth.required, async function(req, res, next) {
     await setArticleTags(req, article, tagList)
     if (config.isDemo) {
       // Delete the oldest post to keep data size limited.
-      if ((await req.app.get('sequelize').models.Article.count()) > 1000) {
+      if ((await req.app.get('sequelize').models.Article.count()) > config.demoMaxObjs) {
         await (await req.app.get('sequelize').models.Article.findOne({order: [['createdAt', 'ASC']]})).destroy()
       }
     }
@@ -341,7 +341,7 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
     )
     if (config.isDemo) {
       // Delete the oldest comment to keep data size limited.
-      if ((await req.app.get('sequelize').models.Comment.count()) > 10) {
+      if ((await req.app.get('sequelize').models.Comment.count()) > config.demoMaxObjs) {
         await (await req.app.get('sequelize').models.Comment.findOne({order: [['createdAt', 'ASC']]})).destroy()
       }
     }

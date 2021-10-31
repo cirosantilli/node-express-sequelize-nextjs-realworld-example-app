@@ -4,9 +4,18 @@ if (process.env.NODE_ENV_OVERRIDE === undefined) {
 } else {
   isProduction = process.env.NODE_ENV_OVERRIDE === 'production'
 }
+
+let demoMaxObjs;
+if (isProduction) {
+  demoMaxObjs = 1000
+} else {
+  demoMaxObjs = 10
+}
+
 module.exports = {
   apiPath: '/api',
   databaseUrl: process.env.DATABASE_URL || '',
+  demoMaxObjs: demoMaxObjs,
   googleAnalyticsId: 'UA-47867706-3',
   isDemo: process.env.NEXT_PUBLIC_DEMO === 'true',
   isProduction: isProduction,

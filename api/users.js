@@ -82,7 +82,7 @@ router.post('/users', async function(req, res, next) {
       //
       // so need to setup some cascades better most likely. Attempt:
       //
-      //if ((await req.app.get('sequelize').models.User.count()) > 10) {
+      //if ((await req.app.get('sequelize').models.User.count()) > config.demoMaxObjs) {
       //  await (await req.app.get('sequelize').models.User.findOne({order: [['createdAt', 'ASC']]})).destroy()
       //}
     }
