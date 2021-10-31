@@ -95,6 +95,17 @@ export default function makeArticleEditor(isnew: boolean = false) {
       }
       Router.push(`/article/${data.article.slug}`);
     };
+    React.useEffect(() => {
+      function ctrlEnterListener(e) {
+        if (e.code === 'Enter' && e.ctrlKey) {
+          handleSubmit(e)
+        }
+      }
+      document.addEventListener('keydown', ctrlEnterListener);
+      return () => {
+        document.removeEventListener('keydown', ctrlEnterListener);
+      };
+    });
     return (
       <div className="editor-page">
         <div className="container page">

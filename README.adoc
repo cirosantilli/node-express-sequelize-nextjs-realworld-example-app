@@ -248,3 +248,7 @@ These are all points that we have or would like to address in this fork.
 == Alternatives
 
 * https://github.com/lifeiscontent/realworld[]: Rails backend is a downside, as it adds another language to the mix besides JavaScript. But it has graphql, which is really really awesome technology.
+
+== Keyboard shortcuts
+
+Ctrl + Enter submits articles.

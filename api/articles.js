@@ -24,19 +24,17 @@ function getClientIp(req) {
   return ipAddress;
 };
 
-async function setArticleTags(req, article, tagList) {
-  return req.app.get('sequelize').models.Tag.bulkCreate(
+async function setArticleTags(req, article, tagList, transaction) {
+  const tags = await req.app.get('sequelize').models.Tag.bulkCreate(
     tagList.map((tag) => {return {name: tag}}),
     {ignoreDuplicates: true}
-  ).then(tags => {
-    // IDs may be missing from the above, so we have to do a find.
-    // https://github.com/sequelize/sequelize/issues/11223#issuecomment-864185973
-    req.app.get('sequelize').models.Tag.findAll({
-      where: {name: tagList}
-    }).then(tags => {
-      return article.setTags(tags)
-    })
+  )
+  // IDs may be missing from the above, so we have to do a find.
+  // https://github.com/sequelize/sequelize/issues/11223#issuecomment-864185973
+  const tags2 = await req.app.get('sequelize').models.Tag.findAll({
+    where: {name: tagList}
   })
+  return article.setTags(tags2, {transaction: transaction})
 }
 
 function validateArticle(req, res, article, tagList) {
@@ -172,7 +170,7 @@ router.get('/feed', auth.required, async function(req, res, next) {
   }
 })
 
-// create article
+// Create article
 router.post('/', auth.required, async function(req, res, next) {
   try {
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
@@ -183,13 +181,20 @@ router.post('/', auth.required, async function(req, res, next) {
     article.authorId = user.id
     const tagList = req.body.article.tagList
     if (validateArticle(req, res, article, tagList)) return
-    // TODO these should be in a transaction
-    await article.save()
-    await setArticleTags(req, article, tagList)
+    //await article.save()
+    //await setArticleTags(req, article, tagList)
+    await req.app.get('sequelize').transaction(async t => {
+      await Promise.all([
+        article.save({ transaction: t }),
+        setArticleTags(req, article, tagList, t),
+      ])
+    })
     if (config.isDemo) {
       // Delete the oldest post to keep data size limited.
       if ((await req.app.get('sequelize').models.Article.count()) > config.demoMaxObjs) {
-        await (await req.app.get('sequelize').models.Article.findOne({order: [['createdAt', 'ASC']]})).destroy()
+        await req.app.get('sequelize').transaction(async t => {
+          await (await req.app.get('sequelize').models.Article.findOne({order: [['createdAt', 'ASC']]})).destroy({ transaction: t })
+        })
       }
     }
     article.author = user
@@ -199,7 +204,7 @@ router.post('/', auth.required, async function(req, res, next) {
   }
 })
 
-// get article
+// Get article
 router.get('/:article', auth.optional, async function(req, res, next) {
   try {
     const results = await Promise.all([
@@ -213,7 +218,7 @@ router.get('/:article', auth.optional, async function(req, res, next) {
   }
 })
 
-// update article
+// Update article
 router.put('/:article', auth.required, async function(req, res, next) {
   try {
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
@@ -230,12 +235,14 @@ router.put('/:article', auth.required, async function(req, res, next) {
       const article = req.article
       const tagList = req.body.article.tagList
       if (validateArticle(req, res, article, tagList)) return
-      await Promise.all([
-        (typeof tagList === 'undefined')
-          ? null
-          : setArticleTags(req, article, tagList),
-        article.save()
-      ])
+      await req.app.get('sequelize').transaction(async t => {
+        await Promise.all([
+          (typeof tagList === 'undefined')
+            ? null
+            : setArticleTags(req, article, tagList, t),
+          article.save({ transaction: t })
+        ])
+      })
       return res.json({ article: await article.toJSONFor(user) })
     } else {
       return res.sendStatus(403)
@@ -245,7 +252,7 @@ router.put('/:article', auth.required, async function(req, res, next) {
   }
 })
 
-// delete article
+// Delete article
 router.delete('/:article', auth.required, async function(req, res, next) {
   try {
     const user = req.app.get('sequelize').models.User.findByPk(req.payload.id)
@@ -253,9 +260,10 @@ router.delete('/:article', auth.required, async function(req, res, next) {
       return res.sendStatus(401)
     }
     if (req.article.author.id.toString() === req.payload.id.toString()) {
-      await req.article.destroy()
+      await req.app.get('sequelize').transaction(async t => {
+        await req.article.destroy({ transaction: t })
+      })
       return res.sendStatus(204)
-      // TODO remove tags that don´t have any articles.
     } else {
       return res.sendStatus(403)
     }
@@ -306,7 +314,7 @@ router.delete('/:article/favorite', auth.required, async function(req, res, next
   }
 })
 
-// return an article's comments
+// Return an article's comments
 router.get('/:article/comments', auth.optional, async function(req, res, next) {
   try {
     let user;
@@ -329,7 +337,7 @@ router.get('/:article/comments', auth.optional, async function(req, res, next) {
   }
 })
 
-// create a new comment
+// Create a new comment
 router.post('/:article/comments', auth.required, async function(req, res, next) {
   try {
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
@@ -342,7 +350,9 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
     if (config.isDemo) {
       // Delete the oldest comment to keep data size limited.
       if ((await req.app.get('sequelize').models.Comment.count()) > config.demoMaxObjs) {
-        await (await req.app.get('sequelize').models.Comment.findOne({order: [['createdAt', 'ASC']]})).destroy()
+        await req.app.get('sequelize').transaction(async t => {
+          await (await req.app.get('sequelize').models.Comment.findOne({order: [['createdAt', 'ASC']]})).destroy({ transaction: t })
+        })
       }
     }
     comment.author = user
@@ -352,19 +362,19 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
   }
 })
 
-router.delete('/:article/comments/:comment', auth.required, function(req, res, next) {
-  return req.comment
-    .getAuthor()
-    .then(function(author) {
-      if (author.id.toString() === req.payload.id.toString()) {
-        return req.comment.destroy().then(function() {
-          res.sendStatus(204)
-        })
-      } else {
-        res.sendStatus(403)
-      }
-    })
-    .catch(next)
+// Delete a comment
+router.delete('/:article/comments/:comment', auth.required, async function(req, res, next) {
+  try {
+    const author = await req.comment.getAuthor()
+    if (author.id.toString() === req.payload.id.toString()) {
+      await req.comment.destroy()
+      return res.sendStatus(204)
+    } else {
+      res.sendStatus(403)
+    }
+  } catch(error) {
+    next(error);
+  }
 })
 
 module.exports = router

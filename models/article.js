@@ -35,7 +35,25 @@ module.exports = (sequelize) => {
           if (!article.slug) {
             article.slug = slug(article.title) + '-' + ((Math.random() * Math.pow(36, 6)) | 0).toString(36)
           }
-        }
+        },
+        beforeDestroy: async (article, options) => {
+          // TODO unsafe read modify write loop, we need to add some kind of locking here.
+          // Could fail if a new article is created in the middle: we could end up destroying
+          // the tag of that article incorrectly. Converting to a single join delete statement
+          // would do the trick.
+          const tags = await article.getTags()
+          const emptyTags = []
+          for (const tag of tags) {
+            if ((await tag.countTaggedArticles()) === 1) {
+              emptyTags.push(tag)
+            }
+          }
+          const actions = []
+          for (const tag of emptyTags) {
+            actions.push(tag.destroy({ transaction: options.transaction }))
+          }
+          await Promise.all(actions)
+        },
       },
       indexes: [
         {
@@ -71,5 +89,6 @@ module.exports = (sequelize) => {
       author,
     }
   }
+
   return Article
 }
