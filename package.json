@@ -10,6 +10,7 @@
     "build": "cd react-redux-realworld-example-app && npm run build",
     "deploy": "git push heroku master",
     "dev": "concurrently --kill-others 'npm run front --' 'npm run back --'",
+    "dev-demo": "CIROSANTILLI_DEMO=true npm run dev",
     "front": "cd react-redux-realworld-example-app && npm start",
     "heroku": "heroku run --app cirosantilli-realworld-express",
     "preinstall": "cd react-redux-realworld-example-app && npm install",

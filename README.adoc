@@ -142,11 +142,19 @@ npm run deploy
 
 If `CIROSANTILLI_DEMO=true` is set, then the app runs in demo mode.
 
+You can also run this mode with:
+
+....
+npm run dev-demo
+....
+
+
 This has the following effects:
 
 * block posts with tags given at `blacklistTags` of `config.js` The initial motivation for this was to block automated "Cypress Automation" spam that is likely setup by some bastard on all published implementations via the backend, example: https://archive.ph/wip/n4Jlx[], and might be taking up a good part of our Heroku dynos, to be confirmed.
 +
 We've logged their IP as 31.183.168.37, let's see if it changes with time. That IP is from Poland, which is consistent with Google Analytics results, which are overwhelmingly from Poland, suggesting a bot within that country, which also does GET on the web UI.
+* whenever a new object is created, such as article, comment or user, if we already have 1000 objects of that type, delete the oldest object of that type, so as to keep the database size limited
 
 === Heroku instance management
 
