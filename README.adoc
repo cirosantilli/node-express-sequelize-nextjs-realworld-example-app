@@ -313,10 +313,22 @@ However, setting up full API tests can be annoying, especially the user creation
 
 Furthermore, the API tests can have a slower setup time, since by going directly to the backend API we can call `bulkCreate` which can be much faster than creating objects one by one.
 
-So sometimes, especially for things like model relations, we will just revert to a some quick API test:
+So sometimes, especially for things like model relations, we will just revert to a some quick direct database tests:
 
 ....
 npm test
+....
+
+Run just a single test:
+
+....
+npm test -- -g 'substring of test title'
+....
+
+Show all queries done in the tests:
+
+....
+DEBUG='sequelize:sql:*' npm test
 ....
 
 To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then 
