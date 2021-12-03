@@ -37,22 +37,56 @@ module.exports = (sequelize) => {
           }
         },
         beforeDestroy: async (article, options) => {
-          // TODO unsafe read modify write loop, we need to add some kind of locking here.
-          // Could fail if a new article is created in the middle: we could end up destroying
+          // This should alwas be run inside a transaction, as it is an unsafe read modify write loop,
+          // otherwise could fail if a new article is created in the middle: we could end up destroying
           // the tag of that article incorrectly. Converting to a single join delete statement
-          // would do the trick.
-          const tags = await article.getTags({ transaction: options.transaction })
-          const emptyTags = []
-          for (const tag of tags) {
-            if ((await tag.countTaggedArticles({ transaction: options.transaction })) === 1) {
-              emptyTags.push(tag)
-            }
-          }
-          const actions = []
-          for (const tag of emptyTags) {
-            actions.push(tag.destroy({ transaction: options.transaction }))
-          }
-          await Promise.all(actions)
+          // would do the trick, but that syntax is not possible in all DBs, and subqueries are impossible
+          // without literals in Sequelize:
+          // https://stackoverflow.com/questions/45354001/nodejs-sequelize-delete-with-nested-select-query
+
+          // Get all tags that the article has that have exactly 1 article before we deleted
+          // this article. We know we can delete those later on.
+          const emptyTags = await article.sequelize.models.Article.findAll({
+            attributes: [
+              sequelize.col('Tags.id'),
+              [sequelize.fn('COUNT', sequelize.col('Article.id')), 'count'],
+            ],
+            raw: true,
+            includeIgnoreAttributes: false,
+            include: [
+              {
+                model: article.sequelize.models.Tag,
+                as: 'tags',
+                where: { '$Article.id$': article.id },
+                include: [
+                  {
+                    model: article.sequelize.models.Article,
+                    as: 'taggedArticles',
+                    required: false
+                  }
+                ]
+              },
+            ],
+            group: ['Tags.id'],
+            order: [[sequelize.col('count'), 'DESC']],
+            having: sequelize.where(sequelize.fn('COUNT', sequelize.col('Article.id')), Op.eq, 1),
+            transaction: options.transaction,
+          })
+
+          // Equivalent to the above but in multiple queries. Keeping around in a comments just in case.
+          // Should also be converted to promise.
+          //const tags = await article.getTags({ transaction: options.transaction })
+          //const emptyTags = []
+          //for (const tag of tags) {
+          //  if ((await tag.countTaggedArticles({ transaction: options.transaction })) === 1) {
+          //    emptyTags.push(tag)
+          //  }
+          //}
+
+          article.sequelize.models.Tag.destroy({
+            where: { id: emptyTags.map(tag => tag.id) },
+            transaction: options.transaction,
+          })
         },
       },
       indexes: [
