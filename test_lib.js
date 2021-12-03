@@ -11,64 +11,32 @@ function addDays(oldDate, days) {
   newDate.setDate(oldDate.getDate() + days);
   return newDate;
 }
-const date0 = new Date(2000, 0, 0, 0, 0, 0, 0)
+const DATE0 = new Date(2000, 0, 0, 0, 0, 0, 0)
 
-async function generateDemoData(params) {
-  const nUsers = params.nUsers === undefined ? 10 : params.nUsers
-  const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
-  const nMaxCommentsPerArticle = params.nMaxCommentsPerArticle === undefined ? 3 : params.nMaxCommentsPerArticle
-  const nMaxTagsPerArticle = params.nMaxTagsPerArticle === undefined ? 3 : params.nMaxTagsPerArticle
-  const nFollowsPerUser = params.nFollowsPerUser === undefined ? 2 : params.nFollowsPerUser
-  const nFavoritesPerUser = params.nFavoritesPerUser === undefined ? 5 : params.nFavoritesPerUser
-  const nTags = params.nTags === undefined ? 10 : params.nTags
-  const directory = params.directory
-  const basename = params.basename
-
-  const nArticles = nUsers * nArticlesPerUser
-
-  const sequelize = models(directory, basename);
-  await sequelize.sync({force: true})
-
-  // Users
-  const userArgs = [];
-  for (var i = 0; i < nUsers; i++) {
-    const userArg = {
-      username: `user${i}`,
-      email: `user${i}@mail.com`,
-    }
-    if (i % 2 === 0) {
-      userArg.bio = `My bio ${i}`
-    }
-    sequelize.models.User.setPassword(userArg, 'asdf')
-    userArgs.push(userArg)
+function makeUser(sequelize, i=0) {
+  const userArg = {
+    username: `user${i}`,
+    email: `user${i}@mail.com`,
   }
-  const users = await sequelize.models.User.bulkCreate(userArgs)
-
-  // Follows
-  const followArgs = []
-  for (var i = 0; i < nUsers; i++) {
-    const userId = users[i].id
-    for (var j = 0; j < nFollowsPerUser; j++) {
-      followArgs.push({
-        userId: userId,
-        followId: users[(i + 1 + j) % nUsers].id,
-      })
-    }
+  if (i % 2 === 0) {
+    userArg.bio = `My bio ${i}`
   }
-  await sequelize.models.UserFollowUser.bulkCreate(followArgs)
+  sequelize.models.User.setPassword(userArg, 'asdf')
+  return userArg;
+}
+exports.makeUser = makeUser
 
-  // Articles
-  const articleArgs = [];
-  for (var i = 0; i < nArticles; i++) {
-    const userIdx = i % nUsers
-    const date = addDays(date0, i)
-    const articleArg = {
-      title: `My title ${i}`,
-      description: `My description ${i}`,
-      authorId: users[userIdx].id,
-      createdAt: date,
-      updatedAt: date,
-      body: `# h1
+function makeArticle(i=0, userId, date) {
+  if (date === undefined) {
+    date = DATE0
+  }
+  return {
+    title: `My title ${i}`,
+    description: `My description ${i}`,
+    authorId: userId,
+    createdAt: date,
+    updatedAt: date,
+    body: `# h1
 
 ## h2
 
@@ -104,8 +72,57 @@ List:
 - item 2
 - item 3
 `,
+  }
+}
+exports.makeArticle = makeArticle
+
+function makeTag(i) {
+  return { name: `tag${i}` }
+}
+exports.makeTag = makeTag
+
+async function generateDemoData(params) {
+  const nUsers = params.nUsers === undefined ? 10 : params.nUsers
+  const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
+  const nMaxCommentsPerArticle = params.nMaxCommentsPerArticle === undefined ? 3 : params.nMaxCommentsPerArticle
+  const nMaxTagsPerArticle = params.nMaxTagsPerArticle === undefined ? 3 : params.nMaxTagsPerArticle
+  const nFollowsPerUser = params.nFollowsPerUser === undefined ? 2 : params.nFollowsPerUser
+  const nFavoritesPerUser = params.nFavoritesPerUser === undefined ? 5 : params.nFavoritesPerUser
+  const nTags = params.nTags === undefined ? 10 : params.nTags
+  const directory = params.directory
+  const basename = params.basename
+
+  const nArticles = nUsers * nArticlesPerUser
+
+  const sequelize = models(directory, basename);
+  await sequelize.sync({force: true})
+
+  // Users
+  const userArgs = [];
+  for (var i = 0; i < nUsers; i++) {
+    userArgs.push(makeUser(sequelize, i))
+  }
+  const users = await sequelize.models.User.bulkCreate(userArgs)
+
+  // Follows
+  const followArgs = []
+  for (var i = 0; i < nUsers; i++) {
+    const userId = users[i].id
+    for (var j = 0; j < nFollowsPerUser; j++) {
+      followArgs.push({
+        userId: userId,
+        followId: users[(i + 1 + j) % nUsers].id,
+      })
     }
-    articleArgs.push(articleArg)
+  }
+  await sequelize.models.UserFollowUser.bulkCreate(followArgs)
+
+  // Articles
+  const articleArgs = [];
+  for (var i = 0; i < nArticles; i++) {
+    const userIdx = i % nUsers
+    const date = addDays(DATE0, i)
+    articleArgs.push(makeArticle(i, users[userIdx].id, date))
   }
   const articles = await sequelize.models.Article.bulkCreate(
     articleArgs,
@@ -133,7 +150,7 @@ List:
   // Tags
   const tagArgs = []
   for (var i = 0; i < nTags; i++) {
-    tagArgs.push({name: `tag${i}`})
+    tagArgs.push(makeTag(i))
   }
   const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
 
@@ -141,7 +158,6 @@ List:
   let tagIdx = 0
   const articleTagArgs = []
   for (var i = 0; i < nArticles; i++) {
-    const articleId = articles[i].id
     for (var j = 0; j < (i % (nMaxTagsPerArticle + 1)); j++) {
       articleTagArgs.push({
         articleId: articles[i].id,

@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const auth = require('../auth')
-const Op = require('sequelize').Op
+const { Op, Transaction } = require('sequelize')
 
 const config = require('../config.js')
 
@@ -183,18 +183,19 @@ router.post('/', auth.required, async function(req, res, next) {
     if (validateArticle(req, res, article, tagList)) return
     //await article.save()
     //await setArticleTags(req, article, tagList)
-    await req.app.get('sequelize').transaction(async t => {
-      await Promise.all([
-        article.save({ transaction: t }),
-        setArticleTags(req, article, tagList, t),
-      ])
-    })
+    await req.app.get('sequelize').transaction(
+      Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+      async t => {
+        await Promise.all([
+          article.save({ transaction: t }),
+          setArticleTags(req, article, tagList, t),
+        ])
+      }
+    )
     if (config.isDemo) {
       // Delete the oldest post to keep data size limited.
       if ((await req.app.get('sequelize').models.Article.count()) > config.demoMaxObjs) {
-        await req.app.get('sequelize').transaction(async t => {
-          await (await req.app.get('sequelize').models.Article.findOne({order: [['createdAt', 'ASC']]})).destroy({ transaction: t })
-        })
+        await (await req.app.get('sequelize').models.Article.findOne({order: [['createdAt', 'ASC']]})).destroy2({ transaction: t })
       }
     }
     article.author = user
@@ -235,14 +236,17 @@ router.put('/:article', auth.required, async function(req, res, next) {
       const article = req.article
       const tagList = req.body.article.tagList
       if (validateArticle(req, res, article, tagList)) return
-      await req.app.get('sequelize').transaction(async t => {
-        await Promise.all([
-          (typeof tagList === 'undefined')
-            ? null
-            : setArticleTags(req, article, tagList, t),
-          article.save({ transaction: t })
-        ])
-      })
+      await req.app.get('sequelize').transaction(
+        Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        async t => {
+          await Promise.all([
+            (typeof tagList === 'undefined')
+              ? null
+              : setArticleTags(req, article, tagList, t),
+            article.save({ transaction: t })
+          ])
+        }
+      )
       return res.json({ article: await article.toJSONFor(user) })
     } else {
       return res.sendStatus(403)
@@ -260,9 +264,7 @@ router.delete('/:article', auth.required, async function(req, res, next) {
       return res.sendStatus(401)
     }
     if (req.article.author.id.toString() === req.payload.id.toString()) {
-      await req.app.get('sequelize').transaction(async t => {
-        await req.article.destroy({ transaction: t })
-      })
+      await req.article.destroy2()
       return res.sendStatus(204)
     } else {
       return res.sendStatus(403)

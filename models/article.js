@@ -1,5 +1,5 @@
 const slug = require('slug')
-const { DataTypes, Op } = require('sequelize')
+const { DataTypes, Op, Transaction } = require('sequelize')
 
 module.exports = (sequelize) => {
   const Article = sequelize.define(
@@ -41,10 +41,10 @@ module.exports = (sequelize) => {
           // Could fail if a new article is created in the middle: we could end up destroying
           // the tag of that article incorrectly. Converting to a single join delete statement
           // would do the trick.
-          const tags = await article.getTags()
+          const tags = await article.getTags({ transaction: options.transaction })
           const emptyTags = []
           for (const tag of tags) {
-            if ((await tag.countTaggedArticles()) === 1) {
+            if ((await tag.countTaggedArticles({ transaction: options.transaction })) === 1) {
               emptyTags.push(tag)
             }
           }
@@ -62,6 +62,19 @@ module.exports = (sequelize) => {
       ],
     }
   )
+
+  // This method should always be used instead of the default destroy because it also destroys
+  // tags that might now have no articles, and this need to be in a SERIALIZABLE transaction
+  // with post + tag creation to prevent a race condition where the tag of a new post gets
+  // wrongly deleted before it is assigned to the post.
+  Article.prototype.destroy2 = async function() {
+    await this.sequelize.transaction(
+      Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+      async t => {
+        await this.destroy({ transaction: t })
+      }
+    )
+  }
 
   Article.prototype.toJSONFor = async function(user) {
     let authorPromise;
