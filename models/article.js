@@ -8,7 +8,6 @@ module.exports = (sequelize) => {
       slug: {
         type: DataTypes.STRING,
         unique: {
-          args: true,
           message: 'Slug must be unique.'
         },
         set(v) {

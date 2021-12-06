@@ -16,8 +16,7 @@ module.exports = (sequelize) => {
           this.setDataValue('username', v.toLowerCase())
         },
         unique: {
-          args: true,
-          message: 'Username must be unique.'
+          msg: 'This username is taken.'
         },
         validate: {
           min: {
@@ -40,17 +39,15 @@ module.exports = (sequelize) => {
           this.setDataValue('email', v.toLowerCase())
         },
         unique: {
-          args: true,
-          msg: 'Oops. Looks like you already have an account with this email address. Please try to login.'
+          msg: 'This email is taken.'
         },
         validate: {
           isEmail: {
-            args: true,
-            msg: 'The email you entered is invalid or is already in our system.'
+            msg: 'This email does not seem valid.'
           },
           max: {
             args: 254,
-            msg: 'The email you entered is invalid or longer than 254 characters.'
+            msg: 'This email is too long, the maximum size is 254 characters.'
           }
         }
       },
