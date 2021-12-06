@@ -89,13 +89,13 @@ heroku run --app cirosantilli-realworld-next bash
 for which we have the helper:
 
 ....
-./heroku run bash
+./heroku.sh run bash
 ....
 
 e.g. to delete, recreate and reseed the database:
 
 ....
-./heroku run bin/generate-demo-data.js --force-production
+./heroku.sh run bin/generate-demo-data.js --force-production
 ....
 
 We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
