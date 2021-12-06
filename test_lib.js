@@ -13,18 +13,14 @@ function addDays(oldDate, days) {
 }
 const DATE0 = new Date(2000, 0, 0, 0, 0, 0, 0)
 
-function makeUser(sequelize, i=0) {
-  const userArg = {
-    username: `user${i}`,
-    email: `user${i}@mail.com`,
+function makeComment(articleId, authorId, i) {
+  return {
+    body: `my comment ${i}`,
+    articleId,
+    authorId,
   }
-  if (i % 2 === 0) {
-    userArg.bio = `My bio ${i}`
-  }
-  sequelize.models.User.setPassword(userArg, 'asdf')
-  return userArg;
 }
-exports.makeUser = makeUser
+exports.makeComment = makeComment
 
 function makeArticle(i=0, userId, date) {
   if (date === undefined) {
@@ -81,6 +77,19 @@ function makeTag(i) {
 }
 exports.makeTag = makeTag
 
+function makeUser(sequelize, i=0) {
+  const userArg = {
+    username: `user${i}`,
+    email: `user${i}@mail.com`,
+  }
+  if (i % 2 === 0) {
+    userArg.bio = `My bio ${i}`
+  }
+  sequelize.models.User.setPassword(userArg, 'asdf')
+  return userArg;
+}
+exports.makeUser = makeUser
+
 async function generateDemoData(params) {
   const nUsers = params.nUsers === undefined ? 10 : params.nUsers
   const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
@@ -94,7 +103,7 @@ async function generateDemoData(params) {
 
   const nArticles = nUsers * nArticlesPerUser
 
-  const sequelize = models(directory, basename);
+  const sequelize = models.getSequelize(directory, basename);
   await sequelize.sync({force: true})
 
   // Users
@@ -173,13 +182,11 @@ async function generateDemoData(params) {
   let commentIdx = 0;
   for (var i = 0; i < nArticles; i++) {
     for (var j = 0; j < (i % (nMaxCommentsPerArticle + 1)); j++) {
-      const commentArg = {
-        body: `my comment ${commentIdx}`,
-        articleId: articles[i].id,
-        authorId: users[commentIdx % nUsers].id,
-      }
-      commentArgs.push(commentArg)
-      commentIdx += 1
+      commentArgs.push(makeComment(
+        articles[i].id,
+        users[commentIdx % nUsers].id,
+        commentIdx
+      ))
     }
   }
   const comments = await sequelize.models.Comment.bulkCreate(commentArgs)

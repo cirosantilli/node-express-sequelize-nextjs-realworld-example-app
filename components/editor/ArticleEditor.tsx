@@ -6,6 +6,7 @@ import TagInput from "components/editor/TagInput";
 import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import { useCtrlEnterSubmit } from "libts";
 
 function editorReducer(state, action) {
   switch (action.type) {
@@ -95,17 +96,7 @@ export default function makeArticleEditor(isnew: boolean = false) {
       }
       Router.push(`/article/${data.article.slug}`);
     };
-    React.useEffect(() => {
-      function ctrlEnterListener(e) {
-        if (e.code === 'Enter' && e.ctrlKey) {
-          handleSubmit(e)
-        }
-      }
-      document.addEventListener('keydown', ctrlEnterListener);
-      return () => {
-        document.removeEventListener('keydown', ctrlEnterListener);
-      };
-    });
+    useCtrlEnterSubmit(handleSubmit)
     return (
       <div className="editor-page">
         <div className="container page">

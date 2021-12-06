@@ -212,6 +212,19 @@ Error messages due to API failures are too inconsistent across implementations t
 * reference: shows "Loading articles..." forever, does not inform user about error
 * https://github.com/gothinkster/react-redux-realworld-example-app just throws an exception
 
+== Database migrations
+
+Database migrations are illustrated under link:[migrations].
+
+Any pending migrations are done automatically during deployment as part of `npm run build`, more precisely they are run from link:[bin/sync-db.js].
+
+We also have a custom setup where, if the database is not initialized, we first:
+
+* just creates the database from the latest model descriptions
+* manually fill in the `SequelizeMeta` migration tracking table with all available migrations to tell sequelize that all migrations have been done up to this point
+
+This is something that should be merged into sequelize itself, or at least asked on Stack Overflow, but lazy now.
+
 == Bugs
 
 https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/missing functionality, some notable ones:

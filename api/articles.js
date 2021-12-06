@@ -3,6 +3,7 @@ const auth = require('../auth')
 const { Op, Transaction } = require('sequelize')
 
 const config = require('../config.js')
+const lib = require('../lib.js')
 
 // https://stackoverflow.com/questions/14382725/how-to-get-the-correct-ip-address-of-a-client-into-a-node-socket-io-app-hosted-o/14382990#14382990
 function getClientIp(req) {
@@ -26,7 +27,7 @@ function getClientIp(req) {
 
 async function setArticleTags(req, article, tagList, transaction) {
   const tags = await req.app.get('sequelize').models.Tag.bulkCreate(
-    tagList.map((tag) => {return {name: tag}}),
+    tagList.map(tag => {return {name: tag}}),
     {ignoreDuplicates: true}
   )
   // IDs may be missing from the above, so we have to do a find.
@@ -158,7 +159,7 @@ router.get('/feed', auth.required, async function(req, res, next) {
       return res.sendStatus(401)
     }
     const {count: articlesCount, rows: articles} = await user.findAndCountArticlesByFollowed(offset, limit)
-    const articlesJson = await Promise.all(articles.map((article) => {
+    const articlesJson = await Promise.all(articles.map(article => {
       return article.toJSONFor(user)
     }))
     return res.json({
@@ -192,12 +193,13 @@ router.post('/', auth.required, async function(req, res, next) {
         ])
       }
     )
-    if (config.isDemo) {
-      // Delete the oldest post to keep data size limited.
-      if ((await req.app.get('sequelize').models.Article.count()) > config.demoMaxObjs) {
-        await (await req.app.get('sequelize').models.Article.findOne({order: [['createdAt', 'ASC']]})).destroy2({ transaction: t })
-      }
-    }
+    await Promise.all([
+      lib.deleteOldestForDemo(req.app.get('sequelize').models.Article),
+      lib.deleteOldestForDemo(req.app.get('sequelize').models.Tag),
+      // TODO does not have a ID, and I can't find how to do IN check with
+      // (tagId, articleId) tuples in sequelize, and lazy to add ID.
+      //lib.deleteOldestForDemo(req.app.get('sequelize').models.ArticleTag),
+    ])
     article.author = user
     return res.json({ article: await article.toJSONFor(user) })
   } catch(error) {
@@ -289,6 +291,8 @@ router.post('/:article/favorite', auth.required, async function(req, res, next) 
       return res.sendStatus(404)
     }
     await user.addFavorite(articleId)
+    // TODO same as ArticleTag
+    //await lib.deleteOldestForDemo(req.app.get('sequelize').models.UserFavoriteArticle)
     return res.json({ article: await article.toJSONFor(user) })
   } catch(error) {
     next(error);
@@ -349,14 +353,7 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
     const comment = await req.app.get('sequelize').models.Comment.create(
       Object.assign({}, req.body.comment, { articleId: req.article.id, authorId: user.id })
     )
-    if (config.isDemo) {
-      // Delete the oldest comment to keep data size limited.
-      if ((await req.app.get('sequelize').models.Comment.count()) > config.demoMaxObjs) {
-        await req.app.get('sequelize').transaction(async t => {
-          await (await req.app.get('sequelize').models.Comment.findOne({order: [['createdAt', 'ASC']]})).destroy({ transaction: t })
-        })
-      }
-    }
+    await lib.deleteOldestForDemo(req.app.get('sequelize').models.Comment)
     comment.author = user
     return res.json({ comment: await comment.toJSONFor(user) })
   } catch(error) {

@@ -7,6 +7,7 @@ import ListErrors from "components/common/ListErrors";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import UserAPI from "lib/api/user";
+import { useCtrlEnterSubmit } from "libts";
 
 const SettingsForm = () => {
   const [isLoading, setLoading] = React.useState(false);
@@ -28,7 +29,7 @@ const SettingsForm = () => {
     const newState = { ...state, [field]: e.target.value };
     setUserInfo(newState);
   };
-  const submitForm = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     const user = { ...userInfo };
@@ -60,10 +61,11 @@ const SettingsForm = () => {
       Router.push(`/profile/${user.username}`);
     }
   };
+  useCtrlEnterSubmit(handleSubmit)
   return (
     <React.Fragment>
       <ListErrors errors={errors} />
-      <form onSubmit={submitForm}>
+      <form onSubmit={handleSubmit}>
         <fieldset>
           <fieldset className="form-group">
             <input

@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const auth = require('../auth')
+const lib = require('../lib.js')
 
 // Preload user profile on routes with ':username'
 router.param('username', function(req, res, next, username) {
@@ -41,6 +42,8 @@ router.post('/:username/follow', auth.required, async function(req, res, next) {
       return res.sendStatus(401)
     }
     await user.addFollow(profileId)
+    // TODO same as ArticleTag
+    //await lib.deleteOldestForDemo(req.app.get('sequelize').models.UserFollowUser)
     return res.json({ profile: await req.profile.toProfileJSONFor(user) })
   } catch(error) {
     next(error);

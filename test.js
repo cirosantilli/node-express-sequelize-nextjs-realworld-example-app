@@ -64,3 +64,26 @@ it('tags without articles are deleted automatically after their last article is 
   tags = await sequelize.models.Tag.findAll({order: [['id', 'ASC']]})
   assert.strictEqual(tags.length, 0)
 })
+
+it('users can be deleted and deletion cascades to all relations', async () => {
+  // This was failing previously because of cascading madness.
+  // It is also interesting to see if article deletion will cascade into the
+  // empty tag deletion hooks or not.
+  const sequelize = models()
+  await sequelize.sync({force: true})
+  const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
+  const article0 = await sequelize.models.Article.create(test_lib.makeArticle(0, user.id))
+  const article1 = await sequelize.models.Article.create(test_lib.makeArticle(1, user.id))
+  const comment0 = await sequelize.models.Comment.create(test_lib.makeComment(article0.id, user.id, 0))
+  const comment1 = await sequelize.models.Comment.create(test_lib.makeComment(article0.id, user.id, 1))
+  const tag0 = await sequelize.models.Tag.create(test_lib.makeTag(0))
+  const tag1 = await sequelize.models.Tag.create(test_lib.makeTag(1))
+  await sequelize.models.ArticleTag.create({ articleId: article0.id, tagId: tag0.id })
+  await sequelize.models.ArticleTag.create({ articleId: article1.id, tagId: tag0.id })
+  await sequelize.models.ArticleTag.create({ articleId: article1.id, tagId: tag1.id })
+  await user.destroy()
+  assert.strictEqual(await sequelize.models.User.count(), 0)
+  assert.strictEqual(await sequelize.models.Article.count(), 0)
+  assert.strictEqual(await sequelize.models.Tag.count(), 0)
+  assert.strictEqual(await sequelize.models.Comment.count(), 0)
+})

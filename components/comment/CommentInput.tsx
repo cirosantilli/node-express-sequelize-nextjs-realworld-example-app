@@ -7,6 +7,7 @@ import CustomImage from "components/common/CustomImage";
 import CustomLink from "components/common/CustomLink";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import { useCtrlEnterSubmit } from "libts";
 
 const CommentInput = () => {
   const loggedInUser = getLoggedInUser()
@@ -40,7 +41,6 @@ const CommentInput = () => {
     setContent("");
     trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`);
   };
-
   if (!loggedInUser) {
     return (
       <>
@@ -55,7 +55,7 @@ const CommentInput = () => {
       </>
     );
   }
-
+  useCtrlEnterSubmit(handleSubmit)
   return (
     <>
       <ul className="error-messages">{/* TODO. Reference does not handle those errors either right now.

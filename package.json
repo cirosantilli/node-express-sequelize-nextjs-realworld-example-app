@@ -67,6 +67,7 @@
     "newman": "5.2.3",
     "nodemon": "1.11.0",
     "prettier": "1.12.1",
+    "sequelize-cli": "6.2.0",
     "sqlite3": "5.0.2",
     "typescript": "3.9.7"
   },

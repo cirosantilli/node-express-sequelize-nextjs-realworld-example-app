@@ -1,10 +1,11 @@
+const fs = require('fs')
 const path = require('path')
 
 const { Sequelize, DataTypes } = require('sequelize')
 
 const config = require('../config')
 
-module.exports = (toplevelDir, toplevelBasename) => {
+function getSequelize(toplevelDir, toplevelBasename) {
   const sequelizeParams = {
     logging: config.verbose ? console.log : false,
     define: {
@@ -12,26 +13,18 @@ module.exports = (toplevelDir, toplevelBasename) => {
     },
   };
   let sequelize;
-  if (config.isProduction) {
-    sequelizeParams.dialect = 'postgres';
-    sequelizeParams.dialectOptions = {
-      // https://stackoverflow.com/questions/27687546/cant-connect-to-heroku-postgresql-database-from-local-node-app-with-sequelize
-      // https://devcenter.heroku.com/articles/heroku-postgresql#connecting-in-node-js
-      // https://stackoverflow.com/questions/58965011/sequelizeconnectionerror-self-signed-certificate
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    };
-    sequelize = new Sequelize(config.databaseUrl, sequelizeParams);
+  if (config.isProduction || config.postgres) {
+    sequelizeParams.dialect = config.production.dialect;
+    sequelizeParams.dialectOptions = config.production.dialectOptions;
+    sequelize = new Sequelize(config.production.url, sequelizeParams);
   } else {
-    sequelizeParams.dialect = 'sqlite';
+    sequelizeParams.dialect = config.development.dialect;
     let storage;
     if (process.env.NODE_ENV === 'test' || toplevelDir === undefined) {
       storage = ':memory:';
     } else {
       if (toplevelBasename === undefined) {
-        toplevelBasename = 'db.sqlite3';
+        toplevelBasename = config.development.storage;
       }
       storage = path.join(toplevelDir, toplevelBasename);
     }
@@ -40,8 +33,9 @@ module.exports = (toplevelDir, toplevelBasename) => {
   }
   const Article = require('./article')(sequelize)
   const Comment = require('./comment')(sequelize)
-  const User = require('./user')(sequelize)
+  const SequelizeMeta = require('./sequelize_meta')(sequelize)
   const Tag = require('./tag')(sequelize)
+  const User = require('./user')(sequelize)
 
   // Associations.
 
@@ -67,46 +61,98 @@ module.exports = (toplevelDir, toplevelBasename) => {
       tableName: 'UserFollowUser'
     }
   );
-  User.belongsToMany(User, {through: UserFollowUser, as: 'follows', foreignKey: 'userId', otherKey: 'followId'});
+  User.belongsToMany(User, {
+    through: UserFollowUser,
+    as: 'follows',
+    foreignKey: 'userId',
+    otherKey: 'followId'
+  });
   UserFollowUser.belongsTo(User, {foreignKey: 'userId'})
   User.hasMany(UserFollowUser, {foreignKey: 'followId'})
 
   // User favorite Article
-  Article.belongsToMany(User, { through: 'UserFavoriteArticle', as: 'favoritedBy', foreignKey: 'articleId', otherKey: 'userId'  });
-  User.belongsToMany(Article, { through: 'UserFavoriteArticle', as: 'favorites',   foreignKey: 'userId', otherKey: 'articleId'  });
+  Article.belongsToMany(User, {
+    through: 'UserFavoriteArticle',
+    as: 'favoritedBy',
+    foreignKey: 'articleId',
+    otherKey: 'userId',
+  });
+  User.belongsToMany(Article, {
+    through: 'UserFavoriteArticle',
+    as: 'favorites',
+    foreignKey:
+    'userId',
+    otherKey: 'articleId',
+  });
 
-  // Article author User
+  // User authors Article
+  User.hasMany(Article, {
+    as: 'authoredArticles',
+    foreignKey: 'authorId',
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
   Article.belongsTo(User, {
     as: 'author',
+    hooks: true,
     foreignKey: {
       name: 'authorId',
-      allowNull: false
+      allowNull: false,
     },
   })
-  User.hasMany(Article, {as: 'authoredArticles', foreignKey: 'authorId'})
 
   // Article has Comment
-  Article.hasMany(Comment, {foreignKey: 'articleId'})
+  Article.hasMany(Comment, {
+    foreignKey: 'articleId',
+    onDelete: 'CASCADE',
+  })
   Comment.belongsTo(Article, {
     foreignKey: {
       name: 'articleId',
-      allowNull: false
+      allowNull: false,
     },
   })
 
-  // Comment author User
+  // User authors Comment
+  User.hasMany(Comment, {
+    foreignKey: 'authorId',
+    onDelete: 'CASCADE',
+  });
   Comment.belongsTo(User, {
     as: 'author',
     foreignKey: {
       name: 'authorId',
-      allowNull: false
+      allowNull: false,
     },
   });
-  User.hasMany(Comment, {foreignKey: 'authorId'});
 
   // Tag Article
-  Article.belongsToMany(Tag, { through: 'ArticleTag', as: 'tags',           foreignKey: 'articleId', otherKey: 'tagId' });
-  Tag.belongsToMany(Article, { through: 'ArticleTag', as: 'taggedArticles', foreignKey: 'tagId', otherKey: 'articleId' });
+  Article.belongsToMany(Tag, {
+    through: 'ArticleTag',
+    as: 'tags',
+    foreignKey: 'articleId',
+    otherKey: 'tagId'
+  });
+  Tag.belongsToMany(Article, {
+    through: 'ArticleTag',
+    as: 'taggedArticles',
+    foreignKey: 'tagId',
+    otherKey: 'articleId'
+  });
 
   return sequelize;
+}
+
+async function sync(sequelize) {
+  await sequelize.sync({force: true})
+  await sequelize.models.SequelizeMeta.bulkCreate(
+    fs.readdirSync(path.join(path.dirname(__dirname), 'migrations')).map(
+      basename => { return { name: basename } }
+    )
+  )
+}
+
+module.exports = {
+  getSequelize,
+  sync,
 }

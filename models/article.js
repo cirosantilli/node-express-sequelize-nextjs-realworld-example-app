@@ -82,11 +82,12 @@ module.exports = (sequelize) => {
           //    emptyTags.push(tag)
           //  }
           //}
-
-          article.sequelize.models.Tag.destroy({
-            where: { id: emptyTags.map(tag => tag.id) },
-            transaction: options.transaction,
-          })
+          if (emptyTags.length) {
+            article.sequelize.models.Tag.destroy({
+              where: { id: emptyTags.map(tag => tag.id) },
+              transaction: options.transaction,
+            })
+          }
         },
       },
       indexes: [

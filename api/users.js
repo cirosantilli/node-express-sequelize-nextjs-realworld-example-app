@@ -2,7 +2,7 @@ const router = require('express').Router()
 const passport = require('passport')
 
 const auth = require('../auth')
-const config = require('../config.js')
+const lib = require('../lib.js')
 
 router.get('/user', auth.required, async function(req, res, next) {
   try {
@@ -74,18 +74,7 @@ router.post('/users', async function(req, res, next) {
     user.email = req.body.user.email
     req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
     await user.save()
-    if (config.isDemo) {
-      // TODO delete oldest user when new one is created. Failing with:
-      //
-      // sequelize:sql:sqlite Executed (default): DELETE FROM `User` WHERE `id` = 1 +10ms
-      // SequelizeForeignKeyConstraintError: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed 
-      //
-      // so need to setup some cascades better most likely. Attempt:
-      //
-      //if ((await req.app.get('sequelize').models.User.count()) > config.demoMaxObjs) {
-      //  await (await req.app.get('sequelize').models.User.findOne({order: [['createdAt', 'ASC']]})).destroy()
-      //}
-    }
+    await lib.deleteOldestForDemo(req.app.get('sequelize').models.User)
     return res.json({ user: user.toAuthJSON() })
   } catch(error) {
     next(error);

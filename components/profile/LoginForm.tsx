@@ -4,6 +4,7 @@ import { mutate } from "swr";
 
 import ListErrors from "components/common/ListErrors";
 import UserAPI from "lib/api/user";
+import { useCtrlEnterSubmit } from "libts";
 
 const LoginForm = ({ register = false }) => {
   const [isLoading, setLoading] = React.useState(false);
@@ -60,6 +61,7 @@ const LoginForm = ({ register = false }) => {
       setLoading(false);
     }
   };
+  useCtrlEnterSubmit(handleSubmit)
   return (
     <>
       <ListErrors errors={errors} />
