@@ -15,6 +15,7 @@ import { ArticleType } from "lib/types/articleType";
 import { CommentType } from "lib/types/commentType";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
+import { AppContext } from 'libts'
 
 interface ArticlePageProps {
   article: ArticleType;
@@ -55,11 +56,10 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
 
   if (router.isFallback) { return <LoadingSpinner />; }
   const markup = { __html: marked(article.body) };
+  const {setTitle} = React.useContext(AppContext)
+  setTitle(article.title)
   return (
     <>
-      <Head>
-        <title>{article.title}</title>
-      </Head>
       <div className="article-page">
         <div className="banner">
           <div className="container">

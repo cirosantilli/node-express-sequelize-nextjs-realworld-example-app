@@ -6,6 +6,7 @@ import { mutate, trigger } from "swr";
 import SettingsForm from "components/profile/SettingsForm";
 import checkLogin from "lib/utils/checkLogin";
 import storage from "lib/utils/storage";
+import { AppContext } from 'libts'
 
 const Settings = () => {
   React.useEffect(() => {
@@ -23,11 +24,10 @@ const Settings = () => {
     Router.push(`/`).then(() => trigger("user"));
   };
   const title = 'Your Settings'
+  const { setTitle } = React.useContext(AppContext)
+  setTitle(title)
   return (
     <>
-      <Head>
-        <title>{ title }</title>
-      </Head>
       <div className="settings-page">
         <div className="container page">
           <div className="row">

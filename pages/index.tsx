@@ -7,6 +7,7 @@ import Tags from "components/home/Tags";
 import TabList from "components/home/TabList";
 import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import { AppContext } from 'libts'
 
 const IndexPage = () => {
   const loggedInUser = getLoggedInUser()
@@ -18,7 +19,6 @@ const IndexPage = () => {
   return (
     <>
       <Head>
-        <title>{APP_NAME}</title>
         <meta
           name="description"
           content="Next.js + SWR codebase containing realworld examples (CRUD, auth, advanced patterns, etc) that adheres to the realworld spec and API"

@@ -1,5 +1,7 @@
 import React from "react";
 
+export const AppContext = React.createContext({ title: '', setTitle: undefined });
+
 export function useCtrlEnterSubmit(handleSubmit) {
   React.useEffect(() => {
     function ctrlEnterListener(e) {

@@ -13,6 +13,7 @@ import FollowUserButton, { FollowUserButtonContext } from "components/profile/Fo
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import { AppContext } from 'libts'
 
 const ProfileHoc = (tab) => {
   return ({ profile }) => {
@@ -31,11 +32,10 @@ const ProfileHoc = (tab) => {
       setFollowing(profile?.following)
     }, [profile?.following])
     if (router.isFallback) { return <LoadingSpinner />; }
+    const {setTitle} = React.useContext(AppContext)
+    setTitle(username)
     return (
       <>
-        <Head>
-          <title>{username}</title>
-        </Head>
         <div className="profile-page">
           <div className="user-info">
             <div className="container">

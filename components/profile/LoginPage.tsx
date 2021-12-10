@@ -3,12 +3,15 @@ import React from "react";
 
 import CustomLink from "components/common/CustomLink";
 import LoginForm from "components/profile/LoginForm";
+import { AppContext } from 'libts'
 
 const makeLoginPage = ({ register = false }) => {
-  return () => (
-    <>
+  const title = register ? 'Sign up' : 'Sign in'
+  return () => {
+    const {setTitle} = React.useContext(AppContext)
+    setTitle(title)
+    return <>
       <Head>
-        <title>{register ? 'REGISTER' : 'LOGIN'} | NEXT REALWORLD</title>
         <meta
           name="description"
           content={register
@@ -21,12 +24,7 @@ const makeLoginPage = ({ register = false }) => {
         <div className="container page">
           <div className="row">
             <div className="col-md-6 offset-md-3 col-xs-12">
-              <h1 className="text-xs-center">
-                {register
-                  ? <>Sign up</>
-                  : <>Sign in</>
-                }
-              </h1>
+              <h1 className="text-xs-center">{ title }</h1>
               <p className="text-xs-center">
                 <CustomLink href={register ? "/user/login" : "/user/register" } >
                   {`${register ? 'Have' : 'Need' }`} an account?
@@ -38,7 +36,7 @@ const makeLoginPage = ({ register = false }) => {
         </div>
       </div>
     </>
-  );
+  };
 }
 
 export default makeLoginPage;

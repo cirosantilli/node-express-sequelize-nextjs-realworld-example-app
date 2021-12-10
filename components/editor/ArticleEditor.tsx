@@ -8,6 +8,7 @@ import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { useCtrlEnterSubmit } from "libts";
+import { AppContext } from 'libts'
 
 function editorReducer(state, action) {
   switch (action.type) {
@@ -98,11 +99,10 @@ export default function makeArticleEditor(isnew: boolean = false) {
       Router.push(`/article/${data.article.slug}`);
     };
     useCtrlEnterSubmit(handleSubmit)
+    const {setTitle} = React.useContext(AppContext)
+    setTitle(isnew ? 'New article' : 'Edit article')
     return (
       <>
-        <Head>
-          <title>{isnew ? 'New article' : 'Edit article' }</title>
-        </Head>
         <div className="editor-page">
           <div className="container page">
             <div className="row">

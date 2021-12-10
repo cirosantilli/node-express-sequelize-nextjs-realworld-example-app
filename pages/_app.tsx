@@ -1,13 +1,15 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React from "react";
 
 import Footer from "components/common/Footer";
 import Navbar from "components/common/Navbar";
 import { googleAnalyticsId, isDemo, isProduction } from "config";
 import ContextProvider from "lib/context";
+import { APP_NAME } from "lib/utils/constant";
 import "ionicons/css/ionicons.min.css";
 import "style.scss";
+import { AppContext } from 'libts'
 
 const MyApp = ({ Component, pageProps }) => {
   if (isProduction) {
@@ -19,20 +21,23 @@ const MyApp = ({ Component, pageProps }) => {
         page_path: url,
       });
     };
-    useEffect(() => {
+    React.useEffect(() => {
       router.events.on('routeChangeComplete', handleRouteChange);
       return () => {
         router.events.off('routeChangeComplete', handleRouteChange);
       };
     }, [router.events]);
   }
+  const [title, setTitle] = React.useState()
+  let realTitle = title === undefined ? '' : title + ' - '
   return (
-    <>
+    <AppContext.Provider value={{title, setTitle}}>
       <Head>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
+        <title>{realTitle + APP_NAME}</title>
       </Head>
       <ContextProvider>
         <Navbar />
@@ -44,7 +49,7 @@ const MyApp = ({ Component, pageProps }) => {
         <Component {...pageProps} />
         <Footer />
       </ContextProvider>
-    </>
+    </AppContext.Provider>
   )
 };
 
