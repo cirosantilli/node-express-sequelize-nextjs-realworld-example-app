@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR  from "swr";
@@ -31,54 +32,59 @@ const ProfileHoc = (tab) => {
     }, [profile?.following])
     if (router.isFallback) { return <LoadingSpinner />; }
     return (
-      <div className="profile-page">
-        <div className="user-info">
+      <>
+        <Head>
+          <title>{username}</title>
+        </Head>
+        <div className="profile-page">
+          <div className="user-info">
+            <div className="container">
+              <div className="row">
+                <div className="col-xs-12 col-md-10 offset-md-1">
+                  <CustomImage
+                    src={image}
+                    alt="User's profile image"
+                    className="user-img"
+                  />
+                  <h4>{username}</h4>
+                  <p>{bio}</p>
+                  <EditProfileButton isCurrentUser={isCurrentUser} />
+                  <FollowUserButtonContext.Provider value={{following, setFollowing}}>
+                    <FollowUserButton profile={profile} />
+                  </FollowUserButtonContext.Provider>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="container">
             <div className="row">
               <div className="col-xs-12 col-md-10 offset-md-1">
-                <CustomImage
-                  src={image}
-                  alt="User's profile image"
-                  className="user-img"
-                />
-                <h4>{username}</h4>
-                <p>{bio}</p>
-                <EditProfileButton isCurrentUser={isCurrentUser} />
-                <FollowUserButtonContext.Provider value={{following, setFollowing}}>
-                  <FollowUserButton profile={profile} />
-                </FollowUserButtonContext.Provider>
+                <div className="articles-toggle">
+                  <ul className="nav nav-pills outline-active">
+                    <li className="nav-item">
+                      <CustomLink
+                        href={`/profile/${encodeURIComponent(username)}`}
+                        className={`nav-link${tab === 'my-posts' ? ' active' : ''}`}
+                      >
+                        My Posts
+                      </CustomLink>
+                    </li>
+                    <li className="nav-item">
+                      <CustomLink
+                        href={`/profile/${encodeURIComponent(username)}/favorites`}
+                        className={`nav-link${tab === 'favorites' ? ' active' : ''}`}
+                      >
+                        Favorited Posts
+                      </CustomLink>
+                    </li>
+                  </ul>
+                </div>
+                <ArticleList what={tab} />
               </div>
             </div>
           </div>
         </div>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-md-10 offset-md-1">
-              <div className="articles-toggle">
-                <ul className="nav nav-pills outline-active">
-                  <li className="nav-item">
-                    <CustomLink
-                      href={`/profile/${encodeURIComponent(username)}`}
-                      className={`nav-link${tab === 'my-posts' ? ' active' : ''}`}
-                    >
-                      My Posts
-                    </CustomLink>
-                  </li>
-                  <li className="nav-item">
-                    <CustomLink
-                      href={`/profile/${encodeURIComponent(username)}/favorites`}
-                      className={`nav-link${tab === 'favorites' ? ' active' : ''}`}
-                    >
-                      Favorited Posts
-                    </CustomLink>
-                  </li>
-                </ul>
-              </div>
-              <ArticleList what={tab} />
-            </div>
-          </div>
-        </div>
-      </div>
+      </>
     );
   };
 }

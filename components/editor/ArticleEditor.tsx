@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Router, { useRouter } from "next/router";
 import React from "react";
 
@@ -98,59 +99,64 @@ export default function makeArticleEditor(isnew: boolean = false) {
     };
     useCtrlEnterSubmit(handleSubmit)
     return (
-      <div className="editor-page">
-        <div className="container page">
-          <div className="row">
-            <div className="col-md-10 offset-md-1 col-xs-12">
-              <ListErrors errors={errors} />
-              <form>
-                <fieldset>
-                  <fieldset className="form-group">
-                    <input
-                      className="form-control form-control-lg"
-                      type="text"
-                      placeholder="Article Title"
-                      value={posting.title}
-                      onChange={handleTitle}
+      <>
+        <Head>
+          <title>{isnew ? 'New article' : 'Edit article' }</title>
+        </Head>
+        <div className="editor-page">
+          <div className="container page">
+            <div className="row">
+              <div className="col-md-10 offset-md-1 col-xs-12">
+                <ListErrors errors={errors} />
+                <form>
+                  <fieldset>
+                    <fieldset className="form-group">
+                      <input
+                        className="form-control form-control-lg"
+                        type="text"
+                        placeholder="Article Title"
+                        value={posting.title}
+                        onChange={handleTitle}
+                      />
+                    </fieldset>
+                    <fieldset className="form-group">
+                      <input
+                        className="form-control"
+                        type="text"
+                        placeholder="What's this article about?"
+                        value={posting.description}
+                        onChange={handleDescription}
+                      />
+                    </fieldset>
+                    <fieldset className="form-group">
+                      <textarea
+                        className="form-control"
+                        rows={8}
+                        placeholder="Write your article (in markdown)"
+                        value={posting.body}
+                        onChange={handleBody}
+                      />
+                    </fieldset>
+                    <TagInput
+                      tagList={posting.tagList}
+                      addTag={addTag}
+                      removeTag={removeTag}
                     />
+                    <button
+                      className="btn btn-lg pull-xs-right btn-primary"
+                      type="button"
+                      disabled={isLoading}
+                      onClick={handleSubmit}
+                    >
+                      {isnew ? 'Publish' : 'Update'} Article
+                    </button>
                   </fieldset>
-                  <fieldset className="form-group">
-                    <input
-                      className="form-control"
-                      type="text"
-                      placeholder="What's this article about?"
-                      value={posting.description}
-                      onChange={handleDescription}
-                    />
-                  </fieldset>
-                  <fieldset className="form-group">
-                    <textarea
-                      className="form-control"
-                      rows={8}
-                      placeholder="Write your article (in markdown)"
-                      value={posting.body}
-                      onChange={handleBody}
-                    />
-                  </fieldset>
-                  <TagInput
-                    tagList={posting.tagList}
-                    addTag={addTag}
-                    removeTag={removeTag}
-                  />
-                  <button
-                    className="btn btn-lg pull-xs-right btn-primary"
-                    type="button"
-                    disabled={isLoading}
-                    onClick={handleSubmit}
-                  >
-                    {isnew ? 'Publish' : 'Update'} Article
-                  </button>
-                </fieldset>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   };
 }

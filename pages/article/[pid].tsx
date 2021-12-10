@@ -1,4 +1,5 @@
 import marked from "marked";
+import Head from "next/head";
 import { useRouter } from 'next/router'
 import React from "react";
 import useSWR  from "swr";
@@ -55,56 +56,61 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   if (router.isFallback) { return <LoadingSpinner />; }
   const markup = { __html: marked(article.body) };
   return (
-    <div className="article-page">
-      <div className="banner">
-        <div className="container">
-          <h1>{article.title}</h1>
-          <FavoriteArticleButtonContext.Provider value={{
-            favorited, setFavorited, favoritesCount, setFavoritesCount
-          }}>
-            <FollowUserButtonContext.Provider value={{
-              following, setFollowing
+    <>
+      <Head>
+        <title>{article.title}</title>
+      </Head>
+      <div className="article-page">
+        <div className="banner">
+          <div className="container">
+            <h1>{article.title}</h1>
+            <FavoriteArticleButtonContext.Provider value={{
+              favorited, setFavorited, favoritesCount, setFavoritesCount
             }}>
-              <ArticleMeta article={article}/>
-            </FollowUserButtonContext.Provider>
-          </FavoriteArticleButtonContext.Provider>
-        </div>
-      </div>
-      <div className="container page">
-        <div className="row article-content">
-          <div className="col-md-12">
-            <div dangerouslySetInnerHTML={markup} />
-            <ul className="tag-list">
-              {article.tagList?.map((tag) => (
-                <li className="tag-default tag-pill tag-outline" key={tag}>{tag}</li>
-              ))}
-            </ul>
+              <FollowUserButtonContext.Provider value={{
+                following, setFollowing
+              }}>
+                <ArticleMeta article={article}/>
+              </FollowUserButtonContext.Provider>
+            </FavoriteArticleButtonContext.Provider>
           </div>
         </div>
-        <hr />
-        <div className="article-actions">
-          <FavoriteArticleButtonContext.Provider value={{
-            favorited, setFavorited, favoritesCount, setFavoritesCount
-          }}>
-            <FollowUserButtonContext.Provider value={{
-              following, setFollowing
+        <div className="container page">
+          <div className="row article-content">
+            <div className="col-md-12">
+              <div dangerouslySetInnerHTML={markup} />
+              <ul className="tag-list">
+                {article.tagList?.map((tag) => (
+                  <li className="tag-default tag-pill tag-outline" key={tag}>{tag}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <hr />
+          <div className="article-actions">
+            <FavoriteArticleButtonContext.Provider value={{
+              favorited, setFavorited, favoritesCount, setFavoritesCount
             }}>
-              <ArticleMeta article={article}/>
-            </FollowUserButtonContext.Provider>
-          </FavoriteArticleButtonContext.Provider>
-        </div>
-        <div className="row">
-          <div className="col-xs-12 col-md-8 offset-md-2">
-            <div>
-              <CommentInput />
-              {comments?.map((comment: CommentType) => (
-                <Comment key={comment.id} comment={comment} />
-              ))}
+              <FollowUserButtonContext.Provider value={{
+                following, setFollowing
+              }}>
+                <ArticleMeta article={article}/>
+              </FollowUserButtonContext.Provider>
+            </FavoriteArticleButtonContext.Provider>
+          </div>
+          <div className="row">
+            <div className="col-xs-12 col-md-8 offset-md-2">
+              <div>
+                <CommentInput />
+                {comments?.map((comment: CommentType) => (
+                  <Comment key={comment.id} comment={comment} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
