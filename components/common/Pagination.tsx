@@ -2,13 +2,13 @@ import React from "react";
 import { trigger } from "swr";
 
 import Maybe from "./Maybe";
-import { getRange, getPageInfo } from "lib/utils/calculatePagination";
 import { usePageDispatch, usePageState } from "lib/context/PageContext";
+import { AppContext } from "libts";
 
 interface PaginationProps {
   total: number;
   limit: number;
-  pageCount: number;
+  showPagesMax: number;
   currentPage: number;
   lastIndex: number;
   fetchURL: string;
@@ -31,20 +31,62 @@ function PaginationItem(props) {
   )
 }
 
+export const getRange = (start, end) => {
+  return [...Array(end - start + 1)].map((_, i) => start + i);
+};
+
+export const getPageInfo = ({ limit, showPagesMax, total, page }) => {
+  const totalPages = Math.floor(total / limit);
+  let currentPage = page;
+  if (currentPage > totalPages) {
+    currentPage = totalPages;
+  }
+  let firstPage = Math.max(0, currentPage - Math.floor(showPagesMax / 2));
+  let lastPage = Math.min(totalPages, currentPage + Math.floor(showPagesMax / 2));
+  if (lastPage - firstPage + 1 < showPagesMax) {
+    if (currentPage < totalPages / 2) {
+      lastPage = Math.min(
+        totalPages,
+        lastPage + (showPagesMax - (lastPage - firstPage))
+      );
+    } else {
+      firstPage = Math.max(1, firstPage - (showPagesMax - (lastPage - firstPage)));
+    }
+  }
+  if (lastPage - firstPage + 1 > showPagesMax) {
+    if (currentPage > totalPages / 2) {
+      firstPage = firstPage + 1;
+    } else {
+      lastPage = lastPage - 1;
+    }
+  }
+  const previousPage = currentPage - 1;
+  const nextPage = currentPage + 1;
+  const hasPreviousPage = currentPage > 0;
+  const hasNextPage = currentPage < totalPages;
+  return {
+    firstPage,
+    lastPage,
+    previousPage,
+    nextPage,
+    hasPreviousPage,
+    hasNextPage,
+    totalPages,
+  };
+};
+
 const Pagination = ({
   total,
   limit,
-  pageCount,
+  showPagesMax,
   currentPage,
   lastIndex,
   fetchURL,
 }: PaginationProps) => {
-  const page = usePageState();
-  const setPage = usePageDispatch();
-
+  const { page, setPage } = React.useContext(AppContext)
   const { firstPage, lastPage, hasPreviousPage, hasNextPage } = getPageInfo({
     limit,
-    pageCount,
+    showPagesMax,
     total,
     page: currentPage,
   });

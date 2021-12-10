@@ -5,11 +5,24 @@ import React from "react";
 import Footer from "components/common/Footer";
 import Navbar from "components/common/Navbar";
 import { googleAnalyticsId, isDemo, isProduction } from "config";
-import ContextProvider from "lib/context";
 import { APP_NAME } from "lib/utils/constant";
 import "ionicons/css/ionicons.min.css";
 import "style.scss";
-import { AppContext } from 'libts'
+import { AppContext, AppContextProvider } from 'libts'
+
+function MyHead() {
+  const { title } = React.useContext(AppContext)
+  let realTitle = title === undefined ? '' : title + ' - '
+  return (
+    <Head>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>{realTitle + APP_NAME}</title>
+    </Head>
+  )
+}
 
 const MyApp = ({ Component, pageProps }) => {
   if (isProduction) {
@@ -28,28 +41,18 @@ const MyApp = ({ Component, pageProps }) => {
       };
     }, [router.events]);
   }
-  const [title, setTitle] = React.useState()
-  let realTitle = title === undefined ? '' : title + ' - '
   return (
-    <AppContext.Provider value={{title, setTitle}}>
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
-        <title>{realTitle + APP_NAME}</title>
-      </Head>
-      <ContextProvider>
-        <Navbar />
-        {isDemo && (
-          <div className="container" style={{'marginBottom': '20px'}}>
-            Source code for this website: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
-          </div>
-        )}
-        <Component {...pageProps} />
-        <Footer />
-      </ContextProvider>
-    </AppContext.Provider>
+    <AppContextProvider>
+      <MyHead />
+      <Navbar />
+      {isDemo && (
+        <div className="container" style={{'marginBottom': '20px'}}>
+          Source code for this website: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
+        </div>
+      )}
+      <Component {...pageProps} />
+      <Footer />
+    </AppContextProvider>
   )
 };
 

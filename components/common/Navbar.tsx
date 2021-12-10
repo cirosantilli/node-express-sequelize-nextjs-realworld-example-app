@@ -6,15 +6,15 @@ import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
 import NavLink from "components/common/NavLink";
 import { APP_NAME } from "lib/utils/constant";
-import { usePageDispatch } from "lib/context/PageContext";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import { AppContext } from "libts";
 
 const NavbarItem = ({ children }) => (
   <li className="nav-item">{children}</li>
 )
 
 const Navbar = () => {
-  const setPage = usePageDispatch();
+  const { setPage } = React.useContext(AppContext)
   const loggedInUser = getLoggedInUser()
   const handleClick = React.useCallback(() => setPage(0), []);
   return (

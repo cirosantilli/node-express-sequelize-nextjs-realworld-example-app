@@ -15,13 +15,11 @@ import {
 } from "lib/context/PageCountContext";
 import { SERVER_BASE_URL, DEFAULT_LIMIT } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
+import { AppContext } from "libts";
 
 const ArticleList = (props) => {
-  const page = usePageState();
-  const pageCount = usePageCountState();
-  const setPageCount = usePageCountDispatch();
-  const lastIndex =
-    pageCount > 480 ? Math.ceil(pageCount / DEFAULT_LIMIT) : Math.ceil(pageCount / DEFAULT_LIMIT) - 1;
+  const { page, pageCount, setPageCount } = React.useContext(AppContext)
+  const lastIndex = pageCount > 480 ? Math.ceil(pageCount / DEFAULT_LIMIT) : Math.ceil(pageCount / DEFAULT_LIMIT) - 1;
   const router = useRouter();
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
@@ -97,7 +95,7 @@ const ArticleList = (props) => {
         <Pagination
           total={pageCount}
           limit={DEFAULT_LIMIT}
-          pageCount={10}
+          showPagesMax={10}
           currentPage={page}
           lastIndex={lastIndex}
           fetchURL={fetchURL}

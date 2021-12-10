@@ -4,11 +4,11 @@ import React from "react";
 import CustomLink from "components/common/CustomLink";
 import CustomImage from "components/common/CustomImage";
 import FavoriteArticleButton from "components/common/FavoriteArticleButton";
-import { usePageDispatch } from "lib/context/PageContext";
 import { formatDate } from "lib/utils/date";
+import { AppContext } from "libts";
 
 const ArticlePreview = ({ article }) => {
-  const setPage = usePageDispatch();
+  const { setPage } = React.useContext(AppContext)
   const preview = article;
   const [hover, setHover] = React.useState(false);
   const [currentIndex, setCurrentIndex] = React.useState(-1);
