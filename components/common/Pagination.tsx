@@ -2,12 +2,11 @@ import React from "react";
 import { trigger } from "swr";
 
 import Maybe from "./Maybe";
-import { usePageDispatch, usePageState } from "lib/context/PageContext";
 import { AppContext } from "libts";
 
 interface PaginationProps {
-  total: number;
-  limit: number;
+  articlesCount: number;
+  articlesPerPage: number;
   showPagesMax: number;
   currentPage: number;
   lastIndex: number;
@@ -35,8 +34,8 @@ export const getRange = (start, end) => {
   return [...Array(end - start + 1)].map((_, i) => start + i);
 };
 
-export const getPageInfo = ({ limit, showPagesMax, total, page }) => {
-  const totalPages = Math.floor(total / limit);
+export const getPageInfo = ({ articlesPerPage, showPagesMax, articlesCount, page }) => {
+  const totalPages = Math.floor(articlesCount / articlesPerPage);
   let currentPage = page;
   if (currentPage > totalPages) {
     currentPage = totalPages;
@@ -76,8 +75,8 @@ export const getPageInfo = ({ limit, showPagesMax, total, page }) => {
 };
 
 const Pagination = ({
-  total,
-  limit,
+  articlesCount,
+  articlesPerPage,
   showPagesMax,
   currentPage,
   lastIndex,
@@ -85,12 +84,12 @@ const Pagination = ({
 }: PaginationProps) => {
   const { page, setPage } = React.useContext(AppContext)
   const { firstPage, lastPage, hasPreviousPage, hasNextPage } = getPageInfo({
-    limit,
+    articlesPerPage,
     showPagesMax,
-    total,
-    page: currentPage,
+    articlesCount,
+    page,
   });
-  const pages = total > 0 ? getRange(firstPage, lastPage) : [];
+  const pages = articlesCount > 0 ? getRange(firstPage, lastPage) : [];
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {

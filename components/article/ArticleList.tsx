@@ -8,18 +8,12 @@ import { FavoriteArticleButtonContext } from "components/common/FavoriteArticleB
 import LoadingSpinner from "components/common/LoadingSpinner";
 import Maybe from "components/common/Maybe";
 import Pagination from "components/common/Pagination";
-import { usePageState } from "lib/context/PageContext";
-import {
-  usePageCountState,
-  usePageCountDispatch,
-} from "lib/context/PageCountContext";
 import { SERVER_BASE_URL, DEFAULT_LIMIT } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import { AppContext } from "libts";
 
 const ArticleList = (props) => {
-  const { page, pageCount, setPageCount } = React.useContext(AppContext)
-  const lastIndex = pageCount > 480 ? Math.ceil(pageCount / DEFAULT_LIMIT) : Math.ceil(pageCount / DEFAULT_LIMIT) - 1;
+  const { page } = React.useContext(AppContext)
   const router = useRouter();
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
@@ -52,9 +46,7 @@ const ArticleList = (props) => {
     articles: [],
     articlesCount: 0,
   };
-  React.useEffect(() => {
-    setPageCount(articlesCount);
-  }, [articlesCount]);
+  const lastIndex = articlesCount > 480 ? Math.ceil(articlesCount / DEFAULT_LIMIT) : Math.ceil(articlesCount / DEFAULT_LIMIT) - 1;
 
   // Favorite article button state.
   const favorited = []
@@ -93,10 +85,9 @@ const ArticleList = (props) => {
       })}
       <Maybe test={articlesCount && articlesCount > DEFAULT_LIMIT}>
         <Pagination
-          total={pageCount}
-          limit={DEFAULT_LIMIT}
+          total={articlesCount}
+          articlesPerPage={DEFAULT_LIMIT}
           showPagesMax={10}
-          currentPage={page}
           lastIndex={lastIndex}
           fetchURL={fetchURL}
         />
