@@ -21,7 +21,7 @@ const Comment = ({ comment }) => {
           href={`/profile/${comment.author.username}`}
           className="comment-author"
         >
-          <img
+          <CustomImage
             src={comment.author.image}
             alt="author profile image"
             className="comment-author-img"
