@@ -82,7 +82,7 @@ function doStart(app) {
     (async () => {
       try {
         await sequelize.authenticate();
-        await sequelize.sync();
+        await models.sync(sequelize);
         app.set('sequelize', sequelize)
         start();
       } catch (e) {
