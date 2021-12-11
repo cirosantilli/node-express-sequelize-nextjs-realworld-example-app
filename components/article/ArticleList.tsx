@@ -46,7 +46,6 @@ const ArticleList = (props) => {
     articles: [],
     articlesCount: 0,
   };
-  const lastIndex = articlesCount > 480 ? Math.ceil(articlesCount / DEFAULT_LIMIT) : Math.ceil(articlesCount / DEFAULT_LIMIT) - 1;
 
   // Favorite article button state.
   const favorited = []
@@ -89,7 +88,6 @@ const ArticleList = (props) => {
           articlesPerPage={DEFAULT_LIMIT}
           showPagesMax={10}
           currentPage={page}
-          lastIndex={lastIndex}
           fetchURL={fetchURL}
         />
       </Maybe>
