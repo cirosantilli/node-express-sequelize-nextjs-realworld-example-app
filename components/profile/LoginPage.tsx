@@ -9,7 +9,9 @@ const makeLoginPage = ({ register = false }) => {
   const title = register ? 'Sign up' : 'Sign in'
   return () => {
     const {setTitle} = React.useContext(AppContext)
-    setTitle(title)
+    React.useEffect(() => {
+      setTitle(title)
+    }, [title])
     return <>
       <Head>
         <meta

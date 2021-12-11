@@ -31,9 +31,11 @@ const ProfileHoc = (tab) => {
     React.useEffect(() => {
       setFollowing(profile?.following)
     }, [profile?.following])
-    if (router.isFallback) { return <LoadingSpinner />; }
     const {setTitle} = React.useContext(AppContext)
-    setTitle(username)
+    React.useEffect(() => {
+      setTitle(username)
+    }, [username])
+    if (router.isFallback) { return <LoadingSpinner />; }
     return (
       <>
         <div className="profile-page">

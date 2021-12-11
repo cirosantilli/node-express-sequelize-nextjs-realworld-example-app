@@ -25,7 +25,9 @@ const Settings = () => {
   };
   const title = 'Your Settings'
   const { setTitle } = React.useContext(AppContext)
-  setTitle(title)
+  React.useEffect(() => {
+    setTitle(title)
+  }, [])
   return (
     <>
       <div className="settings-page">

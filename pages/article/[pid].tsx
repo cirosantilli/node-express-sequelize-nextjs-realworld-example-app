@@ -28,13 +28,15 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
 
   // Fetch user-specific data.
   // Article determines if the curent user favorited the article or not
-  const { data: articleApi, error } = useSWR(`${SERVER_BASE_URL}/articles/${article?.slug}`, fetcher(router.isFallback));
+  const { data: articleApi, error } = useSWR(
+  `${SERVER_BASE_URL}/articles/${article?.slug}`, fetcher(router.isFallback));
   if (articleApi !== undefined) {
     article = articleApi.article
   }
   // We fetch comments so that the new posted comment will appear immediately after posted.
   // Note that we cannot calculate the exact new coment element because we need the server datetime.
-  const { data: commentApi, error: commentError } = useSWR(`${SERVER_BASE_URL}/articles/${article?.slug}/comments`, fetcher(router.isFallback));
+  const { data: commentApi, error: commentError } = useSWR(
+    `${SERVER_BASE_URL}/articles/${article?.slug}/comments`, fetcher(router.isFallback));
   if (commentApi !== undefined) {
     comments = commentApi.comments
   }
@@ -53,11 +55,13 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
     setFavorited(article?.favorited);
     setFavoritesCount(article?.favoritesCount)
   }, [article?.favorited, article?.favoritesCount])
+  const {setTitle} = React.useContext(AppContext)
+  React.useEffect(() => {
+    setTitle(article?.title)
+  }, [article?.title])
 
   if (router.isFallback) { return <LoadingSpinner />; }
   const markup = { __html: marked(article.body) };
-  const {setTitle} = React.useContext(AppContext)
-  setTitle(article.title)
   return (
     <>
       <div className="article-page">
