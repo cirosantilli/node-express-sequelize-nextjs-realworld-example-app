@@ -3,6 +3,9 @@ import React from "react";
 import useSessionStorage from "lib/hooks/useSessionStorage";
 
 export const AppContext = React.createContext<{
+  title: string
+  setTitle: React.Dispatch<any> | undefined
+  page: number
   setPage: React.Dispatch<any> | undefined
 }>({
   title: '',

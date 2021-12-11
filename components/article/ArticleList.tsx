@@ -85,9 +85,10 @@ const ArticleList = (props) => {
       })}
       <Maybe test={articlesCount && articlesCount > DEFAULT_LIMIT}>
         <Pagination
-          total={articlesCount}
+          articlesCount={articlesCount}
           articlesPerPage={DEFAULT_LIMIT}
           showPagesMax={10}
+          currentPage={page}
           lastIndex={lastIndex}
           fetchURL={fetchURL}
         />
