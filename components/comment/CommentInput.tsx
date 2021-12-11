@@ -41,6 +41,7 @@ const CommentInput = () => {
     setContent("");
     trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`);
   };
+  useCtrlEnterSubmit(handleSubmit)
   if (!loggedInUser) {
     return (
       <>
@@ -55,7 +56,6 @@ const CommentInput = () => {
       </>
     );
   }
-  useCtrlEnterSubmit(handleSubmit)
   return (
     <>
       <ul className="error-messages">{/* TODO. Reference does not handle those errors either right now.

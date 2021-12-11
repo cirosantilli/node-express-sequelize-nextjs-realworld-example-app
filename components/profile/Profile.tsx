@@ -28,13 +28,9 @@ const ProfileHoc = (tab) => {
     const loggedInUser = getLoggedInUser()
     const isCurrentUser = loggedInUser && username === loggedInUser?.username
     const [following, setFollowing] = React.useState(false)
-    React.useEffect(() => {
-      setFollowing(profile?.following)
-    }, [profile?.following])
+    React.useEffect(() => { setFollowing(profile?.following) }, [profile?.following])
     const {setTitle} = React.useContext(AppContext)
-    React.useEffect(() => {
-      setTitle(username)
-    }, [username])
+    React.useEffect(() => { setTitle(username) }, [username])
     if (router.isFallback) { return <LoadingSpinner />; }
     return (
       <>

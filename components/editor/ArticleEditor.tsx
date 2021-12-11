@@ -100,7 +100,9 @@ export default function makeArticleEditor(isnew: boolean = false) {
     };
     useCtrlEnterSubmit(handleSubmit)
     const {setTitle} = React.useContext(AppContext)
-    setTitle(isnew ? 'New article' : 'Edit article')
+    React.useEffect(() => {
+      setTitle(isnew ? 'New article' : `Editing: ${initialArticle?.title}`)
+    }, [isnew, initialArticle?.title])
     return (
       <>
         <div className="editor-page">
