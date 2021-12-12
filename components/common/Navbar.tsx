@@ -7,25 +7,25 @@ import Maybe from "components/common/Maybe";
 import NavLink from "components/common/NavLink";
 import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
-import { AppContext } from "libts";
+import { AppContext, resetIndexState } from 'libts'
 
 const NavbarItem = ({ children }) => (
   <li className="nav-item">{children}</li>
 )
 
 const Navbar = () => {
-  const { setPage } = React.useContext(AppContext)
   const loggedInUser = getLoggedInUser()
-  const handleClick = React.useCallback(() => setPage(0), []);
+  const { setPage, setTab } = React.useContext(AppContext)
+  const clickHandler = () => resetIndexState(setPage, setTab, loggedInUser)
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <CustomLink href="/" onClick={handleClick} className="navbar-brand">
+        <CustomLink href="/" onClick={clickHandler} className="navbar-brand">
           {APP_NAME.toLowerCase()}
         </CustomLink>
         <ul className="nav navbar-nav pull-xs-right">
           <NavbarItem>
-            <NavLink href="/" onClick={handleClick}>
+            <NavLink href="/" onClick={clickHandler}>
               Home
             </NavLink>
           </NavbarItem>
@@ -45,7 +45,6 @@ const Navbar = () => {
             <NavbarItem>
               <NavLink
                 href={`/profile/${loggedInUser?.username}`}
-                onClick={handleClick}
               >
                 <CustomImage
                   className="user-pic"

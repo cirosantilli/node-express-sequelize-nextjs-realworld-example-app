@@ -13,7 +13,7 @@ import fetcher from "lib/utils/fetcher";
 import { AppContext } from "libts";
 
 const ArticleList = (props) => {
-  const { page } = React.useContext(AppContext)
+  const { page, setPage } = props
   const router = useRouter();
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
@@ -88,6 +88,7 @@ const ArticleList = (props) => {
           articlesPerPage={DEFAULT_LIMIT}
           showPagesMax={10}
           currentPage={page}
+          setCurrentPage={setPage}
           fetchURL={fetchURL}
         />
       </Maybe>

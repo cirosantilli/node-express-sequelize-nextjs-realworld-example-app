@@ -9,7 +9,7 @@ interface PaginationProps {
   articlesPerPage: number;
   showPagesMax: number;
   currentPage: number;
-  lastIndex: number;
+  setCurrentPage: React.Dispatch<any> | undefined;
   fetchURL: string;
 }
 
@@ -34,9 +34,8 @@ export const getRange = (start, end) => {
   return [...Array(end - start + 1)].map((_, i) => start + i);
 };
 
-export const getPageInfo = ({ articlesPerPage, showPagesMax, articlesCount, page }) => {
+export const getPageInfo = ({ articlesPerPage, showPagesMax, articlesCount, currentPage }) => {
   const totalPages = Math.ceil(articlesCount / articlesPerPage)
-  let currentPage = page;
   if (currentPage > totalPages) {
     currentPage = totalPages;
   }
@@ -75,7 +74,7 @@ export const getPageInfo = ({ articlesPerPage, showPagesMax, articlesCount, page
 };
 
 function makeSetPageCallback(setPage, pageIndex, fetchURL) {
-  return (e: React.MouseEvent<HTMLLIElement, MouseEvent>, page) => {
+  return (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     e.preventDefault();
     setPage(pageIndex);
     trigger(fetchURL);
@@ -87,26 +86,27 @@ const Pagination = ({
   articlesPerPage,
   showPagesMax,
   currentPage,
-  lastIndex,
+  setCurrentPage,
   fetchURL,
 }: PaginationProps) => {
-  const { page, setPage } = React.useContext(AppContext)
   const { firstPage, lastPage, hasPreviousPage, hasNextPage, totalPages } = getPageInfo({
     articlesPerPage,
     showPagesMax,
     articlesCount,
-    page,
+    currentPage,
   });
   const pages = articlesCount > 0 ? getRange(firstPage, lastPage) : [];
-  const handleFirstClick = makeSetPageCallback(setPage, 0, fetchURL)
-  const handlePrevClick = makeSetPageCallback(setPage, page - 1, fetchURL)
-  const handleNextClick = makeSetPageCallback(setPage, page + 1, fetchURL)
-  const handleLastClick = makeSetPageCallback(setPage, totalPages - 1, fetchURL)
+  const handleFirstClick = makeSetPageCallback(setCurrentPage, 0, fetchURL)
+  const handlePrevClick = makeSetPageCallback(setCurrentPage, currentPage - 1, fetchURL)
+  const handleNextClick = makeSetPageCallback(setCurrentPage, currentPage + 1, fetchURL)
+  const handleLastClick = makeSetPageCallback(setCurrentPage, totalPages - 1, fetchURL)
   return (
     <nav>
       <ul className="pagination">
-        <Maybe test={hasPreviousPage}>
+        <Maybe test={firstPage > 0}>
           <PaginationItem onClick={handleFirstClick}>{`<<`}</PaginationItem>
+        </Maybe>
+        <Maybe test={hasPreviousPage}>
           <PaginationItem onClick={handlePrevClick}>{`<`}</PaginationItem>
         </Maybe>
         {pages.map(page => {
@@ -115,7 +115,7 @@ const Pagination = ({
             <PaginationItem
               key={page.toString()}
               className={isCurrent && "active"}
-              onClick={makeSetPageCallback(setPage, page, fetchURL)}
+              onClick={makeSetPageCallback(setCurrentPage, page, fetchURL)}
             >
               {page + 1}
             </PaginationItem>
@@ -123,6 +123,8 @@ const Pagination = ({
         })}
         <Maybe test={hasNextPage}>
           <PaginationItem onClick={handleNextClick}>{`>`}</PaginationItem>
+        </Maybe>
+        <Maybe test={lastPage < totalPages - 1}>
           <PaginationItem onClick={handleLastClick}>{`>>`}</PaginationItem>
         </Maybe>
       </ul>

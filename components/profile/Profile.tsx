@@ -17,6 +17,7 @@ import { AppContext } from 'libts'
 
 const ProfileHoc = (tab) => {
   return ({ profile }) => {
+    const [page, setPage] = React.useState(0)
     const router = useRouter();
     const { data: profileApi, error } = useSWR(`${SERVER_BASE_URL}/profiles/${profile?.username}`, fetcher(router.isFallback));
     if (profileApi !== undefined) {
@@ -77,7 +78,7 @@ const ProfileHoc = (tab) => {
                     </li>
                   </ul>
                 </div>
-                <ArticleList what={tab} />
+                <ArticleList {...{page, setPage, what: tab}} />
               </div>
             </div>
           </div>

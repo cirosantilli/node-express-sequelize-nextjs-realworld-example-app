@@ -8,9 +8,7 @@ import fetcher from "lib/utils/fetcher";
 import ErrorMessage from "components/common/ErrorMessage";
 import { AppContext } from "libts";
 
-const Tags = ({setTab, setTag}) => {
-  const { setPage } = React.useContext(AppContext)
-  const handleClick = React.useCallback(() => setPage(0), []);
+const Tags = ({setTab, setPage, setTag}) => {
   const { data, error } = useSWR(`${SERVER_BASE_URL}/tags`, fetcher());
   if (error) return <ErrorMessage message="Cannot load popular tags..." />;
   if (!data) return <LoadingSpinner />;
@@ -22,9 +20,13 @@ const Tags = ({setTab, setTag}) => {
           key={tag}
           href={``}
           className="tag-default tag-pill"
-          onClick={() => {setTab('tag'); setTag(tag);}}
+          onClick={() => {
+            setTab('tag')
+            setTag(tag)
+            setPage(0)
+          }}
         >
-          <span onClick={handleClick}>{tag}</span>
+          {tag}
         </CustomLink>
       ))}
     </div>

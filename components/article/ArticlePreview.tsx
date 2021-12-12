@@ -29,7 +29,7 @@ const ArticlePreview = ({ article }) => {
             href={`/profile/${preview.author.username}`}
             className="author"
           >
-            <span onClick={() => setPage(0)}>{preview.author.username}</span>
+            {preview.author.username}
           </CustomLink>
           <span className="date">
             {formatDate(preview.createdAt)}

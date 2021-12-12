@@ -7,14 +7,14 @@ import Tags from "components/home/Tags";
 import TabList from "components/home/TabList";
 import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
-import { AppContext } from 'libts'
+import { AppContext, resetIndexState } from 'libts'
 
 const IndexPage = () => {
-  const loggedInUser = getLoggedInUser()
-  const [tab, setTab] = React.useState(loggedInUser ? 'feed' : 'global')
   const [tag, setTag] = React.useState()
+  const { page, setPage, tab, setTab } = React.useContext(AppContext)
+  const loggedInUser = getLoggedInUser()
   React.useEffect(() => {
-    setTab(loggedInUser ? 'feed' : 'global')
+    resetIndexState(setPage, setTab, loggedInUser)
   }, [loggedInUser])
   return (
     <>
@@ -37,14 +37,14 @@ const IndexPage = () => {
           <div className="row">
             <div className="col-md-9">
               <div className="feed-toggle">
-                <TabList tab={tab} setTab={setTab} tag={tag} />
+                <TabList {...{tab, setTab, setPage, tag}} />
               </div>
-              <ArticleList what={tab} tag={tag}/>
+              <ArticleList {...{page, setPage, what: tab, tag}}/>
             </div>
             <div className="col-md-3">
               <div className="sidebar">
                 <p>Popular Tags</p>
-                <Tags setTab={setTab} setTag={setTag} />
+                <Tags {...{setTab, setTag, setPage}} />
               </div>
             </div>
           </div>

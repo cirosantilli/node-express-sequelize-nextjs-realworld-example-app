@@ -93,14 +93,8 @@ router.param('comment', function(req, res, next, id) {
 router.get('/', auth.optional, async function(req, res, next) {
   try {
     let query = {}
-    let limit = 20
-    let offset = 0
-    if (typeof req.query.limit !== 'undefined') {
-      limit = req.query.limit
-    }
-    if (typeof req.query.offset !== 'undefined') {
-      offset = req.query.offset
-    }
+    const limit = lib.validateParam(req.query, 'limit', lib.validatePositiveInteger, 20)
+    const offset = lib.validateParam(req.query, 'offset', lib.validatePositiveInteger, 0)
     const authorInclude = {
       model: req.app.get('sequelize').models.User,
       as: 'author',
@@ -127,8 +121,8 @@ router.get('/', auth.optional, async function(req, res, next) {
       req.app.get('sequelize').models.Article.findAndCountAll({
         where: query,
         order: [['createdAt', 'DESC']],
-        limit: Number(limit),
-        offset: Number(offset),
+        limit: limit,
+        offset: offset,
         include: include,
       }),
       req.payload ? req.app.get('sequelize').models.User.findByPk(req.payload.id) : null
@@ -146,14 +140,8 @@ router.get('/', auth.optional, async function(req, res, next) {
 
 router.get('/feed', auth.required, async function(req, res, next) {
   try {
-    let limit = 20
-    let offset = 0
-    if (typeof req.query.limit !== 'undefined') {
-      limit = Number(req.query.limit)
-    }
-    if (typeof req.query.offset !== 'undefined') {
-      offset = Number(req.query.offset)
-    }
+    const limit = lib.validateParam(req.query, 'limit', lib.validatePositiveInteger, 20)
+    const offset = lib.validateParam(req.query, 'offset', lib.validatePositiveInteger, 0)
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
     if (!user) {
       return res.sendStatus(401)

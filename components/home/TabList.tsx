@@ -5,7 +5,7 @@ import CustomLink from "components/common/CustomLink";
 import Maybe from "components/common/Maybe";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 
-const TabList = ({tab, setTab, tag}) => {
+const TabList = ({tab, setTab, setPage, tag}) => {
   const loggedInUser = getLoggedInUser()
   return (
     <ul className="nav nav-pills outline-active">
@@ -14,7 +14,10 @@ const TabList = ({tab, setTab, tag}) => {
           <CustomLink
             className={`nav-link${tab === 'feed' ? ' active' : ''}`}
             href="/"
-            onClick={() => {setTab('feed')}}
+            onClick={() => {
+              setPage(0)
+              setTab('feed')
+            }}
             shallow
           >
             Your Feed
@@ -27,13 +30,14 @@ const TabList = ({tab, setTab, tag}) => {
           href="/"
           shallow
           onClick={() => {
+            setPage(0)
             setTab('global')
           }}
         >
           Global Feed
         </CustomLink>
       </li>
-      <Maybe test={tab == 'tag'}>
+      <Maybe test={tab === 'tag'}>
         <li className="nav-item">
           <CustomLink
             href={`/`}
