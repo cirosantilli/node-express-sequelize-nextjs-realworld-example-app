@@ -24,16 +24,17 @@ function MyHead() {
   )
 }
 
+function handleRouteChange(url) {
+  window.gtag('config', googleAnalyticsId, {
+    page_path: url,
+  })
+}
+
 const MyApp = ({ Component, pageProps }) => {
   if (isProduction) {
     // Google Analytics page switches:
     // https://stackoverflow.com/questions/60411351/how-to-use-google-analytics-with-next-js-app/62552263#62552263
     const router = useRouter();
-    const handleRouteChange = (url) => {
-      window.gtag('config', googleAnalyticsId, {
-        page_path: url,
-      });
-    };
     React.useEffect(() => {
       router.events.on('routeChangeComplete', handleRouteChange);
       return () => {

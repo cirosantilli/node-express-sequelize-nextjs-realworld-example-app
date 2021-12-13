@@ -52,6 +52,27 @@ If you make any changes to the code, at least code under `/pages` for sure, you 
 
 Running `next build` is one very important test of the code, as it builds many of the most important pages of the website, and runs checks such as TypeScript type checking. You should basically run it after every single commit that touches the frontend.
 
+If you look into what `npm run start-dev` does in the `package.json`, you will see the following environment variables, which are custom to this project and not defined by Next.js itself:
+
+* `NEXT_PUBLIC_NODE_ENV=development`: sets everything to be development by default.
++
+If this variable not given, `NODE_ENV` is used instead.
++
+Just like `NODE_ENV`, this variable affects the following aspects of the application:
++
+** if the Next.js server will run in development or production mode. From the Next.js CLI, this determination is done with `next dev` vs `next start`. But we use a custom server where both dev and prod are run from `./app`, and so we determine that from environment variables.
+** if the database will be SQLite (default development DB) or PostgreSQL (default production DB)
+** in browser effects, e.g. turns off Google Analytics
++
+We cannot use `NODE_ENV` here directly as we would like because and Next.js forces `process.env.NODE_ENV` to match the server's dev vs production mode. But we want a production mode server, and no Google analytics in this case.
+* `NODE_ENV_NEXT_SERVER_ONLY=production`: determines is the Next.js server will run in development or production mode.
++
+This variable only affects the Next.js server dev vs prod aspect of the application, and not any other aspects such as the database used and in browser effects such as having Google Analytics or not.
++
+If given, this variable overrides all others in making that determination, including `NEXT_PUBLIC_NODE_ENV`. If not given, `NODE_ENV` is used as usual.
++
+If this variable is not given, `NEXT_PUBLIC_NODE_ENV` is given instead.
+
 === Local run as identical to deployment as possible
 
 First setup the database as described at: https://github.com/cirosantilli/node-express-sequelize-realworld-example-app#local-run-as-identical-to-deployment-as-possible

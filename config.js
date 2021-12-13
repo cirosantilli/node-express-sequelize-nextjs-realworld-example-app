@@ -1,8 +1,8 @@
 let isProduction;
-if (process.env.NODE_ENV_OVERRIDE === undefined) {
+if (process.env.NEXT_PUBLIC_NODE_ENV === undefined) {
   isProduction = process.env.NODE_ENV === 'production'
 } else {
-  isProduction = process.env.NODE_ENV_OVERRIDE === 'production'
+  isProduction = process.env.NEXT_PUBLIC_NODE_ENV === 'production'
 }
 
 let demoMaxObjs;
@@ -21,10 +21,16 @@ module.exports = {
   maxObjsInMemory: 10000,
   googleAnalyticsId: 'UA-47867706-3',
   isDemo: process.env.NEXT_PUBLIC_DEMO === 'true',
-  isProduction: isProduction,
-  isProductionNext: process.env.NODE_ENV_NEXT === undefined ?
+  // Default isProduction check. Affetcs all aspects of the application unless
+  // they are individually overridden, including:
+  // * is Next.js server dev or prod?
+  // * use SQLite or PostgreSQL?
+  // * in browser effects, e.g. show Google Analytics or not?
+  isProduction,
+  // Overrides isProduction for the "is Next.js server dev or prod?" only.
+  isProductionNext: process.env.NODE_ENV_NEXT_SERVER_ONLY === undefined ?
     (isProduction) :
-    (process.env.NODE_ENV_NEXT === 'production'),
+    (process.env.NODE_ENV_NEXT_SERVER_ONLY === 'production'),
   port: process.env.PORT || 3000,
   // Makes deployment impossibly slow if there are lots of pages
   // like in a real-world production public website.
