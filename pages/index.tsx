@@ -9,7 +9,7 @@ import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'
 
-const IndexPage = () => {
+const IndexPage = ({ articles, articlesCount }) => {
   const [tag, setTag] = React.useState()
   const { page, setPage, tab, setTab } = React.useContext(AppContext)
   const loggedInUser = getLoggedInUser()
@@ -39,7 +39,7 @@ const IndexPage = () => {
               <div className="feed-toggle">
                 <TabList {...{tab, setTab, setPage, tag}} />
               </div>
-              <ArticleList {...{page, setPage, what: tab, tag}}/>
+              <ArticleList {...{articles, articlesCount, page, setPage, what: tab, tag}}/>
             </div>
             <div className="col-md-3">
               <div className="sidebar">
@@ -55,3 +55,23 @@ const IndexPage = () => {
 }
 
 export default IndexPage;
+
+// Server code.
+
+import sequelize from "lib/db";
+import { revalidate } from "config";
+import { DEFAULT_LIMIT  } from "lib/utils/constant";
+
+export async function getStaticProps() {
+  const articles = await sequelize.models.Article.findAndCountAll({
+    order: [['createdAt', 'DESC']],
+    limit: DEFAULT_LIMIT,
+  })
+  return {
+    props: {
+      articles: await Promise.all(articles.rows.map(article => article.toJSONFor())),
+      articlesCount: articles.count,
+    },
+    revalidate,
+  }
+}

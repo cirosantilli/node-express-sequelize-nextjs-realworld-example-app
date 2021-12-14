@@ -1,6 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
-import { prerenderAll } from "config";
+import { revalidate, prerenderAll } from "config";
 import sequelize from "lib/db";
 
 export const getStaticPathsArticle: GetStaticPaths = async () => {
@@ -24,7 +24,7 @@ export const getStaticPathsArticle: GetStaticPaths = async () => {
   }
 }
 
-export function getStaticPropsArticle(revalidate?, addComments?) {
+export function getStaticPropsArticle(addComments?) : GetStaticProps {
   return async ({ params: { pid } }) => {
     const article = await sequelize.models.Article.findOne({
       where: { slug: pid },
@@ -44,9 +44,7 @@ export function getStaticPropsArticle(revalidate?, addComments?) {
     }
     const ret: any = {
       props: { article: await article.toJSONFor() },
-    }
-    if (revalidate !== undefined) {
-      ret.revalidate = revalidate
+      revalidate,
     }
     if (addComments) {
       ret.props.comments = await Promise.all(comments.map(comment => comment.toJSONFor()))

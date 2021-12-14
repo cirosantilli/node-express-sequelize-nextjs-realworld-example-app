@@ -121,9 +121,9 @@ router.get('/', auth.optional, async function(req, res, next) {
       req.app.get('sequelize').models.Article.findAndCountAll({
         where: query,
         order: [['createdAt', 'DESC']],
-        limit: limit,
-        offset: offset,
-        include: include,
+        limit,
+        offset,
+        include,
       }),
       req.payload ? req.app.get('sequelize').models.User.findByPk(req.payload.id) : null
     ])

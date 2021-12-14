@@ -12,7 +12,7 @@ import { SERVER_BASE_URL, DEFAULT_LIMIT } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import { AppContext } from "libts";
 
-const ArticleList = (props) => {
+const ArticleList = props => {
   const { page, setPage } = props
   const router = useRouter();
   const { asPath, pathname, query } = router;
@@ -43,8 +43,8 @@ const ArticleList = (props) => {
   })()
   const { data, error } = useSWR(fetchURL, fetcher());
   const { articles, articlesCount } = data || {
-    articles: [],
-    articlesCount: 0,
+    articles: props.articles || [],
+    articlesCount: props.articlesCount || 0,
   };
 
   // Favorite article button state.
@@ -52,9 +52,9 @@ const ArticleList = (props) => {
   const setFavorited = []
   const favoritesCount = []
   const setFavoritesCount = []
-  for (let i = 0; i < DEFAULT_LIMIT; i++) {
-    [favorited[i], setFavorited[i]] = React.useState(false);
-    [favoritesCount[i], setFavoritesCount[i]] = React.useState(0);
+  for (let i = 0; i < articles.length; i++) {
+      [favorited[i], setFavorited[i]] = React.useState(false);
+      [favoritesCount[i], setFavoritesCount[i]] = React.useState(0);
   }
   React.useEffect(() => {
     for (let i = 0; i < articles.length; i++) {
@@ -64,7 +64,6 @@ const ArticleList = (props) => {
   }, [articles])
 
   if (error) return <ErrorMessage message="Cannot load recent articles..." />;
-  if (!data) return <div className="article-preview">Loading articles...</div>;
   if (articles?.length === 0) {
     return (<div className="article-preview">No articles are here... yet.</div>);
   }
