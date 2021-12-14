@@ -9,7 +9,7 @@ import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'
 
-const IndexPage = ({ articles, articlesCount }) => {
+const IndexPage = ({ articles, articlesCount, tags }) => {
   const [tag, setTag] = React.useState()
   const { page, setPage, tab, setTab } = React.useContext(AppContext)
   const loggedInUser = getLoggedInUser()
@@ -44,7 +44,7 @@ const IndexPage = ({ articles, articlesCount }) => {
             <div className="col-md-3">
               <div className="sidebar">
                 <p>Popular Tags</p>
-                <Tags {...{setTab, setTag, setPage}} />
+                <Tags {...{tags, setTab, setTag, setPage}} />
               </div>
             </div>
           </div>
@@ -71,6 +71,7 @@ export async function getStaticProps() {
     props: {
       articles: await Promise.all(articles.rows.map(article => article.toJSONFor())),
       articlesCount: articles.count,
+      tags: (await sequelize.models.Tag.findAll()).map(tag => tag.name),
     },
     revalidate,
   }

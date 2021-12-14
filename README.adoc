@@ -169,14 +169,16 @@ SSG would, in addition to the previous, require specific Next.js support for the
 
 === Single URL with multiple pages
 
-We don't know how to have multiple pages under a single URL in Next.js nicely. This is needed for tab navigation e.g. under `/` "Your Feed" vs "Global Feed", and for pagination:
+We don't know how to have multiple pages under a single URL in Next.js nicely. This is needed for tab navigation e.g. under `/` "Your Feed" vs "Global Feed" vs tag search, and for pagination:
 
 * https://stackoverflow.com/questions/62628685/static-pagination-in-nextjs
 * https://stackoverflow.com/questions/65471275/material-ui-tabs-with-nextjs
 
-Note however that such functionality also makes it impossible to access those pages without JavaScript, therefore one of the main points of React, which is SEO without the need for JavaScript. Therefore maybe it doesn't matter much.
+Such "multi page with a single URL" website design makes it impossible to access such pages without JavaScript, which is one of the main points of Next.js for.
 
-`reck1ess` original implementation works around this by just fetching from the API and rendering, like a regular non-Next React app would, and this is the only way we know how to do it.
+Our implementation works around this by just fetching from the API and rendering, like a regular non-Next React app would, and this is the only way we know how to do it.
+
+We do however render the default view of each page in a way that will work without JavaScript, e.g. the default page 0 of the global index. But then if you try and e.g. click the pagination buttons they won't do anything.
 
 Global discussion at: https://github.com/gothinkster/realworld/issues/691
 

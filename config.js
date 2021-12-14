@@ -19,6 +19,7 @@ module.exports = {
   // If Sequelize were better, we would be able to do much more in individual complex queries.
   // But as things stand, we just have to bring data into memory and do secondary requests.
   maxObjsInMemory: 10000,
+  /** @type {boolean | 'blocking'} */
   fallback: 'blocking',
   googleAnalyticsId: 'UA-47867706-3',
   isDemo: process.env.NEXT_PUBLIC_DEMO === 'true',

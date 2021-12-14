@@ -8,14 +8,15 @@ import fetcher from "lib/utils/fetcher";
 import ErrorMessage from "components/common/ErrorMessage";
 import { AppContext } from "libts";
 
-const Tags = ({setTab, setPage, setTag}) => {
+const Tags = ({tags, setTab, setPage, setTag}) => {
   const { data, error } = useSWR(`${SERVER_BASE_URL}/tags`, fetcher());
   if (error) return <ErrorMessage message="Cannot load popular tags..." />;
-  if (!data) return <LoadingSpinner />;
-  const { tags } = data;
+  if (data) {
+    ({ tags } = data);
+  }
   return (
     <div className="tag-list">
-      {tags?.map((tag) => (
+      {tags?.map(tag => (
         <CustomLink
           key={tag}
           href={``}
