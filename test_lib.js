@@ -2,8 +2,11 @@
 // which would break non-Mocha requirers.
 
 const path = require('path')
+const perf_hooks = require('perf_hooks')
 
 const models = require('./models')
+
+const now = perf_hooks.performance.now
 
 // https://stackoverflow.com/questions/563406/add-days-to-javascript-date
 function addDays(oldDate, days) {
@@ -90,6 +93,13 @@ function makeUser(sequelize, i=0) {
 }
 exports.makeUser = makeUser
 
+let printTimeNow;
+function printTime() {
+  const newNow = now()
+  console.error((newNow - printTimeNow)/1000.0)
+  printTimeNow = newNow
+}
+
 async function generateDemoData(params) {
   const nUsers = params.nUsers === undefined ? 10 : params.nUsers
   const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
@@ -106,14 +116,16 @@ async function generateDemoData(params) {
   const sequelize = models.getSequelize(directory, basename);
   await models.sync(sequelize, { force: true })
 
-  // Users
+  printTimeNow = now()
+  console.error('User');
   const userArgs = [];
   for (var i = 0; i < nUsers; i++) {
     userArgs.push(makeUser(sequelize, i))
   }
   const users = await sequelize.models.User.bulkCreate(userArgs)
+  printTime()
 
-  // Follows
+  console.error('UserFollowUser');
   const followArgs = []
   for (var i = 0; i < nUsers; i++) {
     const userId = users[i].id
@@ -125,8 +137,9 @@ async function generateDemoData(params) {
     }
   }
   await sequelize.models.UserFollowUser.bulkCreate(followArgs)
+  printTime()
 
-  // Articles
+  console.error('Article');
   const articleArgs = [];
   for (var i = 0; i < nArticles; i++) {
     const userIdx = i % nUsers
@@ -140,8 +153,9 @@ async function generateDemoData(params) {
       individualHooks: true,
     }
   )
+  printTime()
 
-  // Favorites
+  console.error('UserFavoriteArticle');
   let articleIdx = 0
   const favoriteArgs = []
   for (var i = 0; i < nUsers; i++) {
@@ -155,15 +169,17 @@ async function generateDemoData(params) {
     }
   }
   await sequelize.models.UserFavoriteArticle.bulkCreate(favoriteArgs)
+  printTime()
 
-  // Tags
+  console.error('Tag');
   const tagArgs = []
   for (var i = 0; i < nTags; i++) {
     tagArgs.push(makeTag(i))
   }
   const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
+  printTime()
 
-  // ArticleTags
+  console.error('ArticleTag');
   let tagIdx = 0
   const articleTagArgs = []
   for (var i = 0; i < nArticles; i++) {
@@ -176,8 +192,9 @@ async function generateDemoData(params) {
     }
   }
   await sequelize.models.ArticleTag.bulkCreate(articleTagArgs)
+  printTime()
 
-  // Comments
+  console.error('Comment');
   const commentArgs = [];
   let commentIdx = 0;
   for (var i = 0; i < nArticles; i++) {
@@ -190,6 +207,7 @@ async function generateDemoData(params) {
     }
   }
   const comments = await sequelize.models.Comment.bulkCreate(commentArgs)
+  printTime()
 
   return sequelize
 }
