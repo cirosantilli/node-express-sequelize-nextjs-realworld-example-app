@@ -70,18 +70,16 @@ const ArticleList = props => {
   }
   return (
     <>
-      {articles?.map((article, i) => {
-        return (
-          <FavoriteArticleButtonContext.Provider key={article.slug} value={{
-            favorited: favorited[i],
-            setFavorited: setFavorited[i],
-            favoritesCount: favoritesCount[i],
-            setFavoritesCount: setFavoritesCount[i],
-          }}>
-            <ArticlePreview key={article.slug} article={article} />
-          </FavoriteArticleButtonContext.Provider>
-        )
-      })}
+      {articles?.map((article, i) => (
+        <FavoriteArticleButtonContext.Provider key={article.slug} value={{
+          favorited: favorited[i],
+          setFavorited: setFavorited[i],
+          favoritesCount: favoritesCount[i],
+          setFavoritesCount: setFavoritesCount[i],
+        }}>
+          <ArticlePreview key={article.slug} article={article} />
+        </FavoriteArticleButtonContext.Provider>
+      ))}
       <Maybe test={articlesCount && articlesCount > DEFAULT_LIMIT}>
         <Pagination
           articlesCount={articlesCount}
