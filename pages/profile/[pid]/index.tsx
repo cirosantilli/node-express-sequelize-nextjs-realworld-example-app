@@ -1,6 +1,7 @@
 import { getStaticPathsProfile, getStaticPropsProfile } from "lib/profile"
 import ProfileHoc from "components/profile/Profile"
 export const getStaticPaths = getStaticPathsProfile
-export const getStaticProps = getStaticPropsProfile
-const Profile = ProfileHoc('my-posts')
+const type = 'my-posts'
+export const getStaticProps = getStaticPropsProfile(type)
+const Profile = ProfileHoc(type)
 export default Profile

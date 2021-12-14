@@ -15,8 +15,8 @@ import fetcher from "lib/utils/fetcher";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { AppContext } from 'libts'
 
-const ProfileHoc = (tab) => {
-  return ({ profile }) => {
+const ProfileHoc = tab => {
+  return ({ profile, articles, articlesCount }) => {
     const [page, setPage] = React.useState(0)
     const router = useRouter();
     const { data: profileApi, error } = useSWR(`${SERVER_BASE_URL}/profiles/${profile?.username}`, fetcher(router.isFallback));
@@ -78,7 +78,7 @@ const ProfileHoc = (tab) => {
                     </li>
                   </ul>
                 </div>
-                <ArticleList {...{page, setPage, what: tab}} />
+                <ArticleList {...{articles, articlesCount, page, setPage, what: tab}} />
               </div>
             </div>
           </div>
