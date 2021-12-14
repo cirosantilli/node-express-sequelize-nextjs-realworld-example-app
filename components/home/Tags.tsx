@@ -17,10 +17,9 @@ const Tags = ({tags, setTab, setPage, setTag}) => {
   return (
     <div className="tag-list">
       {tags?.map(tag => (
-        <CustomLink
-          key={tag}
-          href={``}
+        <a
           className="tag-default tag-pill"
+          key={tag}
           onClick={() => {
             setTab('tag')
             setTag(tag)
@@ -28,7 +27,7 @@ const Tags = ({tags, setTab, setPage, setTag}) => {
           }}
         >
           {tag}
-        </CustomLink>
+        </a>
       ))}
     </div>
   );
