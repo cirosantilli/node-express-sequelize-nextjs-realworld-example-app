@@ -1,6 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
-import { revalidate, prerenderAll } from "config";
+import { fallback, revalidate, prerenderAll } from "config";
 import sequelize from "lib/db";
 import { DEFAULT_LIMIT  } from "lib/utils/constant";
 
@@ -22,12 +22,12 @@ export const getStaticPathsProfile: GetStaticPaths = async () => {
     paths = []
   }
   return {
-    fallback: true,
+    fallback,
     paths,
   }
 }
 
-export const getStaticPropsProfile: GetStaticProps = tab => {
+export function getStaticPropsProfile(tab): GetStaticProps {
   return async ({ params: { pid } }) => {
     let include = []
     if (tab === 'my-posts') {
