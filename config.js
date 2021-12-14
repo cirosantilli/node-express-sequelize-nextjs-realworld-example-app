@@ -51,7 +51,7 @@ module.exports = {
     storage: 'db.sqlite3',
   },
   production: {
-    url: process.env.DATABASE_URL || 'postgres://cirodown_user:a@localhost:5432/cirodown',
+    url: process.env.DATABASE_URL || 'postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld',
     dialect: 'postgres',
     dialectOptions: {
       // https://stackoverflow.com/questions/27687546/cant-connect-to-heroku-postgresql-database-from-local-node-app-with-sequelize
