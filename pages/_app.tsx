@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import CustomLink from "components/common/CustomLink";
-import Footer from "components/common/Footer";
 import Navbar from "components/common/Navbar";
 import { googleAnalyticsId, isDemo, isProduction } from "config";
 import { APP_NAME } from "lib/utils/constant";
