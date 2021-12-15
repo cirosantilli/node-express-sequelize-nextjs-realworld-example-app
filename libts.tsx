@@ -7,6 +7,8 @@ export const AppContext = React.createContext<{
   setPage: React.Dispatch<any> | undefined
   tab: string
   setTab: React.Dispatch<any> | undefined
+  tag: string
+  setTag: React.Dispatch<any> | undefined
   title: string
   setTitle: React.Dispatch<any> | undefined
 }>({
@@ -14,6 +16,8 @@ export const AppContext = React.createContext<{
   setPage: undefined,
   tab: '',
   setTab: undefined,
+  tag: '',
+  setTag: undefined,
   title: '',
   setTitle: undefined,
 });
@@ -36,9 +40,11 @@ export const AppContextProvider = ({ children }) => {
   // and should reset the page to 0).
   const [page, setPage] = React.useState(0)
   const [tab, setTab] = React.useState(loggedInUser ? 'feed' : 'global')
+  const [tag, setTag] = React.useState('')
   return (<AppContext.Provider value={{
     page, setPage,
     tab, setTab,
+    tag, setTag,
     title, setTitle,
   }}>
     {children}

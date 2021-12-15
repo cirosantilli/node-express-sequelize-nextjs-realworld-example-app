@@ -1,4 +1,5 @@
 import marked from "marked";
+import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from 'next/router'
 import React from "react";
@@ -16,6 +17,7 @@ import { CommentType } from "lib/types/commentType";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import { AppContext } from 'libts'
+import routes from "routes";
 
 interface ArticlePageProps {
   article: ArticleType;
@@ -55,7 +57,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
     setFavorited(article?.favorited);
     setFavoritesCount(article?.favoritesCount)
   }, [article?.favorited, article?.favoritesCount])
-  const {setTitle} = React.useContext(AppContext)
+  const {setPage, setTab, setTag, setTitle} = React.useContext(AppContext)
   React.useEffect(() => {
     setTitle(article?.title)
   }, [article?.title])
@@ -85,7 +87,34 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
               <div dangerouslySetInnerHTML={markup} />
               <ul className="tag-list">
                 {article.tagList?.map((tag) => (
-                  <li className="tag-default tag-pill tag-outline" key={tag}>{tag}</li>
+                  <li
+                    className="tag-default tag-pill tag-outline"
+                    key={tag}
+                  >
+                    {tag}
+                    {false && <>
+                      TODO link to index tag list from here. This code almost works, but fails because 
+                      of the resetIndexState call on pages/index.jsx. The problem is I don't know how to
+                      differentiate between clicking a link like this (we want non-default state) and 
+                      first visit/page refresh (we want default state).
+                      This was not in the original Realworld app, but would be an obvious addition:
+                      https://github.com/gothinkster/realworld/issues/649
+
+                      I also tried to add a global flag to make index reset only once, but since each
+                      page re-renders several times due to hooks, that didn't work.
+                      <Link href={routes.home()}>
+                        <a
+                          onClick={() => {
+                            setTab('tag')
+                            setTag(tag)
+                            setPage(0)
+                          }}
+                        >
+                          {tag}
+                        </a>
+                      </Link>
+                    </>}
+                  </li>
                 ))}
               </ul>
             </div>

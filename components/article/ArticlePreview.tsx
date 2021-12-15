@@ -6,18 +6,17 @@ import CustomImage from "components/common/CustomImage";
 import FavoriteArticleButton from "components/common/FavoriteArticleButton";
 import { formatDate } from "lib/utils/date";
 import { AppContext } from "libts";
+import routes from "routes";
 
 const ArticlePreview = ({ article }) => {
-  const { setPage } = React.useContext(AppContext)
   const preview = article;
   const [hover, setHover] = React.useState(false);
-  const [currentIndex, setCurrentIndex] = React.useState(-1);
   if (!article) return;
   return (
     <div className="article-preview">
       <div className="article-meta">
         <CustomLink
-          href={`/profile/${preview.author.username}`}
+          href={routes.userView(preview.author.username)}
         >
           <CustomImage
             src={preview.author.image}
@@ -26,7 +25,7 @@ const ArticlePreview = ({ article }) => {
         </CustomLink>
         <div className="info">
           <CustomLink
-            href={`/profile/${preview.author.username}`}
+            href={routes.userView(preview.author.username)}
             className="author"
           >
             {preview.author.username}
@@ -43,7 +42,7 @@ const ArticlePreview = ({ article }) => {
         </div>
       </div>
       <CustomLink
-        href={`/article/${preview.slug}`}
+        href={routes.articleView(preview.slug)}
         className="preview-link"
       >
         <h1>{preview.title}</h1>
@@ -52,18 +51,9 @@ const ArticlePreview = ({ article }) => {
         <ul className="tag-list">
           {preview.tagList.map((tag, index) => {
             return (
-              <Link href={`/?tag=${tag}`} key={index}>
+              <Link href={routes.home()} key={index}>
                 <li
                   className="tag-default tag-pill tag-outline"
-                  onClick={(e) => e.stopPropagation()}
-                  onMouseOver={() => {
-                    setHover(true);
-                    setCurrentIndex(index);
-                  }}
-                  onMouseLeave={() => {
-                    setHover(false);
-                    setCurrentIndex(-1);
-                  }}
                 >
                   {tag}
                 </li>

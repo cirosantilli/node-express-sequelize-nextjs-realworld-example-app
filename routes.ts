@@ -8,5 +8,4 @@ export default {
   userNew: () => `/user/register`,
   userView: uid => `/profile/${uid}`,
   userViewLikes: uid => `/profile/${uid}/favorites`,
-  userViewLatest: uid => `/user/latest/${uid}`,
 }

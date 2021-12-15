@@ -4,13 +4,14 @@ import ArticleActions from "components/article/ArticleActions";
 import CustomImage from "components/common/CustomImage";
 import CustomLink from "components/common/CustomLink";
 import { formatDate } from "lib/utils/date";
+import routes from "routes";
 
 const ArticleMeta = ({ article }) => {
   if (!article) return;
   return (
     <div className="article-meta">
       <CustomLink
-        href={`/profile/${encodeURIComponent(article.author?.username)}`}
+        href={routes.userView(encodeURIComponent(article.author?.username))}
       >
         <CustomImage
           src={article.author?.image}
@@ -19,7 +20,7 @@ const ArticleMeta = ({ article }) => {
       </CustomLink>
       <div className="info">
         <CustomLink
-          href={`/profile/${encodeURIComponent(article.author?.username)}`}
+          href={routes.userView(encodeURIComponent(article.author?.username))}
           className="author"
         >
           {article.author?.username}

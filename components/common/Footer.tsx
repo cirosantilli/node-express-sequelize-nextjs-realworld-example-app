@@ -1,10 +1,11 @@
 import CustomLink from "components/common/CustomLink";
 import { APP_NAME } from "lib/utils/constant";
+import routes from "routes";
 
 const Footer = () => (
   <footer>
     <div className="container">
-      <CustomLink href="/" className="logo-font">
+      <CustomLink href={routes.home()} className="logo-font">
         {APP_NAME.toLowerCase()}
       </CustomLink>
       <span className="attribution">

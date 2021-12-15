@@ -14,6 +14,7 @@ import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { AppContext } from 'libts'
+import routes from "routes";
 
 const ProfileHoc = tab => {
   return ({ profile, articles, articlesCount }) => {
@@ -62,7 +63,7 @@ const ProfileHoc = tab => {
                   <ul className="nav nav-pills outline-active">
                     <li className="nav-item">
                       <CustomLink
-                        href={`/profile/${encodeURIComponent(username)}`}
+                        href={routes.userView(encodeURIComponent(username))}
                         className={`nav-link${tab === 'my-posts' ? ' active' : ''}`}
                       >
                         My Posts
@@ -70,7 +71,7 @@ const ProfileHoc = tab => {
                     </li>
                     <li className="nav-item">
                       <CustomLink
-                        href={`/profile/${encodeURIComponent(username)}/favorites`}
+                        href={routes.userViewLikes(encodeURIComponent(username))}
                         className={`nav-link${tab === 'favorites' ? ' active' : ''}`}
                       >
                         Favorited Posts

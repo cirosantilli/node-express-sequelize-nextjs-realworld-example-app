@@ -6,6 +6,7 @@ import Maybe from "components/common/Maybe";
 import DeleteButton from "components/comment/DeleteButton";
 import { formatDate } from "lib/utils/date";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import routes from "routes";
 
 const Comment = ({ comment }) => {
   const loggedInUser = getLoggedInUser()
@@ -18,7 +19,7 @@ const Comment = ({ comment }) => {
       </div>
       <div className="card-footer">
         <CustomLink
-          href={`/profile/${comment.author.username}`}
+          href={routes.userView(comment.author.username)}
           className="comment-author"
         >
           <CustomImage
@@ -29,7 +30,7 @@ const Comment = ({ comment }) => {
         </CustomLink>
         &nbsp;
         <CustomLink
-          href={`/profile/${comment.author.username}`}
+          href={routes.userView(comment.author.username)}
           className="comment-author"
         >
           {comment.author.username}

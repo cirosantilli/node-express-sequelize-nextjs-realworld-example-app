@@ -8,6 +8,7 @@ import NavLink from "components/common/NavLink";
 import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'
+import routes from "routes";
 
 const NavbarItem = ({ children }) => (
   <li className="nav-item">{children}</li>
@@ -20,31 +21,31 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <CustomLink href="/" onClick={clickHandler} className="navbar-brand">
+        <CustomLink href={routes.home()} onClick={clickHandler} className="navbar-brand">
           {APP_NAME.toLowerCase()}
         </CustomLink>
         <ul className="nav navbar-nav pull-xs-right">
           <NavbarItem>
-            <NavLink href="/" onClick={clickHandler}>
+            <NavLink href={routes.home()} onClick={clickHandler}>
               Home
             </NavLink>
           </NavbarItem>
           <Maybe test={loggedInUser}>
             <NavbarItem>
-              <NavLink href="/editor">
+              <NavLink href={routes.articleNew()}>
                 <i className="ion-compose" />
                 &nbsp;New Article
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href="/settings">
+              <NavLink href={routes.userEdit()}>
                 <i className="ion-gear-a" />
                 &nbsp;Settings
               </NavLink>
             </NavbarItem>
             <NavbarItem>
               <NavLink
-                href={`/profile/${loggedInUser?.username}`}
+                href={routes.userView(loggedInUser?.username)}
               >
                 <CustomImage
                   className="user-pic"
@@ -57,12 +58,12 @@ const Navbar = () => {
           </Maybe>
           <Maybe test={!loggedInUser}>
             <NavbarItem>
-              <NavLink href="/user/login">
+              <NavLink href={routes.userLogin()}>
                 Sign in
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href="/user/register">
+              <NavLink href={routes.userNew()}>
                 Sign up
               </NavLink>
             </NavbarItem>

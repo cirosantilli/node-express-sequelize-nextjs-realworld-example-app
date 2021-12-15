@@ -8,6 +8,7 @@ import CustomLink from "components/common/CustomLink";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { useCtrlEnterSubmit } from "libts";
+import routes from "routes";
 
 const CommentInput = () => {
   const loggedInUser = getLoggedInUser()
@@ -45,11 +46,11 @@ const CommentInput = () => {
   if (!loggedInUser) {
     return (
       <>
-        <CustomLink href="/user/login">
+        <CustomLink href={routes.userLogin()}>
           Sign in
         </CustomLink>
         {' '}or{' '}
-        <CustomLink href="/user/register">
+        <CustomLink href={routes.userNew()}>
           sign up
         </CustomLink>
         {' '}to add comments on this article.

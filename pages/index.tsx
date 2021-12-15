@@ -10,8 +10,7 @@ import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'
 
 const IndexPage = ({ articles, articlesCount, tags }) => {
-  const [tag, setTag] = React.useState()
-  const { page, setPage, tab, setTab } = React.useContext(AppContext)
+  const { page, setPage, tab, setTab, tag, setTag } = React.useContext(AppContext)
   const loggedInUser = getLoggedInUser()
   React.useEffect(() => {
     resetIndexState(setPage, setTab, loggedInUser)

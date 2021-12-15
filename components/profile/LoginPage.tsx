@@ -4,6 +4,7 @@ import React from "react";
 import CustomLink from "components/common/CustomLink";
 import LoginForm from "components/profile/LoginForm";
 import { AppContext } from 'libts'
+import routes from "routes";
 
 const makeLoginPage = ({ register = false }) => {
   const title = register ? 'Sign up' : 'Sign in'
@@ -28,7 +29,7 @@ const makeLoginPage = ({ register = false }) => {
             <div className="col-md-6 offset-md-3 col-xs-12">
               <h1 className="text-xs-center">{ title }</h1>
               <p className="text-xs-center">
-                <CustomLink href={register ? "/user/login" : "/user/register" } >
+                <CustomLink href={register ? routes.userLogin() : routes.userNew() } >
                   {`${register ? 'Have' : 'Need' }`} an account?
                 </CustomLink>
               </p>
