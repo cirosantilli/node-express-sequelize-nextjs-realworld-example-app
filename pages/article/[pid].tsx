@@ -124,4 +124,4 @@ export default ArticlePage;
 
 import { getStaticPathsArticle, getStaticPropsArticle } from "lib/article";
 export const getStaticPaths = getStaticPathsArticle;
-export const getStaticProps = getStaticPropsArticle(true);
+export const getStaticProps = getStaticPropsArticle(true, true);

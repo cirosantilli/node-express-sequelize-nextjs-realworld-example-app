@@ -24,7 +24,7 @@ export const getStaticPathsArticle: GetStaticPaths = async () => {
   }
 }
 
-export function getStaticPropsArticle(addComments?) : GetStaticProps {
+export function getStaticPropsArticle(addRevalidate?, addComments?) : GetStaticProps {
   return async ({ params: { pid } }) => {
     const article = await sequelize.models.Article.findOne({
       where: { slug: pid },
@@ -44,7 +44,10 @@ export function getStaticPropsArticle(addComments?) : GetStaticProps {
     }
     const ret: any = {
       props: { article: await article.toJSONFor() },
-      revalidate,
+    }
+    // We can only add this for getStaticProps, not getServerSideProps.
+    if (addRevalidate) {
+      ret.revalidate = revalidate
     }
     if (addComments) {
       ret.props.comments = await Promise.all(comments.map(comment => comment.toJSONFor()))

@@ -9,6 +9,7 @@ import Maybe from "components/common/Maybe";
 import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import routes from "routes";
 
 const ArticleActions = ({ article }) => {
   const loggedInUser = getLoggedInUser()
@@ -42,7 +43,7 @@ const ArticleActions = ({ article }) => {
       <Maybe test={canModify}>
         <span>
           <CustomLink
-            href={`/editor/${article.slug}`}
+            href={routes.articleEdit(article.slug)}
             className="btn btn-outline-secondary btn-sm"
           >
             <i className="ion-edit" /> Edit Article
