@@ -52,6 +52,12 @@ const ArticleList = props => {
   const setFavorited = []
   const favoritesCount = []
   const setFavoritesCount = []
+  // MUST be DEFAULT_LIMIT and not articles.length, because articles.length
+  // can happen a variable number of times on index page due to:
+  // * load ISR page logged off on global
+  // * login, which leads to feed instead of global
+  // and calling hooks like useState different number of times is a capital sin
+  // in React and makes everything blow up.
   for (let i = 0; i < DEFAULT_LIMIT; i++) {
     [favorited[i], setFavorited[i]] = React.useState(false);
     [favoritesCount[i], setFavoritesCount[i]] = React.useState(0);
