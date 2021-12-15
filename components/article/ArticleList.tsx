@@ -52,12 +52,12 @@ const ArticleList = props => {
   const setFavorited = []
   const favoritesCount = []
   const setFavoritesCount = []
-  const nArticles = articles?.length || 0
-  for (let i = 0; i < nArticles; i++) {
-      [favorited[i], setFavorited[i]] = React.useState(false);
-      [favoritesCount[i], setFavoritesCount[i]] = React.useState(0);
+  for (let i = 0; i < DEFAULT_LIMIT; i++) {
+    [favorited[i], setFavorited[i]] = React.useState(false);
+    [favoritesCount[i], setFavoritesCount[i]] = React.useState(0);
   }
   React.useEffect(() => {
+    const nArticles = articles?.length || 0
     for (let i = 0; i < nArticles; i++) {
       setFavorited[i](articles[i].favorited);
       setFavoritesCount[i](articles[i].favoritesCount);
