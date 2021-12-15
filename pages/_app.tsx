@@ -2,13 +2,16 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 
+import CustomLink from "components/common/CustomLink";
 import Footer from "components/common/Footer";
 import Navbar from "components/common/Navbar";
 import { googleAnalyticsId, isDemo, isProduction } from "config";
 import { APP_NAME } from "lib/utils/constant";
+import { AppContext, AppContextProvider } from 'libts'
+import routes from "routes";
+
 import "ionicons/css/ionicons.min.css";
 import "style.scss";
-import { AppContext, AppContextProvider } from 'libts'
 
 function MyHead() {
   const { title } = React.useContext(AppContext)
@@ -52,7 +55,17 @@ const MyApp = ({ Component, pageProps }) => {
         </div>
       )}
       <Component {...pageProps} />
-      <Footer />
+      <footer>
+        <div className="container">
+          <CustomLink href={routes.home()} className="logo-font">
+            {APP_NAME.toLowerCase()}
+          </CustomLink>
+          <span className="attribution">
+            {" "}© 2021. An interactive learning project from{" "}
+            <a href="https://thinkster.io">Thinkster</a>. Code licensed under MIT.
+          </span>
+        </div>
+      </footer>
     </AppContextProvider>
   )
 };
