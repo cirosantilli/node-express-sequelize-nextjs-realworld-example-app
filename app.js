@@ -3,7 +3,6 @@ Error.stackTraceLimit = Infinity;
 
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const errorhandler = require('errorhandler')
 const express = require('express')
 const http = require('http')
 const methods = require('methods')
@@ -15,6 +14,7 @@ const path = require('path')
 const session = require('express-session')
 
 const api = require('./api')
+const lib = require('./lib')
 const models = require('./models')
 const config = require('./config')
 
@@ -69,14 +69,23 @@ function doStart(app) {
   })
 
   // Error handlers
-  if (config.isProduction) {
-    app.use(function(err, req, res, next) {
-      console.error(err.stack)
-      res.status(500).send('error: 500 Internal Server Error')
-    });
-  } else {
-    app.use(errorhandler())
-  }
+  app.use(function(err, req, res, next) {
+    // Automatiaclly handle Sequelize validation errors.
+    if (err instanceof sequelize.Sequelize.ValidationError) {
+      if (!config.isProduction) {
+        // The fuller errors can be helpful during development.
+        console.error(err);
+      }
+      return res.status(422).json({
+        errors: err.errors.map(errItem => errItem.message)
+      })
+    } else if (err instanceof lib.ValidationError) {
+      return res.status(err.status).json({
+        errors: err.errors,
+      })
+    }
+    return next(err)
+  })
 
   if (!module.parent) {
     (async () => {

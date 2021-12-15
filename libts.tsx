@@ -41,14 +41,14 @@ export const AppContextProvider = ({ children }) => {
   const [page, setPage] = React.useState(0)
   const [tab, setTab] = React.useState(loggedInUser ? 'feed' : 'global')
   const [tag, setTag] = React.useState('')
-  return (<AppContext.Provider value={{
+  return <AppContext.Provider value={{
     page, setPage,
     tab, setTab,
     tag, setTag,
     title, setTitle,
   }}>
     {children}
-  </AppContext.Provider>)
+  </AppContext.Provider>
 };
 
 export function useCtrlEnterSubmit(handleSubmit) {
