@@ -69,7 +69,7 @@ export const getStaticProps: GetStaticProps = async () => {
   })
   return {
     props: {
-      articles: await Promise.all(articles.rows.map(article => article.toJSONFor())),
+      articles: await Promise.all(articles.rows.map(article => article.toJson())),
       articlesCount: articles.count,
       tags: (await sequelize.models.Tag.findAll()).map(tag => tag.name),
     },

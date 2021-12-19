@@ -129,7 +129,7 @@ router.get('/', auth.optional, async function(req, res, next) {
     ])
     return res.json({
       articles: await Promise.all(articles.map(function(article) {
-        return article.toJSONFor(user)
+        return article.toJson(user)
       })),
       articlesCount: articlesCount
     })
@@ -148,7 +148,7 @@ router.get('/feed', auth.required, async function(req, res, next) {
     }
     const {count: articlesCount, rows: articles} = await user.findAndCountArticlesByFollowed(offset, limit)
     const articlesJson = await Promise.all(articles.map(article => {
-      return article.toJSONFor(user)
+      return article.toJson(user)
     }))
     return res.json({
       articles: articlesJson,
@@ -189,7 +189,7 @@ router.post('/', auth.required, async function(req, res, next) {
       //lib.deleteOldestForDemo(req.app.get('sequelize').models.ArticleTag),
     ])
     article.author = user
-    return res.json({ article: await article.toJSONFor(user) })
+    return res.json({ article: await article.toJson(user) })
   } catch(error) {
     next(error);
   }
@@ -203,7 +203,7 @@ router.get('/:article', auth.optional, async function(req, res, next) {
       req.article.getAuthor()
     ]);
     const [user, author] = results
-    return res.json({ article: await req.article.toJSONFor(user) })
+    return res.json({ article: await req.article.toJson(user) })
   } catch(error) {
     next(error);
   }
@@ -237,7 +237,7 @@ router.put('/:article', auth.required, async function(req, res, next) {
           ])
         }
       )
-      return res.json({ article: await article.toJSONFor(user) })
+      return res.json({ article: await article.toJson(user) })
     } else {
       return res.sendStatus(403)
     }
@@ -281,7 +281,7 @@ router.post('/:article/favorite', auth.required, async function(req, res, next) 
     await user.addFavorite(articleId)
     // TODO same as ArticleTag
     //await lib.deleteOldestForDemo(req.app.get('sequelize').models.UserFavoriteArticle)
-    return res.json({ article: await article.toJSONFor(user) })
+    return res.json({ article: await article.toJson(user) })
   } catch(error) {
     next(error);
   }
@@ -302,7 +302,7 @@ router.delete('/:article/favorite', auth.required, async function(req, res, next
       return res.sendStatus(404)
     }
     await user.removeFavorite(articleId)
-    return res.json({ article: await article.toJSONFor(user) })
+    return res.json({ article: await article.toJson(user) })
   } catch(error) {
     next(error);
   }
@@ -323,7 +323,7 @@ router.get('/:article/comments', auth.optional, async function(req, res, next) {
     })
     return res.json({
       comments: await Promise.all(comments.map(function(comment) {
-        return comment.toJSONFor(user)
+        return comment.toJson(user)
       }))
     })
   } catch(error) {
@@ -343,7 +343,7 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
     )
     await lib.deleteOldestForDemo(req.app.get('sequelize').models.Comment)
     comment.author = user
-    return res.json({ comment: await comment.toJSONFor(user) })
+    return res.json({ comment: await comment.toJson(user) })
   } catch(error) {
     next(error);
   }

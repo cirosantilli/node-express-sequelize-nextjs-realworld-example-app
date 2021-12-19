@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
     }
   )
 
-  Comment.prototype.toJSONFor = async function(user) {
+  Comment.prototype.toJson = async function(user) {
     return {
       id: this.id,
       body: this.body,

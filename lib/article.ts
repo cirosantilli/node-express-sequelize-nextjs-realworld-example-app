@@ -43,14 +43,14 @@ export function getStaticPropsArticle(addRevalidate?, addComments?) : GetStaticP
       })
     }
     const ret: any = {
-      props: { article: await article.toJSONFor() },
+      props: { article: await article.toJson() },
     }
     // We can only add this for getStaticProps, not getServerSideProps.
     if (addRevalidate) {
       ret.revalidate = revalidate
     }
     if (addComments) {
-      ret.props.comments = await Promise.all(comments.map(comment => comment.toJSONFor()))
+      ret.props.comments = await Promise.all(comments.map(comment => comment.toJson()))
     }
     return ret;
   }

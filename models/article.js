@@ -110,7 +110,7 @@ module.exports = (sequelize) => {
     )
   }
 
-  Article.prototype.toJSONFor = async function(user) {
+  Article.prototype.toJson = async function(user) {
     let authorPromise;
     if (this.authorPromise === undefined) {
       authorPromise = this.getAuthor()

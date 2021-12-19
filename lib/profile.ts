@@ -62,7 +62,7 @@ export function getStaticPropsProfile(tab): GetStaticProps {
       revalidate,
       props: {
         profile: await user.toProfileJSONFor(),
-        articles: await Promise.all(articles.rows.map(article => article.toJSONFor())),
+        articles: await Promise.all(articles.rows.map(article => article.toJson())),
         articlesCount: articles.count,
       },
     }
