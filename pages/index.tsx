@@ -57,11 +57,12 @@ export default IndexPage;
 
 // Server code.
 
+import { GetStaticProps } from 'next'
 import sequelize from "lib/db";
 import { revalidate } from "config";
 import { DEFAULT_LIMIT  } from "lib/utils/constant";
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   const articles = await sequelize.models.Article.findAndCountAll({
     order: [['createdAt', 'DESC']],
     limit: DEFAULT_LIMIT,
