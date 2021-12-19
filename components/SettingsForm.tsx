@@ -3,7 +3,7 @@ import Router from "next/router";
 import React from "react";
 import { mutate } from "swr";
 
-import ListErrors from "components/common/ListErrors";
+import ListErrors from "components/ListErrors";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import UserAPI from "lib/api/user";

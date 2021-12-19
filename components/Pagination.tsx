@@ -131,5 +131,4 @@ const Pagination = ({
     </nav>
   );
 };
-
 export default Pagination;

@@ -1,10 +1,10 @@
 import Head from "next/head";
 import React from "react";
 
-import ArticleList from "components/article/ArticleList";
-import Maybe from "components/common/Maybe";
-import Tags from "components/home/Tags";
-import TabList from "components/home/TabList";
+import ArticleList from "components/ArticleList";
+import Maybe from "components/Maybe";
+import Tags from "components/Tags";
+import TabList from "components/TabList";
 import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'

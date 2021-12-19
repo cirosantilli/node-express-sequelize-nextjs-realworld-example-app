@@ -2,12 +2,12 @@ import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 
-import ArticlePreview from "components/article/ArticlePreview";
-import ErrorMessage from "components/common/ErrorMessage";
-import { FavoriteArticleButtonContext } from "components/common/FavoriteArticleButton";
-import LoadingSpinner from "components/common/LoadingSpinner";
-import Maybe from "components/common/Maybe";
-import Pagination from "components/common/Pagination";
+import ArticlePreview from "components/ArticlePreview";
+import ErrorMessage from "components/ErrorMessage";
+import { FavoriteArticleButtonContext } from "components/FavoriteArticleButton";
+import LoadingSpinner from "components/LoadingSpinner";
+import Maybe from "components/Maybe";
+import Pagination from "components/Pagination";
 import { SERVER_BASE_URL, DEFAULT_LIMIT } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import { AppContext } from "libts";

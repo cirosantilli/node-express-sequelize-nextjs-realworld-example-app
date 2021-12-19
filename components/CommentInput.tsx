@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import { trigger } from "swr";
 
-import CustomImage from "components/common/CustomImage";
-import CustomLink from "components/common/CustomLink";
+import CustomImage from "components/CustomImage";
+import CustomLink from "components/CustomLink";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
 import { useCtrlEnterSubmit } from "libts";

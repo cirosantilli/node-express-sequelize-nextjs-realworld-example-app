@@ -1,5 +1,5 @@
 import { getStaticPathsProfile, getStaticPropsProfile } from "lib/profile"
-import ProfileHoc from "components/profile/Profile"
+import ProfileHoc from "components/Profile"
 export const getStaticPaths = getStaticPathsProfile
 const type = 'my-posts'
 export const getStaticProps = getStaticPropsProfile(type)

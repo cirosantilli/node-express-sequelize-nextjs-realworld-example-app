@@ -2,8 +2,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 
-import CustomLink from "components/common/CustomLink";
-import Navbar from "components/common/Navbar";
+import CustomLink from "components/CustomLink";
+import Navbar from "components/Navbar";
 import { googleAnalyticsId, isDemo, isProduction } from "config";
 import { APP_NAME } from "lib/utils/constant";
 import { AppContext, AppContextProvider } from 'libts'

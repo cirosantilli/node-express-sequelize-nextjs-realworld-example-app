@@ -3,7 +3,7 @@ import Router from "next/router";
 import React from "react";
 import { mutate, trigger } from "swr";
 
-import SettingsForm from "components/profile/SettingsForm";
+import SettingsForm from "components/SettingsForm";
 import checkLogin from "lib/utils/checkLogin";
 import storage from "lib/utils/storage";
 import { AppContext } from 'libts'
