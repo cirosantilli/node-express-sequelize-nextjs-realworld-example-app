@@ -97,33 +97,64 @@ router.get('/', auth.optional, async function(req, res, next) {
     const offset = lib.validateParam(req.query, 'offset', lib.validatePositiveInteger, 0)
     const include = []
 
+    let loggedUserId = req.payload ? req.payload.id : undefined
+
     // Author include.
     const authorInclude = {
       model: req.app.get('sequelize').models.User,
       as: 'author',
     }
+    // TODO get if user follows author on JOIN here.
+    //if (loggedUserId) {
+    //  authorInclude.include = [{
+    //    model: req.app.get('sequelize').models.User,
+    //    as: 'follows',
+    //    where: { id: loggedUserId },
+    //  }]
+    //}
     if (req.query.author) {
       authorInclude.where = { username: req.query.author }
     }
     include.push(authorInclude)
 
+    let favoritedPrecalc = false
     if (req.query.favorited) {
+      // Select only posts that have been favorited by this given.
       include.push({
         model: req.app.get('sequelize').models.User,
         as: 'favoritedBy',
         where: { username: req.query.favorited }
       })
+    } else if (loggedUserId) {
+      // Add "did the logged in user favorite this post" to the JOIN to not have to
+      // do it individually article by article.
+      // https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/5
+      //
+      // TODO we don't know how to do both "did logged in user favorite this article
+      // And "select articles liked by" at the same time as it would require including
+      // the same model multiple times under a single alias:
+      // * https://github.com/sequelize/sequelize/issues/8013
+      // * https://github.com/sequelize/sequelize/issues/7754
+      include.push({
+        model: req.app.get('sequelize').models.UserFavoriteArticle,
+        where: { userId: req.payload.id },
+        required: false,
+        include: [{
+          model: req.app.get('sequelize').models.User
+        }]
+      })
+      favoritedPrecalc = true
     }
 
     // Tag include.
-    if (req.query.tag) {
-      const tagInclude = {
-        model: req.app.get('sequelize').models.Tag,
-        as: 'tags',
-        where: { name: req.query.tag },
-      }
-      include.push(tagInclude)
+    const tagInclude = {
+      model: req.app.get('sequelize').models.Tag,
+      as: 'tags',
     }
+    if (req.query.tag) {
+      tagInclude.where = { name: req.query.tag }
+    }
+    include.push(tagInclude)
 
     const [{count: articlesCount, rows: articles}, user] = await Promise.all([
       req.app.get('sequelize').models.Article.findAndCountAll({
@@ -133,11 +164,13 @@ router.get('/', auth.optional, async function(req, res, next) {
         offset,
         include,
       }),
-      req.payload ? req.app.get('sequelize').models.User.findByPk(req.payload.id) : null
+      req.payload ? req.app.get('sequelize').models.User.findByPk(loggedUserId) : null
     ])
     return res.json({
-      articles: await Promise.all(articles.map(function(article) {
-        return article.toJson(user)
+      articles: await Promise.all(articles.map(article => {
+        const tags = req.query.tag ? undefined : article.tags
+        const favorited = favoritedPrecalc ? !!article.UserFavoriteArticles.length : undefined
+        return article.toJson(user, { tags, favorited })
       })),
       articlesCount: articlesCount
     })

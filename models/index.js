@@ -71,20 +71,41 @@ function getSequelize(toplevelDir, toplevelBasename) {
   UserFollowUser.belongsTo(User, {foreignKey: 'userId'})
   User.hasMany(UserFollowUser, {foreignKey: 'followId'})
 
-  // User favorite Article
+  // User favorite Article (super many to many)
+  const UserFavoriteArticle = sequelize.define('UserFavoriteArticle',
+    {
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: User,
+          key: 'id'
+        }
+      },
+      articleId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: Article,
+          key: 'id'
+        }
+      },
+    },
+  );
   Article.belongsToMany(User, {
-    through: 'UserFavoriteArticle',
+    through: UserFavoriteArticle,
     as: 'favoritedBy',
     foreignKey: 'articleId',
     otherKey: 'userId',
   });
   User.belongsToMany(Article, {
-    through: 'UserFavoriteArticle',
+    through: UserFavoriteArticle,
     as: 'favorites',
-    foreignKey:
-    'userId',
+    foreignKey: 'userId',
     otherKey: 'articleId',
   });
+  Article.hasMany(UserFavoriteArticle, { foreignKey: 'articleId' });
+  UserFavoriteArticle.belongsTo(Article, { foreignKey: 'articleId' });
+  User.hasMany(UserFavoriteArticle, { foreignKey: 'userId' });
+  UserFavoriteArticle.belongsTo(User, { foreignKey: 'userId' });
 
   // User authors Article
   User.hasMany(Article, {

@@ -110,11 +110,23 @@ module.exports = (sequelize) => {
     )
   }
 
-  Article.prototype.toJson = async function(user) {
+  Article.prototype.toJson = async function(user, opts={}) {
+    // We first check if those have already been fetched. This is ideally done
+    // for example from JOINs on a query that fetches multiple articles like the
+    // queries that show article lists on the home page.
+    // https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/5
     const authorPromise = this.author ? this.author : this.getAuthor()
+    const tagPromise = opts.tags ? opts.tags : this.getTags()
+    let favoritePromise
+    if (user) {
+      favoritePromise = opts.favorited === undefined ?
+        user.hasFavorite(this.id) : opts.favorited
+    } else {
+      favoritePromise = false
+    }
     const [tags, favorited, favoritesCount, author] = await Promise.all([
-      this.getTags(),
-      user ? user.hasFavorite(this.id) : false,
+      await tagPromise,
+      await favoritePromise,
       this.countFavoritedBy(),
       (await authorPromise).toProfileJSONFor(user),
     ])

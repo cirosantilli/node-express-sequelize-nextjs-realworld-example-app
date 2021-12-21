@@ -120,7 +120,7 @@ module.exports = (sequelize) => {
                 followId: {[Op.col]: 'author.id' },
               },
               attributes: [],
-              where: {userId: this.id},
+              where: { userId: this.id },
             }
           ],
         },
@@ -141,9 +141,9 @@ module.exports = (sequelize) => {
           attributes: [],
           through: {attributes: []},
           include: [{
-              model: sequelize.models.Article,
-              as: 'authoredArticles',
-              attributes: [],
+            model: sequelize.models.Article,
+            as: 'authoredArticles',
+            attributes: [],
           }],
         },
       ],
