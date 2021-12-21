@@ -95,28 +95,36 @@ router.get('/', auth.optional, async function(req, res, next) {
     let query = {}
     const limit = lib.validateParam(req.query, 'limit', lib.validatePositiveInteger, 20)
     const offset = lib.validateParam(req.query, 'offset', lib.validatePositiveInteger, 0)
+    const include = []
+
+    // Author include.
     const authorInclude = {
       model: req.app.get('sequelize').models.User,
       as: 'author',
     }
     if (req.query.author) {
-      authorInclude.where = {username: req.query.author}
+      authorInclude.where = { username: req.query.author }
     }
-    const include = [authorInclude]
+    include.push(authorInclude)
+
     if (req.query.favorited) {
       include.push({
         model: req.app.get('sequelize').models.User,
         as: 'favoritedBy',
-        where: {username: req.query.favorited},
+        where: { username: req.query.favorited }
       })
+    }
+
+    // Tag include.
+    const tagInclude = {
+      model: req.app.get('sequelize').models.Tag,
+      as: 'tags',
     }
     if (req.query.tag) {
-      include.push({
-        model: req.app.get('sequelize').models.Tag,
-        as: 'tags',
-        where: {name: req.query.tag},
-      })
+      tagInclude.where = { name: req.query.tag }
     }
+    include.push(tagInclude)
+
     const [{count: articlesCount, rows: articles}, user] = await Promise.all([
       req.app.get('sequelize').models.Article.findAndCountAll({
         where: query,

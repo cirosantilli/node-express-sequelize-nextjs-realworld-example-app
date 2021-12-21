@@ -111,17 +111,13 @@ module.exports = (sequelize) => {
   }
 
   Article.prototype.toJson = async function(user) {
-    let authorPromise
-    if (this.author) {
-      authorPromise = new Promise(resolve => {resolve(this.author)})
-    } else {
-      authorPromise = this.getAuthor()
-    }
+    const authorPromise = this.author ? this.author : this.getAuthor()
+    const tagPromise = this.tags ? this.tags : this.getTags()
     const [tags, favorited, favoritesCount, author] = await Promise.all([
-      this.getTags(),
+      tagPromise,
       user ? user.hasFavorite(this.id) : false,
       this.countFavoritedBy(),
-      authorPromise.then(author => author.toProfileJSONFor(user)),
+      (await authorPromise).toProfileJSONFor(user),
     ])
     return {
       slug: this.slug,
