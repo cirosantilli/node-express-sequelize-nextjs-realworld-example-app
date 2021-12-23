@@ -13,8 +13,6 @@ Got it running on Heroku as of April 2021 at https://cirosantilli-realworld-next
 
 This is a branch of https://github.com/cirosantilli/node-express-sequelize-realworld-example-app rebased on top of the `master` branch of that repository, we show it in a separate GitHub repository just to give it more visibility.
 
-Any information that applies to both repositories will be kept in that README only.
-
 Ideally we would like to have both demos on the same tree as they share all backend code, but Next.js and NPM impose too many restrictions which we don't have the time to work around.
 
 The frontend part of this repository is a fork of https://github.com/reck1ess/next-realworld-example-app/tree/66003772a42bf71c7b2771119121d4c9cf4b07d4 which was SSR only via API, not SSG/ISG.
@@ -39,6 +37,10 @@ npm run dev
 ....
 
 You can now visit http://localhost:3000[] to view the website. Both API and pages are served from that single server.
+
+You might also want to generate some test data as mentioned at: <<generate-demo-data>>.
+
+The SQLite database is located at `db.sqlite3`.
 
 == Local optimized frontend
 
@@ -152,6 +154,52 @@ Activated with `NEXT_PUBLID_DEMO=true` or:
 
 ....
 npm run dev-demo
+....
+
+This has the following effects:
+
+* block posts with tags given at `blacklistTags` of `config.js` The initial motivation for this was to block automated "Cypress Automation" spam that is likely setup by some bastard on all published implementations via the backend, example: https://archive.ph/wip/n4Jlx[], and might be taking up a good part of our Heroku dynos, to be confirmed.
++
+We've logged their IP as 31.183.168.37, let's see if it changes with time. That IP is from Poland, which is consistent with Google Analytics results, which are overwhelmingly from Poland, suggesting a bot within that country, which also does GET on the web UI.
+* whenever a new object is created, such as article, comment or user, if we already have 1000 objects of that type, delete the oldest object of that type, so as to keep the database size limited. TODO implement for Tags, Follows and Likes.
+
+=== Heroku instance management
+
+Get a PostgreSQL shell:
+
+....
+heroku psql
+....
+
+DELETE ALL DATA IN THE DATABASE and <<generate-demo-data>> inside Heroku:
+
+....
+heroku run bash
+....
+
+and then run in that shell:
+
+....
+bin/generate-demo-data.js --force-production
+....
+
+or you can do it in one go with:
+
+....
+heroku run bin/generate-demo-data.js --force-production
+....
+
+We have to run `heroku run bash` instead of `heroku ps:exec` because the second command does not set `DATABASE_URL`:
+
+* https://stackoverflow.com/questions/62502951/heroku-env-variables-database-url-and-port-not-showing-in-dyno-heroku-psexec/68050303#68050303
+* https://stackoverflow.com/questions/48119289/how-to-get-environment-variables-in-live-heroku-dyno/64951959#64951959
+* https://www.reddit.com/r/rails/comments/ejljxj/how_to_seed_a_postgres_production_database_on/
+
+Edit a file in Heroku to debug that you are trying to run manually, e.g. by adding print commands, uses https://github.com/hakash/termit[] minimal https://en.wikipedia.org/wiki/GNU_nano[nano]-like text editor:
+
+....
+heroku ps:exec
+termit app.js
 ....
 
 == ISR vs SSR
@@ -313,3 +361,164 @@ These are all points that we have or would like to address in this fork.
 == Keyboard shortcuts
 
 Ctrl + Enter submits articles.
+
+== Debugging
+
+=== Step debugging
+
+For the backend, add `debugger;` to the point of interest, and run as:
+
+....
+npm run back-inspect
+....
+
+On the debugger, do a `c` to continue so that the server will start running (impossible to skip automatically: https://stackoverflow.com/questions/16420374/how-to-disable-in-the-node-debugger-break-on-first-line[]), and then trigger your event of interest from the browser:
+
+....
+npm run front
+....
+
+=== VERBOSE environment variable
+
+If you run as:
+
+....
+VERBOSE=1 npm run dev
+....
+
+this enables the following extra logs:
+
+* a log line for every request done
+
+=== Log database queries done
+
+....
+DEBUG='sequelize:sql:*' npm run start-prod
+....
+
+=== Generate demo data
+
+Note that this will first erase any data present in the database:
+
+....
+./bin/generate-demo-data.js
+....
+
+You can then login with users such as:
+
+* `user0@mail.com`
+* `user1@mail.com`
+
+and password `asdf`.
+
+Test data size can be configured with CLI parameters, e.g.:
+
+....
+./bin/generate-demo-data.js --n-users 5 --n-articles-per-user 8 --n-follows-per-user 3
+....
+
+=== Prevent the browser from opening automatically
+
+In case you've broken things so bad that the very first GET blows up the website and further requests don't respond https://stackoverflow.com/questions/61927814/how-to-disable-open-browser-in-cra
+
+....
+BROWSER=none npm run dev
+....
+
+This gives you time to setup e.g. Network recording in Chrome Developer Tools to be able to understand what is going on.
+
+=== Sequelize sometimes does not show the full stack trace
+
+This is a big problem during development, not sure how to solve it: https://github.com/sequelize/sequelize/issues/8199#issuecomment-863943835
+
+== Testing
+
+When running:
+
+....
+NODE_ENV=test npm run dev
+....
+
+the server runs on a temporary in-memory database.
+
+=== test.js
+
+Oour tests are all located inside link:test.js[].
+
+They can be run with:
+
+....
+npm test
+....
+
+Run just a single test:
+
+....
+npm test -- -g 'substring of test title'
+....
+
+Show all queries done in the tests:
+
+....
+DEBUG='sequelize:sql:*' npm test
+....
+
+To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then 
+
+....
+NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' npm test
+....
+
+The tests include two broad classes of tests:
+
+* API tests: launch the server on a random port, and run API commands, thus testing the entire backend
+* smaller unit tests that only call certain functions directly
+* TODO: frontend tests: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/11
+
+=== Realworld API tests
+
+These tests are part of https://github.com/gothinkster/realworld which we track here as a submodule.
+
+Test test method uses Postman, but we feel that it is not a very good way to do the testing, as it uses JSON formats everywhere with embedded JavaScript, presumably to be edited in some dedicated editor like Jupyter does. It would be much better to just have a pure JavaScript setup instead.
+
+They test the JSON REST API without the frontend.
+
+First start the backend server in a terminal:
+
+....
+npm run back-test
+....
+
+`npm run back-test` will make our server use a clean one-off in-memory database instead of using the default in-disk development `./db.sqlite3` as done for `npm run back`.
+
+Then on another terminal:
+
+....
+npm run test-api
+....
+
+Run a single test called `Register` instead:
+
+....
+npm run test-api -- --folder Register
+....
+
+TODO: many tests depend on previous steps, notably register. But we weren't able to make it run just given specific tests e.g. with:
+
+....
+npmr test-api -- --folder 'Register' --folder 'Login and Remember Token' --folder 'Create Article'
+....
+
+only the last `--folder` is used. Some threads say that multiple ones can be used in newer Newman, but even after updating it to latest v5 we couldn't get it to work: 
+
+* https://stackoverflow.com/questions/60057009/how-to-run-single-request-from-the-collection-in-newman
+* https://stackoverflow.com/questions/52519415/how-to-read-two-folder-with-newman
+
+== Benchmarks
+
+Methodology:
+
+* time after click event https://stackoverflow.com/questions/67750849/how-to-filter-by-event-type-in-chrome-devtools-profile-tab-e-g-to-see-mouse-cli/67750850#67750850 up until new page renders, not considering any images on the new page, just text
+* caches warmed by clicking all pages involved just before the experiment
+* hardware: Lenovo ThinkPad P51
+* browser: Chromium 91

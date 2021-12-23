@@ -68,6 +68,12 @@ function getSequelize(toplevelDir, toplevelBasename) {
     foreignKey: 'userId',
     otherKey: 'followId'
   });
+  User.belongsToMany(User, {
+    through: UserFollowUser,
+    as: 'followed',
+    foreignKey: 'followId',
+    otherKey: 'userId',
+  });
   UserFollowUser.belongsTo(User, {foreignKey: 'userId'})
   User.hasMany(UserFollowUser, {foreignKey: 'followId'})
 

@@ -105,13 +105,18 @@ router.get('/', auth.optional, async function(req, res, next) {
       as: 'author',
     }
     // TODO get if user follows author on JOIN here.
-    //if (loggedUserId) {
-    //  authorInclude.include = [{
-    //    model: req.app.get('sequelize').models.User,
-    //    as: 'follows',
-    //    where: { id: loggedUserId },
-    //  }]
-    //}
+    if (loggedUserId) {
+      authorInclude.include = [{
+        model: req.app.get('sequelize').models.UserFollowUser,
+        as: 'follows',
+        required: false,
+        where: { userId: loggedUserId },
+        include: [{
+          model: req.app.get('sequelize').models.User,
+          as: 'UserFollowsUser',
+        }]
+      }]
+    }
     if (req.query.author) {
       authorInclude.where = { username: req.query.author }
     }
@@ -140,8 +145,8 @@ router.get('/', auth.optional, async function(req, res, next) {
         where: { userId: req.payload.id },
         required: false,
         include: [{
-          model: req.app.get('sequelize').models.User
-        }]
+          model: req.app.get('sequelize').models.User,
+        }],
       })
       favoritedPrecalc = true
     }
@@ -170,6 +175,9 @@ router.get('/', auth.optional, async function(req, res, next) {
       articles: await Promise.all(articles.map(article => {
         const tags = req.query.tag ? undefined : article.tags
         const favorited = favoritedPrecalc ? !!article.UserFavoriteArticles.length : undefined
+        // TODO get if user follows author on JOIN here.
+        console.error(article.author.followed.map(u => u.id));
+        const authorFollowed = loggedUserId ? undefined : undefined
         return article.toJson(user, { tags, favorited })
       })),
       articlesCount: articlesCount
