@@ -9,11 +9,20 @@
 (async () => {
 const path = require('path')
 const child_process = require('child_process');
+const { DatabaseError } = require('sequelize')
 const models = require('../models')
 
 const sequelize = models.getSequelize(path.dirname(__dirname));
-let dbExists = await models.sync(sequelize)
-if (!dbExists) {
+let dbEmpty = true;
+try {
+  await sequelize.models.SequelizeMeta.findOne()
+  dbEmpty = false
+} catch(e) {
+  if (e instanceof DatabaseError) {
+    await models.sync(sequelize)
+  }
+}
+if (!dbEmpty) {
   out = child_process.spawnSync('npx', ['sequelize-cli', 'db:migrate'])
   console.error(out.stdout.toString());
   console.error(out.stderr.toString());

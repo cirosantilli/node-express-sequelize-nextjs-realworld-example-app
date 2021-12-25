@@ -536,3 +536,9 @@ Some things we could do include:
 Some spam events:
 
 * 2021-12-22 https://archive.ph/EVcUw spammed a bunch of pro Chinese government messages, see also: https://github.com/cirosantilli/china-dictatorship and https://cirosantilli.com/china-dictatorship/backlinks
++
+Did a bit of updating with `./heroku.sh psql`:
++
+....
+UPDATE "Tag" SET name = REPLACE(name, '', '六四事件法轮功新疆再教育營')
+....

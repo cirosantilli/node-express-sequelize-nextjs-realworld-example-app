@@ -78,6 +78,7 @@ router.post('/users', async function(req, res, next) {
     }
     user.username = req.body.user.username
     user.email = req.body.user.email
+    user.ip = req.headers['x-forwarded-for']
     req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
     await user.save()
     await lib.deleteOldestForDemo(req.app.get('sequelize').models.User)

@@ -54,7 +54,11 @@ module.exports = (sequelize) => {
       bio: DataTypes.STRING,
       image: DataTypes.STRING,
       hash: DataTypes.STRING(1024),
-      salt: DataTypes.STRING
+      salt: DataTypes.STRING,
+      ip: {
+        type: DataTypes.STRING,
+        default: '',
+      }
     },
     {
       indexes: [{ fields: ['username'] }, { fields: ['email'] }]
