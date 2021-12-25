@@ -106,16 +106,16 @@ router.get('/', auth.optional, async function(req, res, next) {
     }
     // TODO get if user follows author on JOIN here.
     if (loggedUserId) {
-      authorInclude.include = [{
-        model: req.app.get('sequelize').models.UserFollowUser,
-        as: 'follows',
-        required: false,
-        where: { userId: loggedUserId },
-        include: [{
-          model: req.app.get('sequelize').models.User,
-          as: 'UserFollowsUser',
-        }]
-      }]
+      //authorInclude.include = [{
+      //  model: req.app.get('sequelize').models.UserFollowUser,
+      //  as: 'follows',
+      //  required: false,
+      //  where: { userId: loggedUserId },
+      //  include: [{
+      //    model: req.app.get('sequelize').models.User,
+      //    as: 'UserFollowsUser',
+      //  }]
+      //}]
     }
     if (req.query.author) {
       authorInclude.where = { username: req.query.author }
@@ -176,7 +176,7 @@ router.get('/', auth.optional, async function(req, res, next) {
         const tags = req.query.tag ? undefined : article.tags
         const favorited = favoritedPrecalc ? !!article.UserFavoriteArticles.length : undefined
         // TODO get if user follows author on JOIN here.
-        console.error(article.author.followed.map(u => u.id));
+        //console.error(article.author.followed.map(u => u.id));
         const authorFollowed = loggedUserId ? undefined : undefined
         return article.toJson(user, { tags, favorited })
       })),
@@ -214,6 +214,9 @@ router.post('/', auth.required, async function(req, res, next) {
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
     if (!user) {
       return res.sendStatus(401)
+    }
+    if (!req.body.article) {
+      return res.status(422).json({ errors: { article: "can't be blank" } })
     }
     let article = new (req.app.get('sequelize').models.Article)(req.body.article)
     article.authorId = user.id
@@ -263,29 +266,31 @@ router.put('/:article', auth.required, async function(req, res, next) {
   try {
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id);
     if (req.article.authorId.toString() === req.payload.id.toString()) {
-      if (typeof req.body.article.title !== 'undefined') {
-        req.article.title = req.body.article.title
-      }
-      if (typeof req.body.article.description !== 'undefined') {
-        req.article.description = req.body.article.description
-      }
-      if (typeof req.body.article.body !== 'undefined') {
-        req.article.body = req.body.article.body
-      }
       const article = req.article
-      const tagList = req.body.article.tagList
-      if (validateArticle(req, res, article, tagList)) return
-      await req.app.get('sequelize').transaction(
-        Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-        async t => {
-          await Promise.all([
-            (typeof tagList === 'undefined')
-              ? null
-              : setArticleTags(req, article, tagList, t),
-            article.save({ transaction: t })
-          ])
+      if (req.body.article) {
+        if (typeof req.body.article.title !== 'undefined') {
+          article.title = req.body.article.title
         }
-      )
+        if (typeof req.body.article.description !== 'undefined') {
+          article.description = req.body.article.description
+        }
+        if (typeof req.body.article.body !== 'undefined') {
+          article.body = req.body.article.body
+        }
+        const tagList = req.body.article.tagList
+        if (validateArticle(req, res, article, tagList)) return
+        await req.app.get('sequelize').transaction(
+          Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+          async t => {
+            await Promise.all([
+              (typeof tagList === 'undefined')
+                ? null
+                : setArticleTags(req, article, tagList, t),
+              article.save({ transaction: t })
+            ])
+          }
+        )
+      }
       return res.json({ article: await article.toJson(user) })
     } else {
       return res.sendStatus(403)
@@ -386,6 +391,9 @@ router.post('/:article/comments', auth.required, async function(req, res, next) 
     const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
     if (!user) {
       return res.sendStatus(401)
+    }
+    if (!req.body.comment) {
+      return res.status(422).json({ errors: { comment: "can't be blank" } })
     }
     const comment = await req.app.get('sequelize').models.Comment.create(
       Object.assign({}, req.body.comment, { articleId: req.article.id, authorId: user.id })

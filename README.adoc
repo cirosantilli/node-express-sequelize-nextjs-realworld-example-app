@@ -522,3 +522,17 @@ Methodology:
 * caches warmed by clicking all pages involved just before the experiment
 * hardware: Lenovo ThinkPad P51
 * browser: Chromium 91
+
+== Anti-sopam
+
+That website has no signup verification mechanism, users can just spam it at will via API.
+
+Some things we could do include:
+
+* captcha for signup. Captcha for post creation would be too annoying.
+* log IP on every object creation, add on column of each object, then blacklist IPs on code
+* limit number of articles and comments per user
+
+Some spam events:
+
+* 2021-12-22 https://archive.ph/EVcUw spammed a bunch of pro Chinese government messages, see also: https://github.com/cirosantilli/china-dictatorship and https://cirosantilli.com/china-dictatorship/backlinks

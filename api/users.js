@@ -22,25 +22,25 @@ router.put('/user', auth.required, async function(req, res, next) {
     if (!user) {
       return res.sendStatus(401)
     }
-
-    // Only update fields that were actually passed.
-    if (typeof req.body.user.username !== 'undefined') {
-      user.username = req.body.user.username
+    if (req.body.user) {
+      // Only update fields that were actually passed.
+      if (typeof req.body.user.username !== 'undefined') {
+        user.username = req.body.user.username
+      }
+      if (typeof req.body.user.email !== 'undefined') {
+        user.email = req.body.user.email
+      }
+      if (typeof req.body.user.bio !== 'undefined') {
+        user.bio = req.body.user.bio
+      }
+      if (typeof req.body.user.image !== 'undefined') {
+        user.image = req.body.user.image
+      }
+      if (typeof req.body.user.password !== 'undefined') {
+        req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
+      }
+      await user.save()
     }
-    if (typeof req.body.user.email !== 'undefined') {
-      user.email = req.body.user.email
-    }
-    if (typeof req.body.user.bio !== 'undefined') {
-      user.bio = req.body.user.bio
-    }
-    if (typeof req.body.user.image !== 'undefined') {
-      user.image = req.body.user.image
-    }
-    if (typeof req.body.user.password !== 'undefined') {
-      req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
-    }
-
-    await user.save()
     return res.json({ user: user.toAuthJSON() })
   } catch(error) {
     next(error);
@@ -48,6 +48,9 @@ router.put('/user', auth.required, async function(req, res, next) {
 })
 
 router.post('/users/login', function(req, res, next) {
+  if (!req.body.user) {
+    return res.status(422).json({ errors: { user: "can't be blank" } })
+  }
   if (!req.body.user.email) {
     return res.status(422).json({ errors: { email: "can't be blank" } })
   }
@@ -70,6 +73,9 @@ router.post('/users/login', function(req, res, next) {
 router.post('/users', async function(req, res, next) {
   try {
     let user = new (req.app.get('sequelize').models.User)()
+    if (!req.body.user) {
+      return res.status(422).json({ errors: { user: "can't be blank" } })
+    }
     user.username = req.body.user.username
     user.email = req.body.user.email
     req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)

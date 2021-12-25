@@ -42,7 +42,7 @@ function validateParam(obj, prop, validator, defaultValue) {
       return val
     } else {
       throw new ValidationError(
-        [`validator ${validator.name} failed on ${prop} = "${param}"`],
+        { [prop]: [`validator ${validator.name} failed on ${prop} = "${param}"`] },
         422,
       )
     }

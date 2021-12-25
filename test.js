@@ -1,7 +1,40 @@
 const assert = require('assert');
+const http = require('http')
 
+const app = require('./app')
 const models = require('./models')
 const test_lib = require('./test_lib')
+
+function testApp(cb) {
+  return app.start(0, false, async (server) => {
+    await cb(server)
+    server.close()
+  })
+}
+
+// https://stackoverflow.com/questions/6048504/synchronous-request-in-node-js/53338670#53338670
+function sendJsonHttp(opts) {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify(opts.body)
+    const options = {
+      hostname: 'localhost',
+      port: opts.server.address().port,
+      path: opts.path,
+      method: opts.method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+      }
+    }
+    const req = http.request(options, res => {
+      res.on('data', data => {
+        resolve([res, JSON.parse(data.toString())])
+      })
+    })
+    req.write(body)
+    req.end()
+  })
+}
 
 it('feed shows articles by followers', async () => {
   //  art0 by user0
@@ -46,7 +79,7 @@ it('feed shows articles by followers', async () => {
 })
 
 it('tags without articles are deleted automatically after their last article is deleted', async () => {
-  const sequelize = models()
+  const sequelize = models.getSequelize()
   await sequelize.sync({force: true})
   const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
   const article0 = await sequelize.models.Article.create(test_lib.makeArticle(0, user.id))
@@ -69,7 +102,7 @@ it('users can be deleted and deletion cascades to all relations', async () => {
   // This was failing previously because of cascading madness.
   // It is also interesting to see if article deletion will cascade into the
   // empty tag deletion hooks or not.
-  const sequelize = models()
+  const sequelize = models.getSequelize()
   await sequelize.sync({force: true})
   const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
   const article0 = await sequelize.models.Article.create(test_lib.makeArticle(0, user.id))
@@ -86,4 +119,25 @@ it('users can be deleted and deletion cascades to all relations', async () => {
   assert.strictEqual(await sequelize.models.Article.count(), 0)
   assert.strictEqual(await sequelize.models.Tag.count(), 0)
   assert.strictEqual(await sequelize.models.Comment.count(), 0)
+})
+
+
+it('api: create an article', () => {
+  return testApp(async (server) => {
+    let res, data
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'POST',
+      path: '/api/users',
+      body: {
+        user: {
+          username: 'user0',
+          email: 'user0@mail.com',
+          password: 'asdf',
+        }
+      },
+    })
+    assert.strictEqual(res.statusCode, 200)
+    assert.strictEqual(data.user.username, 'user0')
+  })
 })

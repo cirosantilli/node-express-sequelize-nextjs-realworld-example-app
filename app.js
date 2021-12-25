@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // https://stackoverflow.com/questions/7697038/more-than-10-lines-in-a-node-js-stack-error
 Error.stackTraceLimit = Infinity;
 
@@ -18,8 +20,21 @@ const lib = require('./lib')
 const models = require('./models')
 const config = require('./config')
 
-function doStart(app) {
+/**
+ * - port: 0 means find random empty port
+ * - startNext: if false, don't start Next.js, run just the API
+ **/
+async function start(port, startNext, cb) {
+  const app = express()
+  let nextApp
+  let nextHandle
+  if (startNext) {
+    nextApp = next({ dev: !config.isProductionNext })
+    nextHandle = nextApp.getRequestHandler()
+  }
+
   const sequelize = models.getSequelize(__dirname);
+  app.set('sequelize', sequelize)
   passport.use(
     new passport_local.Strategy(
       {
@@ -32,7 +47,6 @@ function doStart(app) {
             if (!user || !sequelize.models.User.validPassword(user, password)) {
               return done(null, false, { errors: { 'email or password': 'is invalid' } })
             }
-
             return done(null, user)
           })
           .catch(done)
@@ -50,7 +64,7 @@ function doStart(app) {
   app.use(bodyParser.json())
   app.use(require('method-override')())
 
-  // Next handles anythiung outside of /api.
+  // Next handles anything outside of /api.
   app.get(new RegExp('^(?!' + config.apiPath + '(/|$))'), function (req, res) {
     return nextHandle(req, res);
   });
@@ -76,9 +90,16 @@ function doStart(app) {
         // The fuller errors can be helpful during development.
         console.error(err);
       }
-      return res.status(422).json({
-        errors: err.errors.map(errItem => errItem.message)
-      })
+      const errors = {}
+      for (let errItem of err.errors) {
+        let errorsForColumn = errors[errItem.path]
+        if (errorsForColumn === undefined) {
+          errorsForColumn = []
+          errors[errItem.path] = errorsForColumn
+        }
+        errorsForColumn.push(errItem.message)
+      }
+      return res.status(422).json({ errors })
     } else if (err instanceof lib.ValidationError) {
       return res.status(err.status).json({
         errors: err.errors,
@@ -87,33 +108,30 @@ function doStart(app) {
     return next(err)
   })
 
-  if (!module.parent) {
-    (async () => {
-      try {
-        await sequelize.authenticate();
-        await models.sync(sequelize);
-        app.set('sequelize', sequelize)
-        start();
-      } catch (e) {
-        console.error(e);
-        process.exit(1)
-      }
-    })()
+  if (startNext) {
+    await nextApp.prepare()
   }
-}
-
-function start(cb) {
-  const server = app.listen(config.port, function() {
-    console.log('Backend listening on: http://localhost:' + config.port)
-    cb && cb(server)
+  await sequelize.authenticate();
+  // Just a convenience DB create so we don't have to force new users to do it manually.
+  await models.sync(sequelize);
+  return new Promise((resolve, reject) => {
+    const server = app.listen(port, async function() {
+      try {
+        cb && await cb(server)
+      } catch (e) {
+        reject(e)
+        this.close()
+        throw e
+      }
+    })
+    server.on('close', resolve)
   })
 }
 
-const app = express()
-const nextApp = next({ dev: !config.isProductionNext })
-const nextHandle = nextApp.getRequestHandler()
-nextApp.prepare().then(() => {
-  doStart(app)
-})
+if (require.main === module) {
+  start(config.port, true, server => {
+    console.log('Listening on: http://localhost:' + server.address().port)
+  })
+}
 
-module.exports = { app, start }
+module.exports = { start }

@@ -1,5 +1,6 @@
 import { DEFAULT_PROFILE_IMAGE } from "lib/utils/constant";
 
+// https://stackoverflow.com/questions/34097560/react-js-replace-img-src-onerror
 const handleBrokenImage = e => {
   e.target.src = DEFAULT_PROFILE_IMAGE;
   e.target.onerror = null;
