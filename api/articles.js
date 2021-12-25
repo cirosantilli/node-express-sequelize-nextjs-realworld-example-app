@@ -152,14 +152,14 @@ router.get('/', auth.optional, async function(req, res, next) {
     }
 
     // Tag include.
-    const tagInclude = {
-      model: req.app.get('sequelize').models.Tag,
-      as: 'tags',
-    }
     if (req.query.tag) {
+      const tagInclude = {
+        model: req.app.get('sequelize').models.Tag,
+        as: 'tags',
+      }
       tagInclude.where = { name: req.query.tag }
+      include.push(tagInclude)
     }
-    include.push(tagInclude)
 
     const [{count: articlesCount, rows: articles}, user] = await Promise.all([
       req.app.get('sequelize').models.Article.findAndCountAll({
