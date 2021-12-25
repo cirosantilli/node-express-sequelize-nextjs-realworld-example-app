@@ -25,16 +25,10 @@ function makeComment(articleId, authorId, i) {
 }
 exports.makeComment = makeComment
 
-function makeArticle(i=0, userId, date) {
-  if (date === undefined) {
-    date = DATE0
-  }
-  return {
+function makeArticle(i=0, opts) {
+  let ret = {
     title: `My title ${i}`,
     description: `My description ${i}`,
-    authorId: userId,
-    createdAt: date,
-    updatedAt: date,
     body: `# h1
 
 ## h2
@@ -72,6 +66,15 @@ List:
 - item 3
 `,
   }
+  if (!opts.api) {
+    const date = opts.date === undefined ? DATE0 : opts.date
+    Object.assign(ret, {
+      authorId: opts.authorId,
+      createdAt: date,
+      updatedAt: date,
+    })
+  }
+  return ret
 }
 exports.makeArticle = makeArticle
 
@@ -144,7 +147,7 @@ async function generateDemoData(params) {
   for (var i = 0; i < nArticles; i++) {
     const userIdx = i % nUsers
     const date = addDays(DATE0, i)
-    articleArgs.push(makeArticle(i, users[userIdx].id, date))
+    articleArgs.push(makeArticle(i, { authorId: users[userIdx].id, date }))
   }
   const articles = await sequelize.models.Article.bulkCreate(
     articleArgs,

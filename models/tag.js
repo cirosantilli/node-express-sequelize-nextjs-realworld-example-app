@@ -10,6 +10,13 @@ module.exports = (sequelize) => {
           message: 'Tag name must be unique.'
         },
       },
+    },
+    {
+      indexes: [
+        {
+          fields: ['createdAt'],
+        },
+      ],
     }
   )
 

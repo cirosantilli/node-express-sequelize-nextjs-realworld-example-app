@@ -15,16 +15,25 @@ function testApp(cb) {
 // https://stackoverflow.com/questions/6048504/synchronous-request-in-node-js/53338670#53338670
 function sendJsonHttp(opts) {
   return new Promise((resolve, reject) => {
-    const body = JSON.stringify(opts.body)
+    let body
+    if (opts.body) {
+      body = JSON.stringify(opts.body)
+    } else {
+      body = ''
+    }
+    const headers = {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(body),
+    }
+    if (opts.token) {
+      headers['Authorization'] = `Token ${opts.token}`
+    }
     const options = {
       hostname: 'localhost',
       port: opts.server.address().port,
       path: opts.path,
       method: opts.method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(body),
-      }
+      headers,
     }
     const req = http.request(options, res => {
       res.on('data', data => {
@@ -82,8 +91,8 @@ it('tags without articles are deleted automatically after their last article is 
   const sequelize = models.getSequelize()
   await sequelize.sync({force: true})
   const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
-  const article0 = await sequelize.models.Article.create(test_lib.makeArticle(0, user.id))
-  const article1 = await sequelize.models.Article.create(test_lib.makeArticle(1, user.id))
+  const article0 = await sequelize.models.Article.create(test_lib.makeArticle(0, { authorId: user.id }))
+  const article1 = await sequelize.models.Article.create(test_lib.makeArticle(1, { authorId: user.id }))
   const tag0 = await sequelize.models.Tag.create(test_lib.makeTag(0))
   const tag1 = await sequelize.models.Tag.create(test_lib.makeTag(1))
   await sequelize.models.ArticleTag.create({ articleId: article0.id, tagId: tag0.id })
@@ -105,8 +114,8 @@ it('users can be deleted and deletion cascades to all relations', async () => {
   const sequelize = models.getSequelize()
   await sequelize.sync({force: true})
   const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
-  const article0 = await sequelize.models.Article.create(test_lib.makeArticle(0, user.id))
-  const article1 = await sequelize.models.Article.create(test_lib.makeArticle(1, user.id))
+  const article0 = await sequelize.models.Article.create(test_lib.makeArticle(0, { authorId: user.id }))
+  const article1 = await sequelize.models.Article.create(test_lib.makeArticle(1, { authorId: user.id }))
   const comment0 = await sequelize.models.Comment.create(test_lib.makeComment(article0.id, user.id, 0))
   const comment1 = await sequelize.models.Comment.create(test_lib.makeComment(article0.id, user.id, 1))
   const tag0 = await sequelize.models.Tag.create(test_lib.makeTag(0))
@@ -122,22 +131,54 @@ it('users can be deleted and deletion cascades to all relations', async () => {
 })
 
 
-it('api: create an article', () => {
+it('api: create an article and see it on global feed', () => {
   return testApp(async (server) => {
     let res, data
+
+    // Create user.
     ;[res, data] = await sendJsonHttp({
       server,
       method: 'POST',
       path: '/api/users',
-      body: {
-        user: {
-          username: 'user0',
-          email: 'user0@mail.com',
-          password: 'asdf',
-        }
-      },
+      body: { user: test_lib.makeUser(sequelize) },
     })
+    const token = data.user.token
     assert.strictEqual(res.statusCode, 200)
     assert.strictEqual(data.user.username, 'user0')
+
+    // Create article.
+    let article = test_lib.makeArticle(0, { api: true })
+    article.tagList: ['tag0', 'tag1']
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'POST',
+      path: '/api/articles',
+      body: { article },
+      token,
+    })
+    assert.strictEqual(res.statusCode, 200)
+    assert.strictEqual(data.article.title, 'title0')
+
+    // See it on global feed.
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'GET',
+      path: '/api/articles',
+      token,
+    })
+    assert.strictEqual(data.articles[0].title, 'My Title 0')
+    assert.strictEqual(data.articles[0].author.username, 'user0')
+    assert.strictEqual(data.articlesCount, 1)
+
+    // See the tags on the global feed.
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'GET',
+      path: '/api/articles',
+      token,
+    })
+    assert.strictEqual(data.articles[0].title, 'My Title 0')
+    assert.strictEqual(data.articles[0].author.username, 'user0')
+    assert.strictEqual(data.articlesCount, 1)
   })
 })

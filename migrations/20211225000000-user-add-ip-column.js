@@ -1,14 +1,8 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => queryInterface.sequelize.transaction(async transaction => {
-    await queryInterface.addColumn('User', 'ip',
-      {
-        type: Sequelize.STRING,
-        defaultValue: '',
-      },
-      {transaction},
-    )
+    queryInterface.addIndex('Tag', { fields: ['createdAt'] }, { transaction });
   }),
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('User', 'displayName')
-  }
+  down: async (queryInterface, Sequelize) => queryInterface.sequelize.transaction(async transaction => {
+    queryInterface.removeIndex('Tag', { fields: ['createdAt'] }, { transaction });
+  })
 };
