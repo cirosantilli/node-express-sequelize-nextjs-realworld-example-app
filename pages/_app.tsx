@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import { SWRConfig } from 'swr'
 
 import CustomLink from "components/CustomLink";
 import Navbar from "components/Navbar";
@@ -46,25 +47,36 @@ const MyApp = ({ Component, pageProps }) => {
   }
   return (
     <AppContextProvider>
-      <MyHead />
-      <Navbar />
-      {isDemo && (
-        <div className="container" style={{'marginBottom': '20px'}}>
-          Source code for this website: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
-        </div>
-      )}
-      <Component {...pageProps} />
-      <footer>
-        <div className="container">
-          <CustomLink href={routes.home()} className="logo-font">
-            {APP_NAME.toLowerCase()}
-          </CustomLink>
-          <span className="attribution">
-            {" "}© 2021. An interactive learning project from{" "}
-            <a href="https://thinkster.io">Thinkster</a>. Code licensed under MIT.
-          </span>
-        </div>
-      </footer>
+      <SWRConfig
+        value={{
+          // Do everything to prevent SWR from refreshing pages automatically.
+          // When users want to check for new data, they can press F5, otherwise
+          // we might overwrite what they were currently looking at.
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+          shouldRetryOnError: false,
+        }}
+      >
+        <MyHead />
+        <Navbar />
+        {isDemo && (
+          <div className="container" style={{'marginBottom': '20px'}}>
+            Source code for this website: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
+          </div>
+        )}
+        <Component {...pageProps} />
+        <footer>
+          <div className="container">
+            <CustomLink href={routes.home()} className="logo-font">
+              {APP_NAME.toLowerCase()}
+            </CustomLink>
+            <span className="attribution">
+              {" "}© 2021. An interactive learning project from{" "}
+              <a href="https://thinkster.io">Thinkster</a>. Code licensed under MIT.
+            </span>
+          </div>
+        </footer>
+      </SWRConfig>
     </AppContextProvider>
   )
 };
