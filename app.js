@@ -79,7 +79,7 @@ async function start(port, startNext, cb) {
 
   // 404 handler.
   app.use(function (req, res, next) {
-    res.status(404).send('error: 404 Not Found ' + req.path)
+    res.status(404).json({ errors: ['error: 404 Not Found ' + req.path] })
   })
 
   // Error handlers

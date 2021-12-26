@@ -5,26 +5,6 @@ const { Op, Transaction } = require('sequelize')
 const config = require('../config.js')
 const lib = require('../lib.js')
 
-// https://stackoverflow.com/questions/14382725/how-to-get-the-correct-ip-address-of-a-client-into-a-node-socket-io-app-hosted-o/14382990#14382990
-function getClientIp(req) {
-  var ipAddress;
-  // Amazon EC2 / Heroku workaround to get real client IP
-  var forwardedIpsStr = req.header('x-forwarded-for');
-  if (forwardedIpsStr) {
-    // 'x-forwarded-for' header may return multiple IP addresses in
-    // the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
-    // the first one
-    var forwardedIps = forwardedIpsStr.split(',');
-    ipAddress = forwardedIps[0];
-  }
-  if (!ipAddress) {
-    // Ensure getting client IP address still works in
-    // development environment
-    ipAddress = req.connection.remoteAddress;
-  }
-  return ipAddress;
-};
-
 async function setArticleTags(req, article, tagList, transaction) {
   const tags = await req.app.get('sequelize').models.Tag.bulkCreate(
     tagList.map(tag => {return {name: tag}}),
@@ -35,7 +15,7 @@ async function setArticleTags(req, article, tagList, transaction) {
   const tags2 = await req.app.get('sequelize').models.Tag.findAll({
     where: {name: tagList}
   })
-  return article.setTags(tags2, {transaction: transaction})
+  return article.setTags(tags2, { transaction })
 }
 
 function validateArticle(req, res, article, tagList) {
@@ -51,10 +31,6 @@ function validateArticle(req, res, article, tagList) {
         }
       }
     }
-  }
-  if (ret) {
-    console.log(`${ret} ${getClientIp(req)}`);
-    return res.sendStatus(422)
   }
   return ret;
 }
@@ -226,10 +202,10 @@ router.post('/', auth.required, async function(req, res, next) {
     //await setArticleTags(req, article, tagList)
     await req.app.get('sequelize').transaction(
       Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-      async t => {
+      async transaction => {
         await Promise.all([
-          article.save({ transaction: t }),
-          setArticleTags(req, article, tagList, t),
+          article.save({ transaction }),
+          setArticleTags(req, article, tagList, transaction),
         ])
       }
     )
@@ -281,12 +257,13 @@ router.put('/:article', auth.required, async function(req, res, next) {
         if (validateArticle(req, res, article, tagList)) return
         await req.app.get('sequelize').transaction(
           Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-          async t => {
+          async transaction => {
+            await article.deleteEmptyTags(transaction)
             await Promise.all([
               (typeof tagList === 'undefined')
                 ? null
-                : setArticleTags(req, article, tagList, t),
-              article.save({ transaction: t })
+                : setArticleTags(req, article, tagList, transaction),
+              article.save({ transaction })
             ])
           }
         )

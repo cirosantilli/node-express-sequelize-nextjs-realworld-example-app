@@ -36,58 +36,7 @@ module.exports = (sequelize) => {
           }
         },
         beforeDestroy: async (article, options) => {
-          // This should alwas be run inside a transaction, as it is an unsafe read modify write loop,
-          // otherwise could fail if a new article is created in the middle: we could end up destroying
-          // the tag of that article incorrectly. Converting to a single join delete statement
-          // would do the trick, but that syntax is not possible in all DBs, and subqueries are impossible
-          // without literals in Sequelize:
-          // https://stackoverflow.com/questions/45354001/nodejs-sequelize-delete-with-nested-select-query
-
-          //article.deleteEmptyTags()
-          // Get all tags that the article has that have exactly 1 article before we deleted
-          // this article. We know we can delete those later on.
-          const emptyTags = await article.sequelize.models.Article.findAll({
-            attributes: [
-              sequelize.col('Tags.id'),
-              [sequelize.fn('COUNT', sequelize.col('Article.id')), 'count'],
-            ],
-            raw: true,
-            includeIgnoreAttributes: false,
-            include: [
-              {
-                model: article.sequelize.models.Tag,
-                as: 'tags',
-                where: { '$Article.id$': article.id },
-                include: [
-                  {
-                    model: article.sequelize.models.Article,
-                    as: 'taggedArticles',
-                    required: false
-                  }
-                ]
-              },
-            ],
-            group: ['Tags.id'],
-            order: [[sequelize.col('count'), 'DESC']],
-            having: sequelize.where(sequelize.fn('COUNT', sequelize.col('Article.id')), Op.eq, 1),
-            transaction: options.transaction,
-          })
-
-          // Equivalent to the above but in multiple queries. Keeping around in a comments just in case.
-          // Should also be converted to promise.
-          //const tags = await article.getTags({ transaction: options.transaction })
-          //const emptyTags = []
-          //for (const tag of tags) {
-          //  if ((await tag.countTaggedArticles({ transaction: options.transaction })) === 1) {
-          //    emptyTags.push(tag)
-          //  }
-          //}
-          if (emptyTags.length) {
-            article.sequelize.models.Tag.destroy({
-              where: { id: emptyTags.map(tag => tag.id) },
-              transaction: options.transaction,
-            })
-          }
+          await article.deleteEmptyTags(options.transaction)
         },
       },
       indexes: [
@@ -98,12 +47,68 @@ module.exports = (sequelize) => {
     }
   )
 
+  // Delete tags that are only associated to this article, and which will therefore be
+  // deleted after this article is deleted.
+  Article.prototype.deleteEmptyTags = async function(transaction) {
+    // This should alwas be run inside a transaction, as it is an unsafe read modify write loop,
+    // otherwise could fail if a new article is created in the middle: we could end up destroying
+    // the tag of that article incorrectly. Converting to a single join delete statement
+    // would do the trick, but that syntax is not possible in all DBs, and subqueries are impossible
+    // without literals in Sequelize:
+    // https://stackoverflow.com/questions/45354001/nodejs-sequelize-delete-with-nested-select-query
+
+    // Get all tags that the article has that have exactly 1 article before we deleted
+    // this article. We know we can delete those later on.
+    const emptyTags = await sequelize.models.Article.findAll({
+      attributes: [
+        sequelize.col('Tags.id'),
+        [sequelize.fn('COUNT', sequelize.col('Article.id')), 'count'],
+      ],
+      raw: true,
+      includeIgnoreAttributes: false,
+      include: [
+        {
+          model: sequelize.models.Tag,
+          as: 'tags',
+          where: { '$Article.id$': this.id },
+          include: [
+            {
+              model: sequelize.models.Article,
+              as: 'taggedArticles',
+              required: false
+            }
+          ]
+        },
+      ],
+      group: ['Tags.id'],
+      order: [[sequelize.col('count'), 'DESC']],
+      having: sequelize.where(sequelize.fn('COUNT', sequelize.col('Article.id')), Op.eq, 1),
+      transaction,
+    })
+
+    // Equivalent to the above but in multiple queries. Keeping around in a comments just in case.
+    // Should also be converted to promise.
+    //const tags = await article.getTags({ transaction: options.transaction })
+    //const emptyTags = []
+    //for (const tag of tags) {
+    //  if ((await tag.countTaggedArticles({ transaction: options.transaction })) === 1) {
+    //    emptyTags.push(tag)
+    //  }
+    //}
+    if (emptyTags.length) {
+      sequelize.models.Tag.destroy({
+        where: { id: emptyTags.map(tag => tag.id) },
+        transaction,
+      })
+    }
+  }
+
   // This method should always be used instead of the default destroy because it also destroys
   // tags that might now have no articles, and this need to be in a SERIALIZABLE transaction
   // with post + tag creation to prevent a race condition where the tag of a new post gets
   // wrongly deleted before it is assigned to the post.
   Article.prototype.destroy2 = async function() {
-    await this.sequelize.transaction(
+    await sequelize.transaction(
       Transaction.ISOLATION_LEVELS.SERIALIZABLE,
       async t => {
         await this.destroy({ transaction: t })

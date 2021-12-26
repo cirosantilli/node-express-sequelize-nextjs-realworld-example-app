@@ -39,17 +39,27 @@ function sendJsonHttp(opts) {
       }
       const req = http.request(options, res => {
         res.on('data', data => {
+          let dataString
+          let ret
           try {
-            resolve([res, JSON.parse(data.toString())])
+            dataString = data.toString()
+            if (res.headers['content-type'].startsWith('application/json;')) {
+              ret = JSON.parse(dataString)
+            } else {
+              ret = dataString
+            }
+            resolve([res, ret])
           } catch (e) {
+            console.error({ dataString });
             reject(e)
           }
         })
+        // We need this as there is no 'data' event empty reply, e.g. a DELETE 204.
+        res.on('end', () => resolve([ res, undefined ]))
       })
       req.write(body)
       req.end()
     } catch (e) {
-      console.error('here');
       reject(e)
     }
   })
@@ -143,7 +153,7 @@ it('users can be deleted and deletion cascades to all relations', async () => {
 
 it('api: create an article and see it on global feed', () => {
   return testApp(async (server) => {
-    let res, data, article
+    let res, data, article, tags
 
     // Create user.
     ;[res, data] = await sendJsonHttp({
@@ -167,7 +177,8 @@ it('api: create an article and see it on global feed', () => {
       token,
     })
     assert.strictEqual(res.statusCode, 200)
-    assert.strictEqual(data.article.title, 'My title 0')
+    article = data.article
+    assert.strictEqual(article.title, 'My title 0')
 
     // See it on global feed.
     ;[res, data] = await sendJsonHttp({
@@ -184,11 +195,74 @@ it('api: create an article and see it on global feed', () => {
     ;[res, data] = await sendJsonHttp({
       server,
       method: 'GET',
+      path: '/api/tags',
+      token,
+    })
+    assert.strictEqual(res.statusCode, 200)
+    data.tags.sort()
+    assert.strictEqual(data.tags[0], 'tag0')
+    assert.strictEqual(data.tags[1], 'tag1')
+    assert.strictEqual(data.tags.length, 2)
+
+    // Update article removing one tag and adding another.
+    article.tagList = ['tag0', 'tag1']
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'PUT',
+      path: `/api/articles/${article.slug}`,
+      body: { article: {
+        title: 'My title 0 hacked',
+        tagList: ['tag0', 'tag2'],
+      } },
+      token,
+    })
+    assert.strictEqual(res.statusCode, 200)
+    assert.strictEqual(data.article.title, 'My title 0 hacked')
+
+    // See it on global feed.
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'GET',
       path: '/api/articles',
       token,
     })
-    assert.strictEqual(data.articles[0].title, 'My title 0')
+    assert.strictEqual(data.articles[0].title, 'My title 0 hacked')
     assert.strictEqual(data.articles[0].author.username, 'user0')
     assert.strictEqual(data.articlesCount, 1)
+
+    // See the tags on the global feed. tag1 should not exist anymore,
+    // since the article was the only one that contained it, and it was
+    // removed from the article.
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'GET',
+      path: '/api/tags',
+      token,
+    })
+    assert.strictEqual(res.statusCode, 200)
+    data.tags.sort()
+    assert.strictEqual(data.tags[0], 'tag0')
+    // TODO
+    assert.strictEqual(data.tags[1], 'tag2')
+    assert.strictEqual(data.tags.length, 2)
+
+    // Delete article
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'DELETE',
+      path: `/api/articles/${article.slug}`,
+      token,
+    })
+    assert.strictEqual(res.statusCode, 204)
+
+    // Global feed now empty.
+    ;[res, data] = await sendJsonHttp({
+      server,
+      method: 'GET',
+      path: '/api/articles',
+      token,
+    })
+    assert.strictEqual(data.articles.length, 0)
+    assert.strictEqual(data.articlesCount, 0)
   })
 })

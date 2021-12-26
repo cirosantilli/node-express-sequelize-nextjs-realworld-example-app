@@ -1,4 +1,6 @@
-const config = require('./config.js')
+const http = require('http')
+
+const config = require('./config')
 
 async function deleteOldestForDemo(Model) {
   if (config.isDemo) {
@@ -15,6 +17,13 @@ async function deleteOldestForDemo(Model) {
   }
 }
 exports.deleteOldestForDemo = deleteOldestForDemo
+
+// https://stackoverflow.com/questions/14382725/how-to-get-the-correct-ip-address-of-a-client-into-a-node-socket-io-app-hosted-o/14382990#14382990
+// Works on Heroku 2021.
+function getClientIp(req) {
+  return req.header('x-forwarded-for')
+};
+exports.getClientIp = getClientIp
 
 class ValidationError extends Error {
   constructor(errors, status) {

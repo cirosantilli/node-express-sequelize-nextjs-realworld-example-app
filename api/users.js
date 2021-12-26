@@ -2,7 +2,7 @@ const router = require('express').Router()
 const passport = require('passport')
 
 const auth = require('../auth')
-const lib = require('../lib.js')
+const lib = require('../lib')
 
 router.get('/user', auth.required, async function(req, res, next) {
   try {
@@ -81,7 +81,7 @@ router.post('/users', async function(req, res, next) {
     }
     user.username = req.body.user.username
     user.email = req.body.user.email
-    user.ip = req.headers['x-forwarded-for']
+    user.ip = lib.getClientIp(req)
     req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
     await user.save()
     await lib.deleteOldestForDemo(req.app.get('sequelize').models.User)
