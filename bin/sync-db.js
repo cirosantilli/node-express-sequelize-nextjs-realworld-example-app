@@ -10,6 +10,7 @@
 const path = require('path')
 const child_process = require('child_process');
 const { DatabaseError } = require('sequelize')
+const config = require('../config')
 const models = require('../models')
 
 const sequelize = models.getSequelize(path.dirname(__dirname));
@@ -23,7 +24,15 @@ try {
   }
 }
 if (!dbEmpty) {
-  out = child_process.spawnSync('npx', ['sequelize-cli', 'db:migrate'])
+  const env = process.env
+  if (config.postgres) {
+    env.NODE_ENV = 'production'
+  }
+  out = child_process.spawnSync(
+    'npx',
+    ['sequelize-cli', 'db:migrate'],
+    { env }
+  )
   console.error(out.stdout.toString());
   console.error(out.stderr.toString());
   process.exit(out.status)

@@ -55,10 +55,9 @@ module.exports = (sequelize) => {
       image: DataTypes.STRING,
       hash: DataTypes.STRING(1024),
       salt: DataTypes.STRING,
-      // Should likely have been NULL on empty. Oh well.
       ip: {
         type: DataTypes.STRING,
-        default: '',
+        allowNull: true,
       }
     },
     {

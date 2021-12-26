@@ -37,6 +37,7 @@ function sendJsonHttp(opts) {
     }
     const req = http.request(options, res => {
       res.on('data', data => {
+        console.error(data.toString());
         resolve([res, JSON.parse(data.toString())])
       })
     })
@@ -140,7 +141,7 @@ it('api: create an article and see it on global feed', () => {
       server,
       method: 'POST',
       path: '/api/users',
-      body: { user: test_lib.makeUser(sequelize) },
+      body: { user: test_lib.makeUser() },
     })
     const token = data.user.token
     assert.strictEqual(res.statusCode, 200)
@@ -148,7 +149,7 @@ it('api: create an article and see it on global feed', () => {
 
     // Create article.
     let article = test_lib.makeArticle(0, { api: true })
-    article.tagList: ['tag0', 'tag1']
+    article.tagList = ['tag0', 'tag1']
     ;[res, data] = await sendJsonHttp({
       server,
       method: 'POST',

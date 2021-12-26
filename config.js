@@ -37,6 +37,7 @@ module.exports = {
   // Makes deployment impossibly slow if there are lots of pages
   // like in a real-world production public website.
   prerenderAll: false,
+  postgres: process.env.REALWORLD_PG === 'true',
   revalidate: 10,
   secret: isProduction ? process.env.SECRET : 'secret',
   verbose: process.env.VERBOSE,
@@ -51,7 +52,7 @@ module.exports = {
     storage: 'db.sqlite3',
   },
   production: {
-    url: process.env.DATABASE_URL || 'postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld',
+    url: process.env.DATABASE_URL || 'postgres://realworld_next_user:a@localhost:5432/realworld_next',
     dialect: 'postgres',
     dialectOptions: {
       // https://stackoverflow.com/questions/27687546/cant-connect-to-heroku-postgresql-database-from-local-node-app-with-sequelize

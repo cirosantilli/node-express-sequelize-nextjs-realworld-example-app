@@ -90,9 +90,9 @@ sudo apt install postgresql
 sudo -u postgres createuser -s "$(whoami)"
 createdb "$(whoami)"
 
-createdb node_express_sequelize_realworld
-psql -c "CREATE ROLE node_express_sequelize_realworld_user with login password 'a'"
-psql -c 'GRANT ALL PRIVILEGES ON DATABASE node_express_sequelize_realworld TO node_express_sequelize_realworld_user'
+createdb realworld_next
+psql -c "CREATE ROLE realworld_next_user with login password 'a'"
+psql -c 'GRANT ALL PRIVILEGES ON DATABASE realworld_next TO realworld_next_user'
 echo "SECRET=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)" >> .env
 ....
 
@@ -109,6 +109,33 @@ To <<generate-demo-data>> for this instance run:
 
 ....
 npm run seed-prod
+....
+
+=== Development run in PostgreSQL
+
+If you want to debug a PostgreSQL specific issue interactively on the browser, you can run a development Next.js server on PostgreSQL.
+
+This is similar to <<local-run-as-identical-to-deployment-as-possible>>, but running the development server is more convenient for development as you won't have to `npmr run build-prod` on every frontend change.
+
+First setup the PostgreSQL database as in <<local-run-as-identical-to-deployment-as-possible>>.
+
+Then start the server with:
+
+....
+npm run dev-pg
+....
+
+To run other database related commands on PostgreSQL you can export the `REALWORLD_PG=true` environment variable manually as in:
+
+....
+REALWORLD_PG=true ./bin/sync-db.js
+REALWORLD_PG=true ./bin/generate-demo-data.js
+....
+
+If you need to inspect the database manually you can use:
+
+....
+psql realworld_next
 ....
 
 == Heroku deployment
@@ -321,6 +348,14 @@ We also have a custom setup where, if the database is not initialized, we first:
 
 This is something that should be merged into sequelize itself, or at least asked on Stack Overflow, but lazy now.
 
+=== Debugging migrations
+
+If a migration appears wrong, a good way to retry it after modifying the file under `migrations` is this oneliner:
+
+....
+git add migrations && git commit -an && git checkout HEAD~ && bin/generate-demo-data.js && git checkout - && ./bin/sync-db.js
+....
+
 == Bugs
 
 https://github.com/reck1ess/next-realworld-example-app[] has several UI bugs/missing functionality, some notable ones:
@@ -466,7 +501,7 @@ DEBUG='sequelize:sql:*' npm test
 To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then 
 
 ....
-NODE_ENV=production DATABASE_URL='postgres://node_express_sequelize_realworld_user:a@localhost:5432/node_express_sequelize_realworld' npm test
+NODE_ENV=production DATABASE_URL='postgres://realworld_next_user:a@localhost:5432/realworld_next' npm test
 ....
 
 The tests include two broad classes of tests:

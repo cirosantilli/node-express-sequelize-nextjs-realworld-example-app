@@ -91,7 +91,9 @@ function makeUser(sequelize, i=0) {
   if (i % 2 === 0) {
     userArg.bio = `My bio ${i}`
   }
-  sequelize.models.User.setPassword(userArg, 'asdf')
+  if (sequelize) {
+    sequelize.models.User.setPassword(userArg, 'asdf')
+  }
   return userArg;
 }
 exports.makeUser = makeUser
