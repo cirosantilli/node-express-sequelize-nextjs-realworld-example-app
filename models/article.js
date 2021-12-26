@@ -43,6 +43,7 @@ module.exports = (sequelize) => {
           // without literals in Sequelize:
           // https://stackoverflow.com/questions/45354001/nodejs-sequelize-delete-with-nested-select-query
 
+          //article.deleteEmptyTags()
           // Get all tags that the article has that have exactly 1 article before we deleted
           // this article. We know we can delete those later on.
           const emptyTags = await article.sequelize.models.Article.findAll({

@@ -38,6 +38,7 @@ const sequelize = await test_lib.generateDemoData({
   nFollowsPerUser: commander.nFollowsPerUser,
   nRags: commander.nTags,
   nUsers: commander.nUsers,
+  verbose: true,
 })
 await sequelize.close()
 })()

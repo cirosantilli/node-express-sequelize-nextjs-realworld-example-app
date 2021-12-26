@@ -15,34 +15,43 @@ function testApp(cb) {
 // https://stackoverflow.com/questions/6048504/synchronous-request-in-node-js/53338670#53338670
 function sendJsonHttp(opts) {
   return new Promise((resolve, reject) => {
-    let body
-    if (opts.body) {
-      body = JSON.stringify(opts.body)
-    } else {
-      body = ''
-    }
-    const headers = {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(body),
-    }
-    if (opts.token) {
-      headers['Authorization'] = `Token ${opts.token}`
-    }
-    const options = {
-      hostname: 'localhost',
-      port: opts.server.address().port,
-      path: opts.path,
-      method: opts.method,
-      headers,
-    }
-    const req = http.request(options, res => {
-      res.on('data', data => {
-        console.error(data.toString());
-        resolve([res, JSON.parse(data.toString())])
+    try {
+      let body
+      if (opts.body) {
+        body = JSON.stringify(opts.body)
+      } else {
+        body = ''
+      }
+      const headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+        'Accept': 'application/json',
+      }
+      if (opts.token) {
+        headers['Authorization'] = `Token ${opts.token}`
+      }
+      const options = {
+        hostname: 'localhost',
+        port: opts.server.address().port,
+        path: opts.path,
+        method: opts.method,
+        headers,
+      }
+      const req = http.request(options, res => {
+        res.on('data', data => {
+          try {
+            resolve([res, JSON.parse(data.toString())])
+          } catch (e) {
+            reject(e)
+          }
+        })
       })
-    })
-    req.write(body)
-    req.end()
+      req.write(body)
+      req.end()
+    } catch (e) {
+      console.error('here');
+      reject(e)
+    }
   })
 }
 
@@ -134,7 +143,7 @@ it('users can be deleted and deletion cascades to all relations', async () => {
 
 it('api: create an article and see it on global feed', () => {
   return testApp(async (server) => {
-    let res, data
+    let res, data, article
 
     // Create user.
     ;[res, data] = await sendJsonHttp({
@@ -143,12 +152,12 @@ it('api: create an article and see it on global feed', () => {
       path: '/api/users',
       body: { user: test_lib.makeUser() },
     })
-    const token = data.user.token
     assert.strictEqual(res.statusCode, 200)
+    const token = data.user.token
     assert.strictEqual(data.user.username, 'user0')
 
     // Create article.
-    let article = test_lib.makeArticle(0, { api: true })
+    article = test_lib.makeArticle(0, { api: true })
     article.tagList = ['tag0', 'tag1']
     ;[res, data] = await sendJsonHttp({
       server,
@@ -158,7 +167,7 @@ it('api: create an article and see it on global feed', () => {
       token,
     })
     assert.strictEqual(res.statusCode, 200)
-    assert.strictEqual(data.article.title, 'title0')
+    assert.strictEqual(data.article.title, 'My title 0')
 
     // See it on global feed.
     ;[res, data] = await sendJsonHttp({
@@ -167,7 +176,7 @@ it('api: create an article and see it on global feed', () => {
       path: '/api/articles',
       token,
     })
-    assert.strictEqual(data.articles[0].title, 'My Title 0')
+    assert.strictEqual(data.articles[0].title, 'My title 0')
     assert.strictEqual(data.articles[0].author.username, 'user0')
     assert.strictEqual(data.articlesCount, 1)
 
@@ -178,7 +187,7 @@ it('api: create an article and see it on global feed', () => {
       path: '/api/articles',
       token,
     })
-    assert.strictEqual(data.articles[0].title, 'My Title 0')
+    assert.strictEqual(data.articles[0].title, 'My title 0')
     assert.strictEqual(data.articles[0].author.username, 'user0')
     assert.strictEqual(data.articlesCount, 1)
   })

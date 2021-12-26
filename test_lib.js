@@ -91,8 +91,11 @@ function makeUser(sequelize, i=0) {
   if (i % 2 === 0) {
     userArg.bio = `My bio ${i}`
   }
+  const password = 'asdf'
   if (sequelize) {
-    sequelize.models.User.setPassword(userArg, 'asdf')
+    sequelize.models.User.setPassword(userArg, password)
+  } else {
+    userArg.password = password
   }
   return userArg;
 }
@@ -115,6 +118,7 @@ async function generateDemoData(params) {
   const nTags = params.nTags === undefined ? 10 : params.nTags
   const directory = params.directory
   const basename = params.basename
+  const verbose = params.verbose === undefined ? false : params.verbose
 
   const nArticles = nUsers * nArticlesPerUser
 
@@ -122,15 +126,15 @@ async function generateDemoData(params) {
   await models.sync(sequelize, { force: true })
 
   printTimeNow = now()
-  console.error('User');
+  if (verbose) console.error('User');
   const userArgs = [];
   for (var i = 0; i < nUsers; i++) {
     userArgs.push(makeUser(sequelize, i))
   }
   const users = await sequelize.models.User.bulkCreate(userArgs)
-  printTime()
+  if (verbose) printTime()
 
-  console.error('UserFollowUser');
+  if (verbose) console.error('UserFollowUser');
   const followArgs = []
   for (var i = 0; i < nUsers; i++) {
     const userId = users[i].id
@@ -142,9 +146,9 @@ async function generateDemoData(params) {
     }
   }
   await sequelize.models.UserFollowUser.bulkCreate(followArgs)
-  printTime()
+  if (verbose) printTime()
 
-  console.error('Article');
+  if (verbose) console.error('Article');
   const articleArgs = [];
   for (var i = 0; i < nArticles; i++) {
     const userIdx = i % nUsers
@@ -158,9 +162,9 @@ async function generateDemoData(params) {
       individualHooks: true,
     }
   )
-  printTime()
+  if (verbose) printTime()
 
-  console.error('UserFavoriteArticle');
+  if (verbose) console.error('UserFavoriteArticle');
   let articleIdx = 0
   const favoriteArgs = []
   for (var i = 0; i < nUsers; i++) {
@@ -174,17 +178,17 @@ async function generateDemoData(params) {
     }
   }
   await sequelize.models.UserFavoriteArticle.bulkCreate(favoriteArgs)
-  printTime()
+  if (verbose) printTime()
 
-  console.error('Tag');
+  if (verbose) console.error('Tag');
   const tagArgs = []
   for (var i = 0; i < nTags; i++) {
     tagArgs.push(makeTag(i))
   }
   const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
-  printTime()
+  if (verbose) printTime()
 
-  console.error('ArticleTag');
+  if (verbose) console.error('ArticleTag');
   let tagIdx = 0
   const articleTagArgs = []
   for (var i = 0; i < nArticles; i++) {
@@ -197,9 +201,9 @@ async function generateDemoData(params) {
     }
   }
   await sequelize.models.ArticleTag.bulkCreate(articleTagArgs)
-  printTime()
+  if (verbose) printTime()
 
-  console.error('Comment');
+  if (verbose) console.error('Comment');
   const commentArgs = [];
   let commentIdx = 0;
   for (var i = 0; i < nArticles; i++) {
@@ -212,7 +216,7 @@ async function generateDemoData(params) {
     }
   }
   const comments = await sequelize.models.Comment.bulkCreate(commentArgs)
-  printTime()
+  if (verbose) printTime()
 
   return sequelize
 }
