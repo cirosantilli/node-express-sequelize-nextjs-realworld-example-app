@@ -42,10 +42,23 @@ const ArticleList = props => {
     }
   })()
   const { data, error } = useSWR(fetchURL, fetcher());
-  const { articles, articlesCount } = data || {
-    articles: props.articles || [],
-    articlesCount: props.articlesCount || 0,
-  };
+  let articles, articlesCount, showSsr = false
+  if (data) {
+    ({ articles, articlesCount } = data)
+  } else if (
+    // If we used server side data on either of those cases, it would lead to wrong
+    // data flickering, either for page 0, for for global feed instead of user following feed
+    // since both of those share the `/` URL.
+    // Instead, we want the loader to flicker.
+    // https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/12
+    page === 0 &&
+    props.what !== 'feed'
+  ) {
+    ({ articles, articlesCount } = props)
+    showSsr = true
+  } else {
+    [ articles, articlesCount ] = [[], 0]
+  }
 
   // Favorite article button state.
   const favorited = []
@@ -68,9 +81,10 @@ const ArticleList = props => {
       setFavorited[i](articles[i].favorited);
       setFavoritesCount[i](articles[i].favoritesCount);
     }
-  }, [articles])
+  }, Object.assign(articles.map(a => a.favorited).concat(articles.map(a => a.favoritesCount)), {length: DEFAULT_LIMIT}))
 
   if (error) return <ErrorMessage message="Cannot load recent articles..." />;
+  if (!data && !showSsr) return <LoadingSpinner />;
   if (articles?.length === 0) {
     return (<div className="article-preview">No articles are here... yet.</div>);
   }
