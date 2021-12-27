@@ -265,6 +265,8 @@ SSR would require `<a href` elements to send custom headers, so that URLs won't 
 
 SSG would, in addition to the previous, require specific Next.js support for the above.
 
+You can turn JavaScript off easily on Chromium with this extension: https://github.com/maximelebreton/quick-javascript-switcher which adds the shortcut Alt + Shift + Q to toggle JavaScript.
+
 == TODO
 
 === Single URL with multiple pages
