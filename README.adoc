@@ -144,13 +144,13 @@ The setup is analogous to: https://github.com/cirosantilli/node-express-sequeliz
 
 ....
 git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-next.git
-heroku config:set --app cirosantilli-realworld-next NEXT_PUBLIC_DEMO=true addons:create heroku-postgresql:hobby-dev
-heroku config:set --app cirosantilli-realworld-next DISABLE_ESLINT_PLUGIN=true
-heroku config:set --app cirosantilli-realworld-next NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
-heroku config:set --app cirosantilli-realworld-next SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
+./heroku.sh config:set --app cirosantilli-realworld-next NEXT_PUBLIC_DEMO=true addons:create heroku-postgresql:hobby-dev
+./heroku.sh config:set --app cirosantilli-realworld-next DISABLE_ESLINT_PLUGIN=true
+./heroku.sh config:set --app cirosantilli-realworld-next NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
+./heroku.sh config:set --app cirosantilli-realworld-next SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
 # Optional. If set, enables demo mode. We must use the NEXT_PUBLIC_* prefix for the variable name,
 # otherwise it is not visible in the page renders.
-heroku config:set --app cirosantilli-realworld-next NEXT_PUBLIC_DEMO=true
+./heroku.sh config:set --app cirosantilli-realworld-next NEXT_PUBLIC_DEMO=true
 ....
 
 This is done because this repository is normally developed as a branch of that one, which would lead to a conflicting name for the branch `heroku`.
@@ -158,7 +158,7 @@ This is done because this repository is normally developed as a branch of that o
 You then have to add `--app cirosantilli-realworld-next` to any raw `heroku` commands to allow Heroku to differentiate between them, e.g.:
 
 ....
-heroku run --app cirosantilli-realworld-next bash
+./heroku.sh run --app cirosantilli-realworld-next bash
 ....
 
 for which we have the helper:
@@ -197,13 +197,19 @@ We've logged their IP as 31.183.168.37, let's see if it changes with time. That 
 Get a PostgreSQL shell:
 
 ....
-heroku psql
+./heroku.sh psql
+....
+
+or run a one-off Postgres query:
+
+....
+./heroku.sh psql -c 'SELECT * FROM "User"'
 ....
 
 DELETE ALL DATA IN THE DATABASE and <<generate-demo-data>> inside Heroku:
 
 ....
-heroku run bash
+./heroku.sh run bash
 ....
 
 and then run in that shell:
@@ -215,7 +221,7 @@ bin/generate-demo-data.js --force-production
 or you can do it in one go with:
 
 ....
-heroku run bin/generate-demo-data.js --force-production
+./heroku.sh run bin/generate-demo-data.js --force-production
 ....
 
 We have to run `heroku run bash` instead of `heroku ps:exec` because the second command does not set `DATABASE_URL`:
@@ -227,7 +233,7 @@ We have to run `heroku run bash` instead of `heroku ps:exec` because the second 
 Edit a file in Heroku to debug that you are trying to run manually, e.g. by adding print commands, uses https://github.com/hakash/termit[] minimal https://en.wikipedia.org/wiki/GNU_nano[nano]-like text editor:
 
 ....
-heroku ps:exec
+./heroku.sh ps:exec
 termit app.js
 ....
 
@@ -572,15 +578,27 @@ Methodology:
 * hardware: Lenovo ThinkPad P51
 * browser: Chromium 91
 
-== Anti-sopam
+== Anti-spam
 
 That website has no signup verification mechanism, users can just spam it at will via API.
 
 Some things we could do include:
 
+* log IPs. Started doing that at https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/commit/f2ee0bea8c081fbd6bb42052a15ed55f3909ab3f on account creation. The only way to check IPs currently is through direct database access on:
++
+....
+./heroku.sh psql
+....
++
+e.g.:
++
+....
+./heroku.sh psql -c 'SELECT username, ip createdAt FROM "User" WHERE ip IS NOT NULL ORDER BY ip'
+....
++
+Of course, IP checks can be overcome with TOR.
 * captcha for signup. Captcha for post creation would be too annoying.
-* log IP on every object creation, add on column of each object, then blacklist IPs on code
-* limit number of articles and comments per user
+* limit number of articles and comments per user. So spammers would need to create new accounts, and therefore redo captchas. 25 posts per account feels like enough.
 
 Some spam events:
 
@@ -589,5 +607,6 @@ Some spam events:
 Did a bit of updating with `./heroku.sh psql`:
 +
 ....
-UPDATE "Tag" SET name = REPLACE(name, '', '六四事件法轮功新疆再教育營')
+./heroku.sh psql -c "UPDATE \"Tag\" SET name = REPLACE(name, '', '六四事件法轮功新疆再教育營')"
+
 ....
