@@ -1,12 +1,11 @@
 const router = require('express').Router()
 
+const lib = require('../lib')
+
 // return a list of tags
 router.get('/', async function(req, res, next) {
   try {
-    const tagList = (await req.app.get('sequelize').models.Tag.findAll({
-      order: [['createdAt', 'DESC'], ['name', 'ASC']],
-    })).map(tag => tag.name)
-    return res.json({ tags: tagList })
+    return res.json({ tags: await lib.getIndexTags(req.app.get('sequelize')) })
   } catch(error) {
     next(error);
   }

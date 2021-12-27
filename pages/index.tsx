@@ -7,6 +7,7 @@ import Tags from "components/Tags";
 import TabList from "components/TabList";
 import { APP_NAME } from "lib/utils/constant";
 import getLoggedInUser from "lib/utils/getLoggedInUser";
+import { getIndexTags } from 'lib'
 import { AppContext, resetIndexState } from 'libts'
 
 const IndexPage = ({ articles, articlesCount, tags }) => {
@@ -71,7 +72,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       articles: await Promise.all(articles.rows.map(article => article.toJson())),
       articlesCount: articles.count,
-      tags: (await sequelize.models.Tag.findAll()).map(tag => tag.name),
+      tags: await getIndexTags(sequelize),
     },
     revalidate,
   }

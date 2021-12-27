@@ -34,6 +34,13 @@ class ValidationError extends Error {
 }
 exports.ValidationError = ValidationError
 
+async function getIndexTags(sequelize) {
+  return (await sequelize.models.Tag.findAll({
+    order: [['createdAt', 'DESC'], ['name', 'ASC']],
+  })).map(tag => tag.name)
+}
+exports.getIndexTags = getIndexTags
+
 function validatePositiveInteger(s) {
   const i = Number(s)
   let ok = s !== '' && Number.isInteger(i) && i >= 0

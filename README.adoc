@@ -189,6 +189,8 @@ This has the following effects:
 +
 We've logged their IP as 31.183.168.37, let's see if it changes with time. That IP is from Poland, which is consistent with Google Analytics results, which are overwhelmingly from Poland, suggesting a bot within that country, which also does GET on the web UI.
 * whenever a new object is created, such as article, comment or user, if we already have 1000 objects of that type, delete the oldest object of that type, so as to keep the database size limited. TODO implement for Tags, Follows and Likes.
+* "Source code for this website" banner on top with link to this repository
+* clearer tags input message "Press Enter, Tab or Comma to add a tag"
 
 === Heroku instance management
 

@@ -1,10 +1,9 @@
+import { isDemo } from "config";
 import React from "react";
 
 const TagInput = ({ tagList, addTag, removeTag }) => {
   const [tag, setTag] = React.useState("");
-
   const changeTagInput = (e) => setTag(e.target.value);
-
   const handleTagInputKeyDown = (e) => {
     switch (e.keyCode) {
       case 13: // Enter
@@ -17,31 +16,27 @@ const TagInput = ({ tagList, addTag, removeTag }) => {
         break;
     }
   };
-
   const handleAddTag = () => {
     if (!!tag) {
       addTag(tag);
       setTag("");
     }
   };
-
   const handleRemoveTag = (tag) => {
     removeTag(tag);
   };
-
   return (
     <>
       <fieldset className="form-group">
         <input
           className="form-control"
           type="text"
-          placeholder="Enter tags"
+          placeholder={isDemo ? "Press Enter, Tab or Comma to add a tag" : "Enter tags"}
           value={tag}
           onChange={changeTagInput}
           onBlur={handleAddTag}
           onKeyDown={handleTagInputKeyDown}
         />
-
         <div className="tag-list">
           {tagList.map((tag, index) => (
             <span className="tag-default tag-pill" key={index}>
