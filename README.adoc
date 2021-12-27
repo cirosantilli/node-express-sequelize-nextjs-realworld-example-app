@@ -582,6 +582,8 @@ Methodology:
 
 That website has no signup verification mechanism, users can just spam it at will via API.
 
+However, until someone decides to spam nonstop 24/7 to the point of actually preventing other users from viewing their own posts, it doesn't matter that much. Remember that in <<demo-mode>> we limit the ammount of articles and comments, so unless we implement further restrictions, a spammer could easily replace all data with their own.
+
 Some things we could do include:
 
 * log IPs. Started doing that at https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/commit/f2ee0bea8c081fbd6bb42052a15ed55f3909ab3f on account creation. The only way to check IPs currently is through direct database access on:
@@ -593,11 +595,13 @@ Some things we could do include:
 e.g.:
 +
 ....
-./heroku.sh psql -c 'SELECT username, ip createdAt FROM "User" WHERE ip IS NOT NULL ORDER BY ip'
+./heroku.sh psql -c 'SELECT username, email, ip createdAt FROM "User" WHERE ip IS NOT NULL ORDER BY ip'
 ....
 +
-Of course, IP checks can be overcome with TOR.
-* captcha for signup. Captcha for post creation would be too annoying.
+Of course, IP checks can be overcome with Tor, and blocking IPs is really messy because you can take down entire institutions.
+* captcha for signup. Captcha for post creation would be too annoying. This would immediatly block any bots, but not manual spammers.
++
+hcapcha looks decent: https://docs.hcaptcha.com/[]. We have to make a request from our server to theirs to verify user login.
 * limit number of articles and comments per user. So spammers would need to create new accounts, and therefore redo captchas. 25 posts per account feels like enough.
 
 Some spam events:
