@@ -173,7 +173,7 @@ e.g. to delete, recreate and reseed the database:
 ./heroku.sh run bin/generate-demo-data.js --force-production
 ....
 
-We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store
+We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store but it has worked so far.
 
 === Demo mode
 
@@ -250,6 +250,16 @@ This data will correspond exactly to the static prerendered data, but with the u
 This approach feels simple enough that it could even be automated in a framework manner. One day, one day.
 
 It is true that the pass-down approach goes a bit against the phylosophy of `useSWR`, but there isn't much we can do, e.g. `/` fetches all articles with `/api/articles`, and determines favorite states of multiple posts. Therefore, we if hardcoded `useSWR` for the article under `FavoriteArticleButton`, that would fetch the states from each article separately `/api/articles/[slug]`. We want that to happen on single article inspection however.
+
+=== No flickering and automatic updates
+
+Our general ISR philosophy is: the only flickering or automatic page update allowed is from loading spinner to the final data.
+
+New data can only ever happen if the user presses F5.
+
+We do have one exception though: the front page, as it would be too confusing for users to not see their newly created post there. An update might happen on that page therefore.
+
+This is the kind of thing that suggests that SSR is generally what you want for index/find pages.
 
 == What works with JavaScript turned off
 
