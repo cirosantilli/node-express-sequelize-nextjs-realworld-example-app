@@ -1,3 +1,13 @@
+a.tag-default.tag-pill:hover {
+  background-color: #515a61;
+}
+
+.hide-text {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .loading-spinner {
   position: relative;
   width: 40px;
@@ -39,8 +49,4 @@
 /* https://github.com/gothinkster/angular-realworld-example-app/blob/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f/src/app/shared/article-helpers/article-list.component.css#L1 */
 .link {
   cursor: pointer;
-}
-
-a.tag-default.tag-pill:hover {
-  background-color: #515a61;
 }
