@@ -12,7 +12,7 @@ import EditProfileButton from "components/EditProfileButton";
 import FollowUserButton, { FollowUserButtonContext } from "components/FollowUserButton";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import { AppContext } from 'libts'
 import routes from "routes";
 
@@ -27,7 +27,7 @@ const ProfileHoc = tab => {
     const username = profile?.username
     const bio = profile?.bio
     const image = profile?.image
-    const loggedInUser = getLoggedInUser()
+    const loggedInUser = useLoggedInUser()
     const isCurrentUser = loggedInUser && username === loggedInUser?.username
     const [following, setFollowing] = React.useState(false)
     React.useEffect(() => { setFollowing(profile?.following) }, [profile?.following])
@@ -79,7 +79,15 @@ const ProfileHoc = tab => {
                     </li>
                   </ul>
                 </div>
-                <ArticleList {...{articles, articlesCount, page, setPage, what: tab}} />
+                <ArticleList {...{
+                  articles,
+                  articlesCount,
+                  loggedInUser,
+                  page,
+                  setPage,
+                  ssr: false,
+                  what: tab,
+                }} />
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ import CustomLink from "components/CustomLink";
 import Maybe from "components/Maybe";
 import NavLink from "components/NavLink";
 import { APP_NAME } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'
 import routes from "routes";
 
@@ -14,7 +14,7 @@ const NavbarItem = ({ children }) => (
 )
 
 const Navbar = () => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const { setPage, setTab } = React.useContext(AppContext)
   const clickHandler = () => resetIndexState(setPage, setTab, loggedInUser)
   return (

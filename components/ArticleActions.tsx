@@ -8,11 +8,11 @@ import CustomLink from "components/CustomLink";
 import Maybe from "components/Maybe";
 import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import routes from "routes";
 
 const ArticleActions = ({ article }) => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const router = useRouter();
   const {
     query: { pid },

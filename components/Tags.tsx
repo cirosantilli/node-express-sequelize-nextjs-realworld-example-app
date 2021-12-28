@@ -13,14 +13,12 @@ const Tags = ({tags, ssr, setTab, setPage, setTag}) => {
   if (error) return <ErrorMessage message="Cannot load popular tags..." />;
   if (data) {
     ({ tags } = data)
-  } else if (!ssr) {
-    return <LoadingSpinner />
   }
   return (
     <div className="tag-list">
       {tags?.map(tag => (
         <a
-          className="tag-default tag-pill"
+          className="link tag-default tag-pill"
           key={tag}
           onClick={() => {
             setTab('tag')

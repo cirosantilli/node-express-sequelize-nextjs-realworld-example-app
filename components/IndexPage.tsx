@@ -2,16 +2,17 @@ import Head from "next/head";
 import React from "react";
 
 import ArticleList from "components/ArticleList";
+import CustomLink from "components/CustomLink";
 import Maybe from "components/Maybe";
 import Tags from "components/Tags";
-import TabList from "components/TabList";
 import { APP_NAME } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'
+import routes from "routes";
 
 const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
   const { page, setPage, tab, setTab, tag, setTag } = React.useContext(AppContext)
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   React.useEffect(() => {
     resetIndexState(setPage, setTab, loggedInUser)
   }, [loggedInUser])
@@ -36,11 +37,44 @@ const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
           <div className="row">
             <div className="col-md-9">
               <div className="feed-toggle">
-                <TabList {...{tab, setTab, setPage, tag}} />
+                <ul className="nav nav-pills outline-active">
+                  <Maybe test={loggedInUser}>
+                    <li className="nav-item">
+                      <a
+                        className={`link nav-link${tab === 'feed' ? ' active' : ''}`}
+                        onClick={() => {
+                          setPage(0)
+                          setTab('feed')
+                        }}
+                      >
+                        Your Feed
+                      </a>
+                    </li>
+                  </Maybe>
+                  <li className="nav-item">
+                    <a
+                      className={`link nav-link${tab === 'global' ? ' active' : ''}`}
+                      onClick={() => {
+                        setPage(0)
+                        setTab('global')
+                      }}
+                    >
+                      Global Feed
+                    </a>
+                  </li>
+                  <Maybe test={tab === 'tag'}>
+                    <li className="nav-item">
+                      <a className="link nav-link active" >
+                        <i className="ion-pound" /> {tag}
+                      </a>
+                    </li>
+                  </Maybe>
+                </ul>
               </div>
               <ArticleList {...{
                 articles,
                 articlesCount,
+                loggedInUser,
                 page,
                 setPage,
                 what: tab,

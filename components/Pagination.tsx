@@ -9,7 +9,6 @@ interface PaginationProps {
   showPagesMax: number;
   currentPage: number;
   setCurrentPage: React.Dispatch<any> | undefined;
-  fetchURL: string;
 }
 
 function PaginationItem(props) {
@@ -24,7 +23,7 @@ function PaginationItem(props) {
   }
   return (
     <li className={`page-item${className}`} {...newProps}>
-      <a className="page-link">{props.children}</a>
+      <a className="link page-link">{props.children}</a>
     </li>
   )
 }
@@ -33,11 +32,10 @@ function getRange(start, end) {
   return [...Array(end - start + 1)].map((_, i) => start + i);
 };
 
-function makeSetPageCallback(setPage, pageIndex, fetchURL) {
+function makeSetPageCallback(setPage, pageIndex) {
   return (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     e.preventDefault();
     setPage(pageIndex);
-    trigger(fetchURL);
   }
 }
 
@@ -47,7 +45,6 @@ const Pagination = ({
   showPagesMax,
   currentPage,
   setCurrentPage,
-  fetchURL,
 }: PaginationProps) => {
 
   // - totalPages
@@ -77,10 +74,10 @@ const Pagination = ({
     }
   }
   const pages = articlesCount > 0 ? getRange(firstPage, lastPage) : [];
-  const handleFirstClick = makeSetPageCallback(setCurrentPage, 0, fetchURL)
-  const handlePrevClick = makeSetPageCallback(setCurrentPage, currentPage - 1, fetchURL)
-  const handleNextClick = makeSetPageCallback(setCurrentPage, currentPage + 1, fetchURL)
-  const handleLastClick = makeSetPageCallback(setCurrentPage, totalPages - 1, fetchURL)
+  const handleFirstClick = makeSetPageCallback(setCurrentPage, 0)
+  const handlePrevClick = makeSetPageCallback(setCurrentPage, currentPage - 1)
+  const handleNextClick = makeSetPageCallback(setCurrentPage, currentPage + 1)
+  const handleLastClick = makeSetPageCallback(setCurrentPage, totalPages - 1)
   return (
     <nav>
       <ul className="pagination">
@@ -96,7 +93,7 @@ const Pagination = ({
             <PaginationItem
               key={page.toString()}
               className={isCurrent && "active"}
-              onClick={makeSetPageCallback(setCurrentPage, page, fetchURL)}
+              onClick={makeSetPageCallback(setCurrentPage, page)}
             >
               {page + 1}
             </PaginationItem>

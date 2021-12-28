@@ -6,7 +6,7 @@ import ListErrors from "components/ListErrors";
 import TagInput from "components/TagInput";
 import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import { useCtrlEnterSubmit } from "libts";
 import { AppContext } from 'libts'
 
@@ -63,7 +63,7 @@ export default function makeArticleEditor(isnew: boolean = false) {
     const [isLoading, setLoading] = React.useState(false);
     const [errors, setErrors] = React.useState([]);
     const [posting, dispatch] = React.useReducer(editorReducer, initialState);
-    const loggedInUser = getLoggedInUser()
+    const loggedInUser = useLoggedInUser()
     const router = useRouter();
     const {
       query: { pid },

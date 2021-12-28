@@ -5,7 +5,7 @@ import { mutate } from "swr";
 
 import ListErrors from "components/ListErrors";
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import UserAPI from "lib/api/user";
 import { useCtrlEnterSubmit } from "libts";
 
@@ -19,7 +19,7 @@ const SettingsForm = () => {
     email: "",
     password: "",
   });
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   React.useEffect(() => {
     if (!loggedInUser) return;
     setUserInfo({ ...userInfo, ...loggedInUser });

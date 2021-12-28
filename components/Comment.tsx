@@ -5,11 +5,11 @@ import CustomImage from "components/CustomImage";
 import Maybe from "components/Maybe";
 import DeleteButton from "components/DeleteButton";
 import { formatDate } from "lib/utils/date";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import routes from "routes";
 
 const Comment = ({ comment }) => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const canModify =
     loggedInUser && loggedInUser?.username === comment?.author?.username;
   return (

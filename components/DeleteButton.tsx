@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import { trigger } from "swr";
 
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 
 const DeleteButton = ({ commentId }) => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const router = useRouter();
   const {
     query: { pid },

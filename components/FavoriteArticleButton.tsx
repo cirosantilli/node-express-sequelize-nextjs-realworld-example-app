@@ -3,7 +3,7 @@ import React from "react";
 import Router from "next/router";
 
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 
 const FAVORITED_CLASS = "btn btn-sm btn-primary";
 const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
@@ -11,7 +11,7 @@ const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
 export const FavoriteArticleButtonContext = React.createContext(undefined);
 
 const FavoriteArticleButton = (props) => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const {favorited, setFavorited, favoritesCount, setFavoritesCount} = React.useContext(FavoriteArticleButtonContext);
   let buttonText;
   if (props.showText) {

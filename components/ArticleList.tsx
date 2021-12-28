@@ -12,17 +12,38 @@ import { SERVER_BASE_URL, DEFAULT_LIMIT } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import { AppContext } from "libts";
 
-const ArticleList = props => {
-  const { page, setPage } = props
+
+const ArticleList = ({
+  articles,
+  articlesCount,
+  loggedInUser,
+  page,
+  setPage,
+  what,
+  ssr,
+  tag = undefined,
+}) => {
   const router = useRouter();
-  const { asPath, pathname, query } = router;
-  const { favorite, follow, tag, pid } = query;
+  const { query } = router;
+  const { pid } = query;
+  // The page can be seen up to date from SSR without refetching,
+  // so we skip the fetch.
+  let ssrSkipFetch = (
+    page === 0 &&
+    (
+      (loggedInUser && what === 'feed') ||
+      (!loggedInUser && what === 'global')
+    )
+  )
   let fetchURL = (() => {
-    if (props.ssr && page === 0) {
-      // With SSR, we don't need to fetch page 0 ever.
+    if (
+      loggedInUser === undefined ||
+      (ssr && ssrSkipFetch)
+    ) {
+      // This makes SWR not fetch.
       return null
     }
-    switch (props.what) {
+    switch (what) {
       case 'favorites':
         return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&favorited=${encodeURIComponent(
           String(pid)
@@ -32,7 +53,7 @@ const ArticleList = props => {
           String(pid)
         )}&offset=${page * DEFAULT_LIMIT}`;
       case 'tag':
-        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&tag=${encodeURIComponent(props.tag)}&offset=${
+        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&tag=${encodeURIComponent(tag)}&offset=${
           page * DEFAULT_LIMIT
         }`;
       case 'feed':
@@ -41,12 +62,15 @@ const ArticleList = props => {
         }`;
       case 'global':
         return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&offset=${page * DEFAULT_LIMIT}`;
+      case undefined:
+        // We haven't decided yet because we haven't decided if we are logged in or out yet.
+        return null
       default:
-        throw new Error(`Unknown search: ${props.what}`)
+        throw new Error(`Unknown search: ${what}`)
     }
   })()
   const { data, error } = useSWR(fetchURL, fetcher());
-  let articles, articlesCount, showSsr = false
+  let showSpinner = true
   if (data) {
     ({ articles, articlesCount } = data)
   } else if (
@@ -55,16 +79,19 @@ const ArticleList = props => {
     // since both of those share the `/` URL.
     // Instead, we want the loader to flicker.
     // https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/12
-    page === 0 &&
     (
-      props.what !== 'feed' ||
-      // When doing ssr we actually check if the user is logged in on the Next.js GET,
-      // and so we can return the feed.
-      props.ssr
-    )
+      !ssr &&
+      page === 0 &&
+      (
+        // These don't have their own URLs.
+        what !== 'feed' &&
+        what !== 'tag'
+      )
+    ) ||
+    // SSR has all the data it needs, so for sure we won't show the spinner.
+    ssr && (ssrSkipFetch || loggedInUser === undefined)
   ) {
-    ({ articles, articlesCount } = props)
-    showSsr = true
+    showSpinner = false
   } else {
     [ articles, articlesCount ] = [[], 0]
   }
@@ -93,7 +120,7 @@ const ArticleList = props => {
   }, Object.assign(articles.map(a => a.favorited).concat(articles.map(a => a.favoritesCount)), {length: DEFAULT_LIMIT}))
 
   if (error) return <ErrorMessage message="Cannot load recent articles..." />;
-  if (!data && !showSsr) return <LoadingSpinner />;
+  if (!data && showSpinner) return <LoadingSpinner />;
   if (articles?.length === 0) {
     return (<div className="article-preview">No articles are here... yet.</div>);
   }
@@ -116,7 +143,6 @@ const ArticleList = props => {
           showPagesMax={10}
           currentPage={page}
           setCurrentPage={setPage}
-          fetchURL={fetchURL}
         />
       </Maybe>
     </>

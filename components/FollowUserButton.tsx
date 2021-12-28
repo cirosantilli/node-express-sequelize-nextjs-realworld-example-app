@@ -4,14 +4,14 @@ import Router from "next/router";
 
 import UserAPI from "lib/api/user";
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 
 export const FollowUserButtonContext = React.createContext(undefined);
 
 const FollowUserButton = ({
   profile,
 }) => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const {following, setFollowing} = React.useContext(FollowUserButtonContext);
   const { username } = profile;
   const isCurrentUser = loggedInUser && username === loggedInUser?.username;

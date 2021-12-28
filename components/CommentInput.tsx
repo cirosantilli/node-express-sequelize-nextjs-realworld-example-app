@@ -6,12 +6,12 @@ import { trigger } from "swr";
 import CustomImage from "components/CustomImage";
 import CustomLink from "components/CustomLink";
 import { SERVER_BASE_URL } from "lib/utils/constant";
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 import { useCtrlEnterSubmit } from "libts";
 import routes from "routes";
 
 const CommentInput = () => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const router = useRouter();
   const {
     query: { pid },

@@ -37,6 +37,10 @@
 }
 
 /* https://github.com/gothinkster/angular-realworld-example-app/blob/9e8c49514ee874e5e0bbfe53ffdba7d2fd0af36f/src/app/shared/article-helpers/article-list.component.css#L1 */
-.page-link {
+.link {
   cursor: pointer;
+}
+
+a.tag-default.tag-pill:hover {
+  background-color: #515a61;
 }

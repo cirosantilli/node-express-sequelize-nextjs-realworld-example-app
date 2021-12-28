@@ -1,6 +1,6 @@
 import React from "react";
 
-import getLoggedInUser from "lib/utils/getLoggedInUser";
+import useLoggedInUser from "lib/utils/useLoggedInUser";
 
 export const AppContext = React.createContext<{
   page: number
@@ -22,14 +22,22 @@ export const AppContext = React.createContext<{
   setTitle: undefined,
 });
 
+function getTabForLoggedInUser(loggedInUser) {
+  if (loggedInUser === undefined) {
+    return undefined
+  } else {
+    return loggedInUser === null ? 'global' : 'feed'
+  }
+}
+
 export const resetIndexState = (setPage, setTab, loggedInUser) => {
   setPage(0)
-  setTab(loggedInUser ? 'feed' : 'global')
+  setTab(getTabForLoggedInUser(loggedInUser))
 }
 
 // Global state.
 export const AppContextProvider = ({ children }) => {
-  const loggedInUser = getLoggedInUser()
+  const loggedInUser = useLoggedInUser()
   const [title, setTitle] = React.useState()
   // This state has to be lifted to app tolevel because there
   // are many things that need to set it from outside of article lists,
@@ -39,7 +47,7 @@ export const AppContextProvider = ({ children }) => {
   // are in global while logged in, it will move you to feed,
   // and should reset the page to 0).
   const [page, setPage] = React.useState(0)
-  const [tab, setTab] = React.useState(loggedInUser ? 'feed' : 'global')
+  const [tab, setTab] = React.useState(getTabForLoggedInUser(loggedInUser))
   const [tag, setTag] = React.useState('')
   return <AppContext.Provider value={{
     page, setPage,
