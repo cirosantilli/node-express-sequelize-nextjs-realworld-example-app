@@ -171,14 +171,7 @@ router.get('/feed', auth.required, async function(req, res, next) {
     if (!user) {
       return res.sendStatus(401)
     }
-    const {count: articlesCount, rows: articles} = await user.findAndCountArticlesByFollowed(offset, limit)
-    const articlesJson = await Promise.all(articles.map(article => {
-      return article.toJson(user)
-    }))
-    return res.json({
-      articles: articlesJson,
-      articlesCount: articlesCount,
-    })
+    return res.json(await user.findAndCountArticlesByFollowedToJson(offset, limit))
   } catch(error) {
     next(error);
   }

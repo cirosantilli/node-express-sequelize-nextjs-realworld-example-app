@@ -7,6 +7,7 @@ import SettingsForm from "components/SettingsForm";
 import checkLogin from "lib/utils/checkLogin";
 import storage from "lib/utils/storage";
 import { AppContext } from 'libts'
+import { deleteCookie } from 'front'
 
 const Settings = () => {
   React.useEffect(() => {
@@ -20,6 +21,7 @@ const Settings = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     window.localStorage.removeItem("user");
+    deleteCookie('auth')
     mutate("user", null);
     Router.push(`/`).then(() => trigger("user"));
   };

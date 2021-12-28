@@ -1,10 +1,9 @@
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
-
-const secret = require('../config').secret
-
 const Sequelize = require('sequelize')
 const { DataTypes, Op } = Sequelize
+
+const config = require('../config')
 
 module.exports = (sequelize) => {
   let User = sequelize.define(
@@ -61,7 +60,10 @@ module.exports = (sequelize) => {
       }
     },
     {
-      indexes: [{ fields: ['username'] }, { fields: ['email'] }]
+      indexes: [
+        { fields: ['username'] },
+        { fields: ['email'] }
+      ]
     }
   )
 
@@ -69,14 +71,13 @@ module.exports = (sequelize) => {
     let today = new Date()
     let exp = new Date(today)
     exp.setDate(today.getDate() + 60)
-
     return jwt.sign(
       {
         id: this.id,
         username: this.username,
         exp: parseInt(exp.getTime() / 1000)
       },
-      secret
+      config.secret
     )
   }
 
@@ -130,6 +131,17 @@ module.exports = (sequelize) => {
         },
       ],
     })
+  }
+
+  User.prototype.findAndCountArticlesByFollowedToJson = async function(offset, limit) {
+    const {count: articlesCount, rows: articles} = await this.findAndCountArticlesByFollowed(offset, limit)
+    const articlesJson = await Promise.all(articles.map(article => {
+      return article.toJson(this)
+    }))
+    return {
+      articles: articlesJson,
+      articlesCount,
+    }
   }
 
   User.prototype.getArticleCountByFollowed = async function() {

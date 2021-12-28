@@ -4,6 +4,7 @@ import { mutate } from "swr";
 
 import ListErrors from "components/ListErrors";
 import UserAPI from "lib/api/user";
+import { setCookie } from "front";
 import { useCtrlEnterSubmit } from "libts";
 
 const LoginForm = ({ register = false }) => {
@@ -52,6 +53,7 @@ const LoginForm = ({ register = false }) => {
         }
         data.user.effectiveImage = profileData.profile.image;
         window.localStorage.setItem("user", JSON.stringify(data.user));
+        setCookie('auth', data.user.token)
         mutate("user", data.user);
         Router.push("/");
       }

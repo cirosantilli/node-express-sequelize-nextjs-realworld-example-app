@@ -18,6 +18,10 @@ const ArticleList = props => {
   const { asPath, pathname, query } = router;
   const { favorite, follow, tag, pid } = query;
   let fetchURL = (() => {
+    if (props.ssr && page === 0) {
+      // With SSR, we don't need to fetch page 0 ever.
+      return null
+    }
     switch (props.what) {
       case 'favorites':
         return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&favorited=${encodeURIComponent(
@@ -52,7 +56,12 @@ const ArticleList = props => {
     // Instead, we want the loader to flicker.
     // https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/12
     page === 0 &&
-    props.what !== 'feed'
+    (
+      props.what !== 'feed' ||
+      // When doing ssr we actually check if the user is logged in on the Next.js GET,
+      // and so we can return the feed.
+      props.ssr
+    )
   ) {
     ({ articles, articlesCount } = props)
     showSsr = true

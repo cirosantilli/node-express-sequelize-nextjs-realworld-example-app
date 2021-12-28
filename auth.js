@@ -1,5 +1,6 @@
 const jwt = require('express-jwt')
 
+const front = require('./front')
 const secret = require('./config').secret
 
 function getTokenFromHeader(authorization) {
@@ -13,10 +14,24 @@ function getTokenFromHeader(authorization) {
 }
 
 function getTokenFromRequest(req) {
-  return getTokenFromHeader(req.headers.authorization)
+  let ret = getTokenFromHeader(req.headers.authorization)
+  if (ret)
+    return ret
+  // If one day we want to allow API GET requests with the cookie.
+  // Does not work for Next.js routes.
+  //if (
+  //  req.method === 'GET' ||
+  //  req.method === 'HEAD' ||
+  //  req.method === 'OPTIONS'
+  //) {
+  //  ret = front.getCookieFromReq(req, 'auth')
+  //  if (ret)
+  //    return ret
+  //}
+  return null
 }
 
-const auth = {
+module.exports = {
   required: jwt({
     secret: secret,
     userProperty: 'payload',
@@ -29,5 +44,3 @@ const auth = {
     getToken: getTokenFromRequest
   })
 }
-
-module.exports = auth

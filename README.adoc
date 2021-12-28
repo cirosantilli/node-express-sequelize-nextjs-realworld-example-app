@@ -239,7 +239,16 @@ termit app.js
 
 == ISR vs SSR
 
-ISR is very tempting, but is has some possibly drawbacks. Part of the goal of this repository is to decide if it is worth already or not.
+ISR is an optimization that aims to:
+
+* reduce load times
+* reduce server load
+
+Like all optimizations, it makes things more complex, so you really have to benchmark things to see if you need them.
+
+As mentioned at: <<ssr-version>>, this is one of the main goals of this website.
+
+The main complexity increase of ISR is that you have to worry about React `usEffect` chains of events after the initial page load, which can be very hard to debug.
 
 With ISR, we want article contents and user pages to load instantly from a prerendered cache, as if the user were logged out.
 
@@ -257,7 +266,19 @@ This data will correspond exactly to the static prerendered data, but with the u
 
 This approach feels simple enough that it could even be automated in a framework manner. One day, one day.
 
-It is true that the pass-down approach goes a bit against the phylosophy of `useSWR`, but there isn't much we can do, e.g. `/` fetches all articles with `/api/articles`, and determines favorite states of multiple posts. Therefore, we if hardcoded `useSWR` for the article under `FavoriteArticleButton`, that would fetch the states from each article separately `/api/articles/[slug]`. We want that to happen on single article inspection however.
+It is true that the pass-down approach goes a bit against the philosophy of `useSWR`, but there isn't much we can do, e.g. `/` fetches all articles with `/api/articles`, and determines favorite states of multiple posts. Therefore, we if hardcoded `useSWR` for the article under `FavoriteArticleButton`, that would fetch the states from each article separately `/api/articles/[slug]`. We want that to happen on single article inspection however.
+
+=== SSR version
+
+We are slowly building an SSR version of the website under the `/ssr` prefix. E.g. `/ssr` will be a SSR version of the ISR at `/`, `/ssr/login` of `/login`, and so on.
+
+The most noticeable thing in SSR is if you open the DevTools that there are no `GET` requests to the `/api` after the page loads, except where we are forced to do them by the terrible design of Realworld not having separate URLs for pagination and some tabs.
+
+You will also never see the loading spinner. The page will just load all at once in one go.
+
+This will allows us to very directly compare if there are any noticeable user experience differences.
+
+TODO It would also be amazing to test server overload with this, but that is harder. One day.
 
 === No flickering and automatic updates
 
@@ -568,6 +589,19 @@ only the last `--folder` is used. Some threads say that multiple ones can be use
 
 * https://stackoverflow.com/questions/60057009/how-to-run-single-request-from-the-collection-in-newman
 * https://stackoverflow.com/questions/52519415/how-to-read-two-folder-with-newman
+
+== Authentication
+
+As specified by Realworld, we use JWT authentication.
+
+This can happen in two ways:
+
+* `Authentication` header ("standard JWT"): sent to the API routes. Immune to XSS. Stored in https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage[window.localStorage]. Requires JavaScript.
+* a cookie that contains a copy of the JWT, used only on safe HTTP methods, notably GET.
++
+The goal of the cookie auth is allow true SSR, and reduce complexity (`useEffect` debugging hell). This way, on every page load Next.js immediately sees that the user is logged in, and `getServerSideProps` is able to return the appropriate page rendered for that specific user by reading the cookie in the request headers. Note that is not possible in ISR.
+
+Because cookies are used exclusively for safe methods, we don't need to worry about implementing the https://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important/72569#72569[synchronizer token pattern].
 
 == Benchmarks
 
