@@ -529,6 +529,15 @@ Run eslint checks:
 npm run lint
 ....
 
+These lint checks include both:
+
+* https://github.com/prettier/prettier[prettier] checks, which do style checking. Since it is just style checks, any problems with those can be fixed automatically by prettier's auto-refactoring functionality with:
++
+....
+npm run format
+....
+* more functional checks, including important checks such as those provided by eslint-config-react-hooks  as opposed to more functional thing 
+
 == Testing
 
 When running:
