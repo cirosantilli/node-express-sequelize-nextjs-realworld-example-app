@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetStaticProps } from 'next'
 
 import { revalidate } from "config";
-import sequelize from "lib/db";
+import sequelize from "back/db";
 import { getIndexTags } from 'lib'
 import { DEFAULT_LIMIT  } from "lib/utils/constant";
 

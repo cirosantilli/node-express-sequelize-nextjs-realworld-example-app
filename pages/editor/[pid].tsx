@@ -1,10 +1,10 @@
 import makeArticleEditor from "front/ArticleEditor";
 
-import { getStaticPropsArticle } from "lib/article";
+import { getStaticPropsArticle } from "back/ArticlePage";
 
 // Backend only.
 
-import sequelize from "lib/db";
+import sequelize from "back/db";
 
 export const getServerSideProps = getStaticPropsArticle();
 

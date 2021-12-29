@@ -151,6 +151,6 @@ export default ArticlePage;
 
 // Server only.
 
-import { getStaticPathsArticle, getStaticPropsArticle } from "lib/article";
+import { getStaticPathsArticle, getStaticPropsArticle } from "back/ArticlePage";
 export const getStaticPaths = getStaticPathsArticle;
 export const getStaticProps = getStaticPropsArticle(true, true);
