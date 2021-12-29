@@ -8,61 +8,61 @@ import { setCookie } from 'front'
 import { useCtrlEnterSubmit } from 'libts'
 
 const LoginForm = ({ register = false }) => {
-  const [isLoading, setLoading] = React.useState(false);
-  const [errors, setErrors] = React.useState([]);
-  let username, setUsername;
+  const [isLoading, setLoading] = React.useState(false)
+  const [errors, setErrors] = React.useState([])
+  let username, setUsername
   if (register) {
-    [username, setUsername] = React.useState("");
+    [username, setUsername] = React.useState("")
   }
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  let handleUsernameChange;
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
+  let handleUsernameChange
   if (register) {
     handleUsernameChange = React.useCallback(
       (e) => setUsername(e.target.value),
       []
-    );
+    )
   }
   const handleEmailChange = React.useCallback(
     (e) => setEmail(e.target.value),
     []
-  );
+  )
   const handlePasswordChange = React.useCallback(
     (e) => setPassword(e.target.value),
     []
-  );
+  )
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
     try {
-      let data, status;
+      let data, status
       if (register) {
-        ({ data, status } = await UserAPI.register(username, email, password));
+        ({ data, status } = await UserAPI.register(username, email, password))
       } else {
-        ({ data, status } = await UserAPI.login(email, password));
+        ({ data, status } = await UserAPI.login(email, password))
       }
       if (status !== 200 && data?.errors) {
-        setErrors(data.errors);
+        setErrors(data.errors)
       }
       if (data?.user) {
         // We fetch from /profiles/:username again because the return from /users/login above
         // does not contain the image placeholder.
-        const { data: profileData, status: profileStatus } = await UserAPI.get(data.user.username);
+        const { data: profileData, status: profileStatus } = await UserAPI.get(data.user.username)
         if (profileStatus !== 200) {
-          setErrors(profileData.errors);
+          setErrors(profileData.errors)
         }
-        data.user.effectiveImage = profileData.profile.image;
-        window.localStorage.setItem("user", JSON.stringify(data.user));
+        data.user.effectiveImage = profileData.profile.image
+        window.localStorage.setItem("user", JSON.stringify(data.user))
         setCookie('auth', data.user.token)
-        mutate("user", data.user);
-        Router.push("/");
+        mutate("user", data.user)
+        Router.push("/")
       }
     } catch (error) {
-      console.error(error);
+      console.error(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   useCtrlEnterSubmit(handleSubmit)
   return (
     <>
@@ -108,7 +108,7 @@ const LoginForm = ({ register = false }) => {
         </fieldset>
       </form>
     </>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

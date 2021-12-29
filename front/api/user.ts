@@ -4,17 +4,17 @@ import { SERVER_BASE_URL } from 'lib/utils/constant'
 
 const UserAPI = {
   current: async () => {
-    const user: any = window.localStorage.getItem("user");
-    const token = user?.token;
+    const user: any = window.localStorage.getItem("user")
+    const token = user?.token
     try {
       const response = await axios.get(`/user`, {
         headers: {
           Authorization: `Token ${encodeURIComponent(token)}`,
         },
-      });
-      return response;
+      })
+      return response
     } catch (error) {
-      return error.response;
+      return error.response
     }
   },
   login: async (email, password) => {
@@ -27,10 +27,10 @@ const UserAPI = {
             "Content-Type": "application/json",
           },
         }
-      );
-      return response;
+      )
+      return response
     } catch (error) {
-      return error.response;
+      return error.response
     }
   },
   register: async (username, email, password) => {
@@ -43,10 +43,10 @@ const UserAPI = {
             "Content-Type": "application/json",
           },
         }
-      );
-      return response;
+      )
+      return response
     } catch (error) {
-      return error.response;
+      return error.response
     }
   },
   save: async (user) => {
@@ -59,15 +59,15 @@ const UserAPI = {
             "Content-Type": "application/json",
           },
         }
-      );
-      return response;
+      )
+      return response
     } catch (error) {
-      return error.response;
+      return error.response
     }
   },
   follow: async (username) => {
-    const user: any = JSON.parse(window.localStorage.getItem("user"));
-    const token = user?.token;
+    const user: any = JSON.parse(window.localStorage.getItem("user"))
+    const token = user?.token
     try {
       const response = await axios.post(
         `${SERVER_BASE_URL}/profiles/${username}/follow`,
@@ -77,15 +77,15 @@ const UserAPI = {
             Authorization: `Token ${encodeURIComponent(token)}`,
           },
         }
-      );
-      return response;
+      )
+      return response
     } catch (error) {
-      return error.response;
+      return error.response
     }
   },
   unfollow: async (username) => {
-    const user: any = JSON.parse(window.localStorage.getItem("user"));
-    const token = user?.token;
+    const user: any = JSON.parse(window.localStorage.getItem("user"))
+    const token = user?.token
     try {
       const response = await axios.delete(
         `${SERVER_BASE_URL}/profiles/${username}/follow`,
@@ -94,15 +94,15 @@ const UserAPI = {
             Authorization: `Token ${encodeURIComponent(token)}`,
           },
         }
-      );
-      return response;
+      )
+      return response
     } catch (error) {
-      return error.response;
+      return error.response
     }
   },
   get: async (username) => {
     return axios.get(`${SERVER_BASE_URL}/profiles/${username}`)
   }
-};
+}
 
-export default UserAPI;
+export default UserAPI

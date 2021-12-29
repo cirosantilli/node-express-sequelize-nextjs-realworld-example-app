@@ -20,7 +20,7 @@ export const AppContext = React.createContext<{
   setTag: undefined,
   title: '',
   setTitle: undefined,
-});
+})
 
 function getTabForLoggedInUser(loggedInUser) {
   if (loggedInUser === undefined) {
@@ -57,7 +57,7 @@ export const AppContextProvider = ({ children }) => {
   }}>
     {children}
   </AppContext.Provider>
-};
+}
 
 export function useCtrlEnterSubmit(handleSubmit) {
   React.useEffect(() => {
@@ -66,9 +66,9 @@ export function useCtrlEnterSubmit(handleSubmit) {
         handleSubmit(e)
       }
     }
-    document.addEventListener('keydown', ctrlEnterListener);
+    document.addEventListener('keydown', ctrlEnterListener)
     return () => {
-      document.removeEventListener('keydown', ctrlEnterListener);
-    };
-  });
+      document.removeEventListener('keydown', ctrlEnterListener)
+    }
+  })
 }

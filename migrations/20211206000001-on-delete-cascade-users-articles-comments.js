@@ -10,4 +10,4 @@ module.exports = {
     await queryInterface.changeColumn('Comment', 'articleId', { onDelete: 'NO ACTION', transaction })
     await queryInterface.changeColumn('Comment', 'authorId', { onDelete: 'NO ACTION', transaction })
   })
-};
+}

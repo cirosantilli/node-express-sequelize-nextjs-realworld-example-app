@@ -12,18 +12,18 @@ import routes from 'routes'
 
 const CommentInput = () => {
   const loggedInUser = useLoggedInUser()
-  const router = useRouter();
+  const router = useRouter()
   const {
     query: { pid },
-  } = router;
-  const [content, setContent] = React.useState("");
-  const [isLoading, setLoading] = React.useState(false);
+  } = router
+  const [content, setContent] = React.useState("")
+  const [isLoading, setLoading] = React.useState(false)
   const handleChange = React.useCallback((e) => {
-    setContent(e.target.value);
-  }, []);
+    setContent(e.target.value)
+  }, [])
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
     await axios.post(
       `${SERVER_BASE_URL}/articles/${encodeURIComponent(String(pid))}/comments`,
       JSON.stringify({
@@ -37,11 +37,11 @@ const CommentInput = () => {
           Authorization: `Token ${encodeURIComponent(loggedInUser?.token)}`,
         },
       }
-    );
-    setLoading(false);
-    setContent("");
-    trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`);
-  };
+    )
+    setLoading(false)
+    setContent("")
+    trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`)
+  }
   useCtrlEnterSubmit(handleSubmit)
   if (!loggedInUser) {
     return (
@@ -55,7 +55,7 @@ const CommentInput = () => {
         </CustomLink>
         {' '}to add comments on this article.
       </>
-    );
+    )
   }
   return (
     <>
@@ -86,7 +86,7 @@ const CommentInput = () => {
         </fieldset>
       </form>
     </>
-  );
-};
+  )
+}
 
-export default CommentInput;
+export default CommentInput

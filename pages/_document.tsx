@@ -3,35 +3,33 @@ import React from 'react'
 import { googleAnalyticsId, isProduction } from 'config'
 
 interface IProps {
-  css: any;
+  css: any
 }
 
 class MyDocument extends Document<IProps> {
   static async getInitialProps(ctx) {
-    const initialProps = await Document.getInitialProps(ctx);
-    const { html, head } = ctx.renderPage();
-    return { ...initialProps, html, head };
+    const initialProps = await Document.getInitialProps(ctx)
+    const { html, head } = ctx.renderPage()
+    return { ...initialProps, html, head }
   }
-
   render() {
-    const { ids }: any = this.props;
     return (
       <Html lang="en">
         <Head>
-          {isProduction &&
+          {isProduction && (
             <>
               <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
               <script
                 dangerouslySetInnerHTML={{
-                  __html: `window.dataLayer = window.dataLayer || [];
+                  __html: `window.dataLayer = window.dataLayer || []
 function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${googleAnalyticsId}', { page_path: window.location.pathname });
+gtag('js', new Date())
+gtag('config', '${googleAnalyticsId}', { page_path: window.location.pathname })
 `,
                 }}
               />
             </>
-          }
+          )}
           <link rel="stylesheet" href="//demo.productionready.io/main.css" />
           <link
             rel="stylesheet"
@@ -43,8 +41,8 @@ gtag('config', '${googleAnalyticsId}', { page_path: window.location.pathname });
           <NextScript />
         </body>
       </Html>
-    );
+    )
   }
 }
 
-export default MyDocument;
+export default MyDocument

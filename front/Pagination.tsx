@@ -4,18 +4,18 @@ import { trigger } from 'swr'
 import Maybe from 'front/Maybe'
 
 interface PaginationProps {
-  articlesCount: number;
-  articlesPerPage: number;
-  showPagesMax: number;
-  currentPage: number;
-  setCurrentPage: React.Dispatch<any> | undefined;
+  articlesCount: number
+  articlesPerPage: number
+  showPagesMax: number
+  currentPage: number
+  setCurrentPage: React.Dispatch<any> | undefined
 }
 
 function PaginationItem(props) {
   const newProps = Object.assign({}, props)
   delete newProps.children
   delete newProps.className
-  let className;
+  let className
   if (props.className) {
     className = ' ' + props.className
   } else {
@@ -29,13 +29,13 @@ function PaginationItem(props) {
 }
 
 function getRange(start, end) {
-  return [...Array(end - start + 1)].map((_, i) => start + i);
-};
+  return [...Array(end - start + 1)].map((_, i) => start + i)
+}
 
 function makeSetPageCallback(setPage, pageIndex) {
   return (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-    e.preventDefault();
-    setPage(pageIndex);
+    e.preventDefault()
+    setPage(pageIndex)
   }
 }
 
@@ -52,28 +52,28 @@ const Pagination = ({
   // - lastPage: 0-indexed, inclusive
   const totalPages = Math.ceil(articlesCount / articlesPerPage)
   if (currentPage > totalPages) {
-    currentPage = totalPages;
+    currentPage = totalPages
   }
-  let firstPage = Math.max(0, currentPage - Math.floor(showPagesMax / 2));
-  let lastPage = Math.min(totalPages - 1, currentPage + Math.floor(showPagesMax / 2));
+  let firstPage = Math.max(0, currentPage - Math.floor(showPagesMax / 2))
+  let lastPage = Math.min(totalPages - 1, currentPage + Math.floor(showPagesMax / 2))
   if (lastPage - firstPage + 1 < showPagesMax) {
     if (currentPage < totalPages / 2) {
       lastPage = Math.min(
         totalPages - 1,
         lastPage + (showPagesMax - (lastPage - firstPage))
-      );
+      )
     } else {
-      firstPage = Math.max(1, firstPage - (showPagesMax - (lastPage - firstPage)));
+      firstPage = Math.max(1, firstPage - (showPagesMax - (lastPage - firstPage)))
     }
   }
   if (lastPage - firstPage + 1 > showPagesMax) {
     if (currentPage > totalPages / 2) {
-      firstPage = firstPage + 1;
+      firstPage = firstPage + 1
     } else {
-      lastPage = lastPage - 1;
+      lastPage = lastPage - 1
     }
   }
-  const pages = articlesCount > 0 ? getRange(firstPage, lastPage) : [];
+  const pages = articlesCount > 0 ? getRange(firstPage, lastPage) : []
   const handleFirstClick = makeSetPageCallback(setCurrentPage, 0)
   const handlePrevClick = makeSetPageCallback(setCurrentPage, currentPage - 1)
   const handleNextClick = makeSetPageCallback(setCurrentPage, currentPage + 1)
@@ -88,7 +88,7 @@ const Pagination = ({
           <PaginationItem onClick={handlePrevClick}>{`<`}</PaginationItem>
         </Maybe>
         {pages.map(page => {
-          const isCurrent = !currentPage ? page === 0 : page === currentPage;
+          const isCurrent = !currentPage ? page === 0 : page === currentPage
           return (
             <PaginationItem
               key={page.toString()}
@@ -97,7 +97,7 @@ const Pagination = ({
             >
               {page + 1}
             </PaginationItem>
-          );
+          )
         })}
         <Maybe test={currentPage < totalPages - 1}>
           <PaginationItem onClick={handleNextClick}>{`>`}</PaginationItem>
@@ -107,6 +107,6 @@ const Pagination = ({
         </Maybe>
       </ul>
     </nav>
-  );
-};
-export default Pagination;
+  )
+}
+export default Pagination

@@ -5,15 +5,15 @@ import Router from 'next/router'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
 import useLoggedInUser from 'lib/utils/useLoggedInUser'
 
-const FAVORITED_CLASS = "btn btn-sm btn-primary";
-const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
+const FAVORITED_CLASS = "btn btn-sm btn-primary"
+const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary"
 
-export const FavoriteArticleButtonContext = React.createContext(undefined);
+export const FavoriteArticleButtonContext = React.createContext(undefined)
 
 const FavoriteArticleButton = (props) => {
   const loggedInUser = useLoggedInUser()
-  const {favorited, setFavorited, favoritesCount, setFavoritesCount} = React.useContext(FavoriteArticleButtonContext);
-  let buttonText;
+  const {favorited, setFavorited, favoritesCount, setFavoritesCount} = React.useContext(FavoriteArticleButtonContext)
+  let buttonText
   if (props.showText) {
     if (favorited) {
       buttonText = 'Unfavorite'
@@ -26,8 +26,8 @@ const FavoriteArticleButton = (props) => {
   }
   const handleClickFavorite = async () => {
     if (!loggedInUser) {
-      Router.push(`/user/login`);
-      return;
+      Router.push(`/user/login`)
+      return
     }
     setFavorited(!favorited)
     setFavoritesCount(favoritesCount + (favorited ? - 1 : 1))
@@ -37,7 +37,7 @@ const FavoriteArticleButton = (props) => {
           headers: {
             Authorization: `Token ${loggedInUser?.token}`,
           },
-        });
+        })
       } else {
         await axios.post(
           `${SERVER_BASE_URL}/articles/${props.slug}/favorite`,
@@ -47,14 +47,14 @@ const FavoriteArticleButton = (props) => {
               Authorization: `Token ${loggedInUser?.token}`,
             },
           }
-        );
+        )
       }
     } catch (error) {
       setFavorited(!favorited)
       setFavoritesCount(favoritesCount + (favorited ? 1 : -1))
     }
-  };
-  let count = favoritesCount;
+  }
+  let count = favoritesCount
   if (props.showText) {
     count = (<span className="counter">({count})</span>)
   }
@@ -71,4 +71,4 @@ const FavoriteArticleButton = (props) => {
   )
 }
 
-export default FavoriteArticleButton;
+export default FavoriteArticleButton

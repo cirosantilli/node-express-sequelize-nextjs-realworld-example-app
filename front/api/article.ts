@@ -58,11 +58,11 @@ const ArticleAPI = {
           Authorization: `Token ${encodeURIComponent(token)}`,
         },
       }
-    );
+    )
     return {
       data,
       status,
-    };
+    }
   },
 
   create: async (article, token) => {
@@ -75,12 +75,12 @@ const ArticleAPI = {
           Authorization: `Token ${encodeURIComponent(token)}`,
         },
       }
-    );
+    )
     return {
       data,
       status,
-    };
+    }
   },
-};
+}
 
-export default ArticleAPI;
+export default ArticleAPI

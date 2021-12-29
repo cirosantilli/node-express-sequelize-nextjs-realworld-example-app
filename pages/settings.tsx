@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import Router from 'next/router'
 import React from 'react'
 import { mutate, trigger } from 'swr'
@@ -12,22 +11,22 @@ import { deleteCookie } from 'front'
 const Settings = () => {
   React.useEffect(() => {
     storage("user").then(loggedInUser => {
-      const isLoggedIn = checkLogin(loggedInUser);
+      const isLoggedIn = checkLogin(loggedInUser)
       if (!isLoggedIn) {
-        Router.push(`/`);
+        Router.push(`/`)
       }
     })
   })
   const handleLogout = async (e) => {
-    e.preventDefault();
-    window.localStorage.removeItem("user");
+    e.preventDefault()
+    window.localStorage.removeItem("user")
     deleteCookie('auth')
-    mutate("user", null);
-    Router.push(`/`).then(() => trigger("user"));
-  };
+    mutate("user", null)
+    Router.push(`/`).then(() => trigger("user"))
+  }
   const title = 'Your Settings'
   const { setTitle } = React.useContext(AppContext)
-  React.useEffect(() => { setTitle(title) }, [title])
+  React.useEffect(() => { setTitle(title) }, [setTitle, title])
   return (
     <>
       <div className="settings-page">
@@ -45,7 +44,7 @@ const Settings = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

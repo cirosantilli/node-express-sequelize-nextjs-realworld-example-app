@@ -11,7 +11,7 @@ import routes from 'routes'
 const Comment = ({ comment }) => {
   const loggedInUser = useLoggedInUser()
   const canModify =
-    loggedInUser && loggedInUser?.username === comment?.author?.username;
+    loggedInUser && loggedInUser?.username === comment?.author?.username
   return (
     <div className="card">
       <div className="card-block">
@@ -28,7 +28,7 @@ const Comment = ({ comment }) => {
             className="comment-author-img"
           />
         </CustomLink>
-        &nbsp;
+        &nbsp
         <CustomLink
           href={routes.userView(comment.author.username)}
           className="comment-author"
@@ -41,7 +41,7 @@ const Comment = ({ comment }) => {
         </Maybe>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Comment;
+export default Comment

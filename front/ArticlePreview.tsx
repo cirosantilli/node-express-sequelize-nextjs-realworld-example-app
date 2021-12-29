@@ -9,9 +9,9 @@ import { AppContext } from 'libts'
 import routes from 'routes'
 
 const ArticlePreview = ({ article }) => {
-  const preview = article;
-  const [hover, setHover] = React.useState(false);
-  if (!article) return;
+  const preview = article
+  const [hover, setHover] = React.useState(false)
+  if (!article) return
   return (
     <div className="article-preview">
       <div className="article-meta">
@@ -58,12 +58,12 @@ const ArticlePreview = ({ article }) => {
                   {tag}
                 </li>
               </Link>
-            );
+            )
           })}
         </ul>
       </CustomLink>
     </div>
-  );
-};
+  )
+}
 
-export default ArticlePreview;
+export default ArticlePreview

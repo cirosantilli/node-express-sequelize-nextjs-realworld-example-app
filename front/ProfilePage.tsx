@@ -19,8 +19,8 @@ import routes from 'routes'
 const ProfileHoc = tab => {
   return ({ profile, articles, articlesCount }) => {
     const [page, setPage] = React.useState(0)
-    const router = useRouter();
-    const { data: profileApi, error } = useSWR(`${SERVER_BASE_URL}/profiles/${profile?.username}`, fetcher(router.isFallback));
+    const router = useRouter()
+    const { data: profileApi, error } = useSWR(`${SERVER_BASE_URL}/profiles/${profile?.username}`, fetcher(router.isFallback))
     if (profileApi !== undefined) {
       profile = profileApi.profile
     }
@@ -93,8 +93,8 @@ const ProfileHoc = tab => {
           </div>
         </div>
       </>
-    );
-  };
+    )
+  }
 }
 
-export default ProfileHoc;
+export default ProfileHoc

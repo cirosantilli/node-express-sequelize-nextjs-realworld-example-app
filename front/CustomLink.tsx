@@ -4,11 +4,11 @@ import Link from 'next/link'
 import React from 'react'
 
 interface CustomLinkProps {
-  href: string;
-  className?: string;
-  onClick?: () => void;
-  children: React.ReactNode;
-  shallow?: boolean;
+  href: string
+  className?: string
+  onClick?: () => void
+  children: React.ReactNode
+  shallow?: boolean
 }
 
 const CustomLink = ({
@@ -19,7 +19,7 @@ const CustomLink = ({
   shallow,
 }: CustomLinkProps) => {
   if (shallow === undefined) {
-    shallow = false;
+    shallow = false
   }
   return (<Link href={href} passHref shallow={shallow}>
     <a onClick={onClick} className={className || ""}>
@@ -28,4 +28,4 @@ const CustomLink = ({
   </Link>)
 }
 
-export default CustomLink;
+export default CustomLink

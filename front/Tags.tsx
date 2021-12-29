@@ -9,8 +9,8 @@ import ErrorMessage from 'front/ErrorMessage'
 import { AppContext } from 'libts'
 
 const Tags = ({tags, ssr, setTab, setPage, setTag}) => {
-  const { data, error } = useSWR(ssr ? null : `${SERVER_BASE_URL}/tags`, fetcher());
-  if (error) return <ErrorMessage message="Cannot load popular tags..." />;
+  const { data, error } = useSWR(ssr ? null : `${SERVER_BASE_URL}/tags`, fetcher())
+  if (error) return <ErrorMessage message="Cannot load popular tags..." />
   if (data) {
     ({ tags } = data)
   }
@@ -30,7 +30,7 @@ const Tags = ({tags, ssr, setTab, setPage, setTag}) => {
         </a>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default Tags;
+export default Tags

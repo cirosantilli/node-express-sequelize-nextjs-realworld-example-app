@@ -2,29 +2,29 @@ import { isDemo } from 'config'
 import React from 'react'
 
 const TagInput = ({ tagList, addTag, removeTag }) => {
-  const [tag, setTag] = React.useState("");
-  const changeTagInput = (e) => setTag(e.target.value);
+  const [tag, setTag] = React.useState("")
+  const changeTagInput = (e) => setTag(e.target.value)
   const handleTagInputKeyDown = (e) => {
     switch (e.keyCode) {
       case 13: // Enter
       case 9: // Tab
       case 188: // Comma
-        if (e.keyCode !== 9) e.preventDefault();
-        handleAddTag();
-        break;
+        if (e.keyCode !== 9) e.preventDefault()
+        handleAddTag()
+        break
       default:
-        break;
+        break
     }
-  };
+  }
   const handleAddTag = () => {
     if (!!tag) {
-      addTag(tag);
-      setTag("");
+      addTag(tag)
+      setTag("")
     }
-  };
+  }
   const handleRemoveTag = (tag) => {
-    removeTag(tag);
-  };
+    removeTag(tag)
+  }
   return (
     <>
       <fieldset className="form-group">
@@ -50,7 +50,7 @@ const TagInput = ({ tagList, addTag, removeTag }) => {
         </div>
       </fieldset>
     </>
-  );
-};
+  )
+}
 
-export default TagInput;
+export default TagInput

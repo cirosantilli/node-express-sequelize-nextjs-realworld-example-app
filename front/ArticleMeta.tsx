@@ -7,7 +7,7 @@ import { formatDate } from 'lib/utils/date'
 import routes from 'routes'
 
 const ArticleMeta = ({ article }) => {
-  if (!article) return;
+  if (!article) return
   return (
     <div className="article-meta">
       <CustomLink
@@ -29,7 +29,7 @@ const ArticleMeta = ({ article }) => {
       </div>
       <ArticleActions article={article} />
     </div>
-  );
-};
+  )
+}
 
-export default ArticleMeta;
+export default ArticleMeta

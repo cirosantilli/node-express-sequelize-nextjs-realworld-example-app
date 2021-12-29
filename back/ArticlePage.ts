@@ -4,7 +4,7 @@ import { fallback, revalidate, prerenderAll } from 'config'
 import sequelize from 'back/db'
 
 export const getStaticPathsArticle: GetStaticPaths = async () => {
-  let paths;
+  let paths
   if (prerenderAll) {
     paths = (await sequelize.models.Article.findAll()).map(
       article => {
@@ -35,7 +35,7 @@ export function getStaticPropsArticle(addRevalidate?, addComments?) : GetStaticP
         notFound: true
       }
     }
-    let comments;
+    let comments
     if (addComments) {
       comments = await article.getComments({
         order: [['createdAt', 'DESC']],
@@ -52,6 +52,6 @@ export function getStaticPropsArticle(addRevalidate?, addComments?) : GetStaticP
     if (addComments) {
       ret.props.comments = await Promise.all(comments.map(comment => comment.toJson()))
     }
-    return ret;
+    return ret
   }
 }

@@ -95,4 +95,4 @@ const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
   )
 }
 
-export default IndexPage;
+export default IndexPage

@@ -1,9 +1,8 @@
 import marked from 'marked'
 import Link from 'next/link'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import useSWR  from 'swr'
+import useSWR from 'swr'
 
 import ArticleMeta from 'front/ArticleMeta'
 import Comment from 'front/Comment'
@@ -11,73 +10,72 @@ import CommentInput from 'front/CommentInput'
 import { FavoriteArticleButtonContext } from 'front/FavoriteArticleButton'
 import LoadingSpinner from 'front/LoadingSpinner'
 import { FollowUserButtonContext } from 'front/FollowUserButton'
-import ArticleAPI from 'front/api/article'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
 import fetcher from 'lib/utils/fetcher'
 import { AppContext } from 'libts'
 import routes from 'routes'
 
 export interface ArticleList {
-  articles: ArticleType[];
+  articles: ArticleType[]
 }
 
 export interface Article {
-  article: ArticleType;
+  article: ArticleType
 }
 
 export type ArticleType = {
-  tagList: string[];
-  createdAt: number;
-  author: Author;
-  description: string;
-  title: string;
-  body: string;
-  slug: string;
-  updatedAt: number;
-  favoritesCount: number;
-  favorited: boolean;
-};
+  tagList: string[]
+  createdAt: number
+  author: Author
+  description: string
+  title: string
+  body: string
+  slug: string
+  updatedAt: number
+  favoritesCount: number
+  favorited: boolean
+}
 
 export type Author = {
-  username: string;
-  bio: string;
-  image: string;
-  following: boolean;
-};
+  username: string
+  bio: string
+  image: string
+  following: boolean
+}
 
 interface ArticlePageProps {
-  article: ArticleType;
-  comments: CommentType[];
-  pid: string;
+  article: ArticleType
+  comments: CommentType[]
+  pid: string
 }
 
 export interface Comments {
-  comments: CommentType[];
+  comments: CommentType[]
 }
 
 export type CommentType = {
-  createdAt: number;
-  id: string;
-  body: string;
-  slug: string;
-  author: Author;
-  updatedAt: number;
-};
+  createdAt: number
+  id: string
+  body: string
+  slug: string
+  author: Author
+  updatedAt: number
+}
 
 const ArticlePage = ({ article, comments }: ArticlePageProps) => {
-  const router = useRouter();
+  const router = useRouter()
 
   // Fetch user-specific data.
   // Article determines if the curent user favorited the article or not
-  const { data: articleApi, error } = useSWR(
-  `${SERVER_BASE_URL}/articles/${article?.slug}`, fetcher(router.isFallback));
+  const { data: articleApi } = useSWR(
+  `${SERVER_BASE_URL}/articles/${article?.slug}`, fetcher(router.isFallback))
   if (articleApi !== undefined) {
     article = articleApi.article
   }
   // We fetch comments so that the new posted comment will appear immediately after posted.
   // Note that we cannot calculate the exact new coment element because we need the server datetime.
-  const { data: commentApi, error: commentError } = useSWR(
-    `${SERVER_BASE_URL}/articles/${article?.slug}/comments`, fetcher(router.isFallback));
+  const { data: commentApi } = useSWR(
+    `${SERVER_BASE_URL}/articles/${article?.slug}/comments`, fetcher(router.isFallback))
   if (commentApi !== undefined) {
     comments = commentApi.comments
   }
@@ -90,19 +88,19 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   React.useEffect(() => {
     setFollowing(article?.author.following)
   }, [article?.author.following])
-  const [favorited, setFavorited] = React.useState(false);
-  const [favoritesCount, setFavoritesCount] = React.useState(article?.favoritesCount);
+  const [favorited, setFavorited] = React.useState(false)
+  const [favoritesCount, setFavoritesCount] = React.useState(article?.favoritesCount)
   React.useEffect(() => {
-    setFavorited(article?.favorited);
+    setFavorited(article?.favorited)
     setFavoritesCount(article?.favoritesCount)
   }, [article?.favorited, article?.favoritesCount])
   const {setPage, setTab, setTag, setTitle} = React.useContext(AppContext)
   React.useEffect(() => {
     setTitle(article?.title)
-  }, [article?.title])
+  }, [setTitle, article?.title])
 
   if (router.isFallback) { return <LoadingSpinner />; }
-  const markup = { __html: marked(article.body) };
+  const markup = { __html: marked(article.body) }
   return (
     <>
       <div className="article-page">
@@ -133,14 +131,14 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
                     {tag}
                     {false && <>
                       TODO link to index tag list from here. This code almost works, but fails because 
-                      of the resetIndexState call on pages/index.jsx. The problem is I don't know how to
+                      of the resetIndexState call on pages/index.jsx. The problem is I dont know how to
                       differentiate between clicking a link like this (we want non-default state) and 
                       first visit/page refresh (we want default state).
                       This was not in the original Realworld app, but would be an obvious addition:
                       https://github.com/gothinkster/realworld/issues/649
 
                       I also tried to add a global flag to make index reset only once, but since each
-                      page re-renders several times due to hooks, that didn't work.
+                      page re-renders several times due to hooks, that didnt work.
                       <Link href={routes.home()}>
                         <a
                           onClick={() => {
@@ -183,13 +181,13 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ArticlePage;
+export default ArticlePage
 
 // Server only.
 
 import { getStaticPathsArticle, getStaticPropsArticle } from 'back/ArticlePage'
-export const getStaticPaths = getStaticPathsArticle;
-export const getStaticProps = getStaticPropsArticle(true, true);
+export const getStaticPaths = getStaticPathsArticle
+export const getStaticProps = getStaticPropsArticle(true, true)

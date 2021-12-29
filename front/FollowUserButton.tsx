@@ -6,29 +6,29 @@ import UserAPI from 'front/api/user'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
 import useLoggedInUser from 'lib/utils/useLoggedInUser'
 
-export const FollowUserButtonContext = React.createContext(undefined);
+export const FollowUserButtonContext = React.createContext(undefined)
 
 const FollowUserButton = ({
   profile,
 }) => {
   const loggedInUser = useLoggedInUser()
-  const {following, setFollowing} = React.useContext(FollowUserButtonContext);
-  const { username } = profile;
-  const isCurrentUser = loggedInUser && username === loggedInUser?.username;
+  const {following, setFollowing} = React.useContext(FollowUserButtonContext)
+  const { username } = profile
+  const isCurrentUser = loggedInUser && username === loggedInUser?.username
   if (loggedInUser && isCurrentUser) { return null; }
   const handleClick = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!loggedInUser) {
-      Router.push(`/user/login`);
-      return;
+      Router.push(`/user/login`)
+      return
     }
     if (following) {
-      UserAPI.unfollow(username);
+      UserAPI.unfollow(username)
     } else {
-      UserAPI.follow(username);
+      UserAPI.follow(username)
     }
     setFollowing(!following)
-  };
+  }
   return (
     <button
       className={`btn btn-sm action-btn ${
@@ -40,7 +40,7 @@ const FollowUserButton = ({
       {" "}&nbsp;{" "}
       {following ? "Unfollow" : "Follow"} {username}
     </button>
-  );
-};
+  )
+}
 
-export default FollowUserButton;
+export default FollowUserButton

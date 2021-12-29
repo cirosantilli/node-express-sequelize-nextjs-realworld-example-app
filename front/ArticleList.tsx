@@ -23,9 +23,9 @@ const ArticleList = ({
   ssr,
   tag = undefined,
 }) => {
-  const router = useRouter();
-  const { query } = router;
-  const { pid } = query;
+  const router = useRouter()
+  const { query } = router
+  const { pid } = query
   // The page can be seen up to date from SSR without refetching,
   // so we skip the fetch.
   let ssrSkipFetch = (
@@ -51,17 +51,17 @@ const ArticleList = ({
       case 'my-posts':
         return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&author=${encodeURIComponent(
           String(pid)
-        )}&offset=${page * DEFAULT_LIMIT}`;
+        )}&offset=${page * DEFAULT_LIMIT}`
       case 'tag':
         return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&tag=${encodeURIComponent(tag)}&offset=${
           page * DEFAULT_LIMIT
-        }`;
+        }`
       case 'feed':
         return `${SERVER_BASE_URL}/articles/feed?limit=${DEFAULT_LIMIT}&offset=${
           page * DEFAULT_LIMIT
-        }`;
+        }`
       case 'global':
-        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&offset=${page * DEFAULT_LIMIT}`;
+        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&offset=${page * DEFAULT_LIMIT}`
       case undefined:
         // We haven't decided yet because we haven't decided if we are logged in or out yet.
         return null
@@ -69,7 +69,7 @@ const ArticleList = ({
         throw new Error(`Unknown search: ${what}`)
     }
   })()
-  const { data, error } = useSWR(fetchURL, fetcher());
+  const { data, error } = useSWR(fetchURL, fetcher())
   let showSpinner = true
   if (data) {
     ({ articles, articlesCount } = data)
@@ -108,21 +108,21 @@ const ArticleList = ({
   // and calling hooks like useState different number of times is a capital sin
   // in React and makes everything blow up.
   for (let i = 0; i < DEFAULT_LIMIT; i++) {
-    [favorited[i], setFavorited[i]] = React.useState(false);
-    [favoritesCount[i], setFavoritesCount[i]] = React.useState(0);
+    [favorited[i], setFavorited[i]] = React.useState(false)
+    [favoritesCount[i], setFavoritesCount[i]] = React.useState(0)
   }
   React.useEffect(() => {
     const nArticles = articles?.length || 0
     for (let i = 0; i < nArticles; i++) {
-      setFavorited[i](articles[i].favorited);
-      setFavoritesCount[i](articles[i].favoritesCount);
+      setFavorited[i](articles[i].favorited)
+      setFavoritesCount[i](articles[i].favoritesCount)
     }
   }, Object.assign(articles.map(a => a.favorited).concat(articles.map(a => a.favoritesCount)), {length: DEFAULT_LIMIT}))
 
-  if (error) return <ErrorMessage message="Cannot load recent articles..." />;
-  if (!data && showSpinner) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message="Cannot load recent articles..." />
+  if (!data && showSpinner) return <LoadingSpinner />
   if (articles?.length === 0) {
-    return (<div className="article-preview">No articles are here... yet.</div>);
+    return (<div className="article-preview">No articles are here... yet.</div>)
   }
   return (
     <>
@@ -146,7 +146,7 @@ const ArticleList = ({
         />
       </Maybe>
     </>
-  );
-};
+  )
+}
 
-export default ArticleList;
+export default ArticleList

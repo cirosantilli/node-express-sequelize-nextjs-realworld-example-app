@@ -39,7 +39,7 @@ const makeLoginPage = ({ register = false }) => {
         </div>
       </div>
     </>
-  };
+  }
 }
 
-export default makeLoginPage;
+export default makeLoginPage

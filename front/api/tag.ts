@@ -4,5 +4,5 @@ import { SERVER_BASE_URL } from 'lib/utils/constant'
 
 const TagAPI = {
   getAll: () => axios.get(`${SERVER_BASE_URL}/tags`),
-};
-export default TagAPI;
+}
+export default TagAPI

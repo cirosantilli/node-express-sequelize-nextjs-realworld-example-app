@@ -16,31 +16,31 @@ function editorReducer(state, action) {
       return {
         ...state,
         title: action.text
-      };
+      }
     case "SET_DESCRIPTION":
       return {
         ...state,
         description: action.text
-      };
+      }
     case "SET_BODY":
       return {
         ...state,
         body: action.text
-      };
+      }
     case "ADD_TAG":
       return {
         ...state,
         tagList: state.tagList.concat(action.tag)
-      };
+      }
     case "REMOVE_TAG":
       return {
         ...state,
         tagList: state.tagList.filter(tag => tag !== action.tag)
-      };
+      }
     default:
-      throw new Error("Unhandled action");
+      throw new Error("Unhandled action")
   }
-};
+}
 
 export default function makeArticleEditor(isnew: boolean = false) {
   return ({ article: initialArticle }) => {
@@ -60,44 +60,44 @@ export default function makeArticleEditor(isnew: boolean = false) {
         tagList: [],
       }
     }
-    const [isLoading, setLoading] = React.useState(false);
-    const [errors, setErrors] = React.useState([]);
-    const [posting, dispatch] = React.useReducer(editorReducer, initialState);
+    const [isLoading, setLoading] = React.useState(false)
+    const [errors, setErrors] = React.useState([])
+    const [posting, dispatch] = React.useReducer(editorReducer, initialState)
     const loggedInUser = useLoggedInUser()
-    const router = useRouter();
+    const router = useRouter()
     const {
       query: { pid },
-    } = router;
+    } = router
     const handleTitle = (e) =>
-      dispatch({ type: "SET_TITLE", text: e.target.value });
+      dispatch({ type: "SET_TITLE", text: e.target.value })
     const handleDescription = (e) =>
-      dispatch({ type: "SET_DESCRIPTION", text: e.target.value });
+      dispatch({ type: "SET_DESCRIPTION", text: e.target.value })
     const handleBody = (e) =>
-      dispatch({ type: "SET_BODY", text: e.target.value });
-    const addTag = (tag) => dispatch({ type: "ADD_TAG", tag: tag });
-    const removeTag = (tag) => dispatch({ type: "REMOVE_TAG", tag: tag });
+      dispatch({ type: "SET_BODY", text: e.target.value })
+    const addTag = (tag) => dispatch({ type: "ADD_TAG", tag: tag })
+    const removeTag = (tag) => dispatch({ type: "REMOVE_TAG", tag: tag })
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      setLoading(true);
-      let data, status;
+      e.preventDefault()
+      setLoading(true)
+      let data, status
       if (isnew) {
         ({ data, status } = await ArticleAPI.create(
           posting,
           loggedInUser?.token
-        ));
+        ))
       } else {
         ({ data, status } = await ArticleAPI.update(
           posting,
           router.query.pid,
           loggedInUser?.token
-        ));
+        ))
       }
-      setLoading(false);
+      setLoading(false)
       if (status !== 200) {
-        setErrors(data.errors);
+        setErrors(data.errors)
       }
-      Router.push(`/article/${data.article.slug}`);
-    };
+      Router.push(`/article/${data.article.slug}`)
+    }
     useCtrlEnterSubmit(handleSubmit)
     const {setTitle} = React.useContext(AppContext)
     React.useEffect(() => {
@@ -159,6 +159,6 @@ export default function makeArticleEditor(isnew: boolean = false) {
           </div>
         </div>
       </>
-    );
-  };
+    )
+  }
 }

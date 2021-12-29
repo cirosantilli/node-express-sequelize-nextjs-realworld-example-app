@@ -10,31 +10,31 @@ import UserAPI from 'front/api/user'
 import { useCtrlEnterSubmit } from 'libts'
 
 const SettingsForm = () => {
-  const [isLoading, setLoading] = React.useState(false);
-  const [errors, setErrors] = React.useState([]);
+  const [isLoading, setLoading] = React.useState(false)
+  const [errors, setErrors] = React.useState([])
   const [userInfo, setUserInfo] = React.useState({
     image: "",
     username: "",
     bio: "",
     email: "",
     password: "",
-  });
+  })
   const loggedInUser = useLoggedInUser()
   React.useEffect(() => {
-    if (!loggedInUser) return;
-    setUserInfo({ ...userInfo, ...loggedInUser });
-  }, [loggedInUser]);
+    if (!loggedInUser) return
+    setUserInfo({ ...userInfo, ...loggedInUser })
+  }, [loggedInUser])
   const updateState = (field) => (e) => {
-    const state = userInfo;
-    const newState = { ...state, [field]: e.target.value };
-    setUserInfo(newState);
-  };
+    const state = userInfo
+    const newState = { ...state, [field]: e.target.value }
+    setUserInfo(newState)
+  }
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const user = { ...userInfo };
+    e.preventDefault()
+    setLoading(true)
+    const user = { ...userInfo }
     if (!user.password) {
-      delete user.password;
+      delete user.password
     }
     const { data, status } = await axios.put(
       `${SERVER_BASE_URL}/user`,
@@ -45,22 +45,22 @@ const SettingsForm = () => {
           Authorization: `Token ${loggedInUser?.token}`,
         },
       }
-    );
-    setLoading(false);
+    )
+    setLoading(false)
     if (status !== 200) {
-      setErrors(data.errors.body);
+      setErrors(data.errors.body)
     }
     if (data?.user) {
-      const { data: profileData, status: profileStatus } = await UserAPI.get(data.user.username);
+      const { data: profileData, status: profileStatus } = await UserAPI.get(data.user.username)
       if (profileStatus !== 200) {
-        setErrors(profileData.errors);
+        setErrors(profileData.errors)
       }
-      data.user.effectiveImage = profileData.profile.image;
-      window.localStorage.setItem("user", JSON.stringify(data.user));
-      mutate("user", data.user);
-      Router.push(`/profile/${user.username}`);
+      data.user.effectiveImage = profileData.profile.image
+      window.localStorage.setItem("user", JSON.stringify(data.user))
+      mutate("user", data.user)
+      Router.push(`/profile/${user.username}`)
     }
-  };
+  }
   useCtrlEnterSubmit(handleSubmit)
   return (
     <React.Fragment>
@@ -122,7 +122,7 @@ const SettingsForm = () => {
         </fieldset>
       </form>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default SettingsForm;
+export default SettingsForm

@@ -5,7 +5,7 @@ import sequelize from 'back/db'
 import { DEFAULT_LIMIT  } from 'lib/utils/constant'
 
 export const getStaticPathsProfile: GetStaticPaths = async () => {
-  let paths;
+  let paths
   if (prerenderAll) {
     paths = (await sequelize.models.User.findAll({
       order: [['username', 'ASC']],

@@ -2,14 +2,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 interface NavLinkProps {
-  href: string;
-  onClick?: () => void;
-  children: React.ReactNode;
+  href: string
+  onClick?: () => void
+  children: React.ReactNode
 }
 
 const NavLink = ({ href, onClick, children }: NavLinkProps) => {
-  const router = useRouter();
-  const { asPath } = router;
+  const router = useRouter()
+  const { asPath } = router
   return (
     <Link href={href} passHref>
       <a
@@ -21,7 +21,7 @@ const NavLink = ({ href, onClick, children }: NavLinkProps) => {
         {children}
       </a>
     </Link>
-  );
-};
+  )
+}
 
-export default NavLink;
+export default NavLink

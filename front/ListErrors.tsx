@@ -10,9 +10,9 @@ const ListErrors = ({ errors }) => (
             <li>{errors[key]}</li>
           </ul>
         </li>
-      );
+      )
     })}
   </ul>
-);
+)
 
-export default ListErrors;
+export default ListErrors

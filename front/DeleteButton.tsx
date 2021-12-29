@@ -7,10 +7,10 @@ import useLoggedInUser from 'lib/utils/useLoggedInUser'
 
 const DeleteButton = ({ commentId }) => {
   const loggedInUser = useLoggedInUser()
-  const router = useRouter();
+  const router = useRouter()
   const {
     query: { pid },
-  } = router;
+  } = router
   const handleDelete = async (commentId) => {
     await axios.delete(
       `${SERVER_BASE_URL}/articles/${pid}/comments/${commentId}`,
@@ -19,15 +19,15 @@ const DeleteButton = ({ commentId }) => {
           Authorization: `Token ${loggedInUser?.token}`,
         },
       }
-    );
-    trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`);
-  };
+    )
+    trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`)
+  }
 
   return (
     <span className="mod-options">
       <i className="ion-trash-a" onClick={() => handleDelete(commentId)} />
     </span>
-  );
-};
+  )
+}
 
-export default DeleteButton;
+export default DeleteButton

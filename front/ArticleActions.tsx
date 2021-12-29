@@ -13,20 +13,20 @@ import routes from 'routes'
 
 const ArticleActions = ({ article }) => {
   const loggedInUser = useLoggedInUser()
-  const router = useRouter();
+  const router = useRouter()
   const {
     query: { pid },
-  } = router;
+  } = router
   const handleDelete = async () => {
-    if (!loggedInUser) return;
-    const result = window.confirm("Do you really want to delete it?");
-    if (!result) return;
-    await ArticleAPI.delete(pid, loggedInUser?.token);
-    trigger(`${SERVER_BASE_URL}/articles/${pid}`);
-    Router.push(`/`);
-  };
+    if (!loggedInUser) return
+    const result = window.confirm("Do you really want to delete it?")
+    if (!result) return
+    await ArticleAPI.delete(pid, loggedInUser?.token)
+    trigger(`${SERVER_BASE_URL}/articles/${pid}`)
+    Router.push(`/`)
+  }
   const canModify =
-    loggedInUser && loggedInUser?.username === article?.author?.username;
+    loggedInUser && loggedInUser?.username === article?.author?.username
   return (
     <>
       <Maybe test={!canModify}>
@@ -57,7 +57,7 @@ const ArticleActions = ({ article }) => {
         </span>
       </Maybe>
     </>
-  );
-};
+  )
+}
 
-export default ArticleActions;
+export default ArticleActions

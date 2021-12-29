@@ -34,17 +34,18 @@ function handleRouteChange(url) {
 }
 
 const MyApp = ({ Component, pageProps }) => {
-  if (isProduction) {
-    // Google Analytics page switches:
-    // https://stackoverflow.com/questions/60411351/how-to-use-google-analytics-with-next-js-app/62552263#62552263
-    const router = useRouter();
-    React.useEffect(() => {
-      router.events.on('routeChangeComplete', handleRouteChange);
+  // Google Analytics page switches:
+  // https://stackoverflow.com/questions/60411351/how-to-use-google-analytics-with-next-js-app/62552263#62552263
+  const router = useRouter()
+  React.useEffect(() => {
+    if (isProduction) {
+      router.events.on('routeChangeComplete', handleRouteChange)
       return () => {
-        router.events.off('routeChangeComplete', handleRouteChange);
-      };
-    }, [router.events]);
-  }
+        router.events.off('routeChangeComplete', handleRouteChange)
+      }
+    }
+  }, [router.events])
+
   return (
     <AppContextProvider>
       <SWRConfig
@@ -60,7 +61,7 @@ const MyApp = ({ Component, pageProps }) => {
         <MyHead />
         <Navbar />
         {isDemo && (
-          <div className="container" style={{'marginBottom': '20px'}}>
+          <div className="container" style={{marginBottom: '20px'}}>
             Source code for this website: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
           </div>
         )}
@@ -79,6 +80,6 @@ const MyApp = ({ Component, pageProps }) => {
       </SWRConfig>
     </AppContextProvider>
   )
-};
+}
 
-export default MyApp;
+export default MyApp
