@@ -1,8 +1,13 @@
 /* Copied from http://demo.productionready.io/main.css before that decays like
  * everything else in that project, and also to embed in a single webpack package
- * for better use experience. The source for this processed CSS was lost, authors
+ * for better user experience. The source for this processed CSS was lost, authors
  * didn't reply when asked for it, so so be it, we prettified it with prettier.
- * to at least make it more understandable if needed.
+ * to at least make it more understandable if needed:
+ * https://github.com/gothinkster/realworld/issues/662
+ *
+ * We can't find any readily available specific Mono fonts:
+ * https://github.com/gothinkster/realworld/discussions/843
+ * so just going with none for now.
  **/
 .logo-font {
   font-family: titillium web, sans-serif;

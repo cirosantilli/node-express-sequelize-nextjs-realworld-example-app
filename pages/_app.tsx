@@ -12,6 +12,17 @@ import routes from 'routes'
 
 // Packages.
 import 'ionicons/css/ionicons.min.css'
+import '@fontsource/titillium-web/700.css'
+import '@fontsource/source-serif-pro/400.css'
+import '@fontsource/source-serif-pro/700.css'
+import '@fontsource/source-sans-pro/300.css'
+import '@fontsource/source-sans-pro/400.css'
+import '@fontsource/source-sans-pro/600.css'
+import '@fontsource/source-sans-pro/700.css'
+import '@fontsource/source-sans-pro/300-italic.css'
+import '@fontsource/source-sans-pro/400-italic.css'
+import '@fontsource/source-sans-pro/600-italic.css'
+import '@fontsource/source-sans-pro/700-italic.css'
 
 // In tree
 import 'demo.productionready.io.main.css'
