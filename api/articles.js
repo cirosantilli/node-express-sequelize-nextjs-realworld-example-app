@@ -438,14 +438,12 @@ router.post(
       if (!req.body.comment) {
         return res.status(422).json({ errors: { comment: "can't be blank" } })
       }
-      const comment = await req.app
-        .get('sequelize')
-        .models.Comment.create(
-          Object.assign({}, req.body.comment, {
-            articleId: req.article.id,
-            authorId: user.id,
-          })
-        )
+      const comment = await req.app.get('sequelize').models.Comment.create(
+        Object.assign({}, req.body.comment, {
+          articleId: req.article.id,
+          authorId: user.id,
+        })
+      )
       await lib.deleteOldestForDemo(req.app.get('sequelize').models.Comment)
       comment.author = user
       return res.json({ comment: await comment.toJson(user) })

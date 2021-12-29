@@ -10,7 +10,11 @@ import { APP_NAME } from 'lib/utils/constant'
 import { AppContext, AppContextProvider } from 'libts'
 import routes from 'routes'
 
+// Packages.
 import 'ionicons/css/ionicons.min.css'
+
+// In tree
+import 'demo.productionready.io.main.css'
 import 'style.scss'
 
 function MyHead() {
