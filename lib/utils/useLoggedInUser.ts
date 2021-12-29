@@ -1,7 +1,7 @@
-import useSWR from "swr";
+import useSWR from 'swr'
 
-import checkLogin from "lib/utils/checkLogin";
-import storage from "lib/utils/storage";
+import checkLogin from 'lib/utils/checkLogin'
+import storage from 'lib/utils/storage'
 
 // @return:
 //   - undefined if we don't know

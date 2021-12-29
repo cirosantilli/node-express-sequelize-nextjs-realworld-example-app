@@ -1,7 +1,7 @@
-import React from "react";
-import { trigger } from "swr";
+import React from 'react'
+import { trigger } from 'swr'
 
-import Maybe from "front/Maybe";
+import Maybe from 'front/Maybe'
 
 interface PaginationProps {
   articlesCount: number;

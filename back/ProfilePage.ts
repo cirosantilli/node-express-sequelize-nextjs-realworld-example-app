@@ -1,8 +1,8 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
-import { fallback, revalidate, prerenderAll } from "config";
-import sequelize from "back/db";
-import { DEFAULT_LIMIT  } from "lib/utils/constant";
+import { fallback, revalidate, prerenderAll } from 'config'
+import sequelize from 'back/db'
+import { DEFAULT_LIMIT  } from 'lib/utils/constant'
 
 export const getStaticPathsProfile: GetStaticPaths = async () => {
   let paths;

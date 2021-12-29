@@ -1,21 +1,21 @@
-import marked from "marked";
-import Link from "next/link";
-import Head from "next/head";
+import marked from 'marked'
+import Link from 'next/link'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React from "react";
-import useSWR  from "swr";
+import React from 'react'
+import useSWR  from 'swr'
 
-import ArticleMeta from "front/ArticleMeta";
-import Comment from "front/Comment";
-import CommentInput from "front/CommentInput";
-import { FavoriteArticleButtonContext } from "front/FavoriteArticleButton";
-import LoadingSpinner from "front/LoadingSpinner";
-import { FollowUserButtonContext } from "front/FollowUserButton";
-import ArticleAPI from "front/api/article";
-import { SERVER_BASE_URL } from "lib/utils/constant";
-import fetcher from "lib/utils/fetcher";
+import ArticleMeta from 'front/ArticleMeta'
+import Comment from 'front/Comment'
+import CommentInput from 'front/CommentInput'
+import { FavoriteArticleButtonContext } from 'front/FavoriteArticleButton'
+import LoadingSpinner from 'front/LoadingSpinner'
+import { FollowUserButtonContext } from 'front/FollowUserButton'
+import ArticleAPI from 'front/api/article'
+import { SERVER_BASE_URL } from 'lib/utils/constant'
+import fetcher from 'lib/utils/fetcher'
 import { AppContext } from 'libts'
-import routes from "routes";
+import routes from 'routes'
 
 export interface ArticleList {
   articles: ArticleType[];
@@ -190,6 +190,6 @@ export default ArticlePage;
 
 // Server only.
 
-import { getStaticPathsArticle, getStaticPropsArticle } from "back/ArticlePage";
+import { getStaticPathsArticle, getStaticPropsArticle } from 'back/ArticlePage'
 export const getStaticPaths = getStaticPathsArticle;
 export const getStaticProps = getStaticPropsArticle(true, true);

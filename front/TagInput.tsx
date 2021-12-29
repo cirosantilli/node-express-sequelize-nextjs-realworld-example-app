@@ -1,5 +1,5 @@
-import { isDemo } from "config";
-import React from "react";
+import { isDemo } from 'config'
+import React from 'react'
 
 const TagInput = ({ tagList, addTag, removeTag }) => {
   const [tag, setTag] = React.useState("");

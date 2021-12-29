@@ -1,12 +1,12 @@
-import Link from "next/link";
-import React from "react";
+import Link from 'next/link'
+import React from 'react'
 
-import CustomLink from "front/CustomLink";
-import CustomImage from "front/CustomImage";
-import FavoriteArticleButton from "front/FavoriteArticleButton";
-import { formatDate } from "lib/utils/date";
-import { AppContext } from "libts";
-import routes from "routes";
+import CustomLink from 'front/CustomLink'
+import CustomImage from 'front/CustomImage'
+import FavoriteArticleButton from 'front/FavoriteArticleButton'
+import { formatDate } from 'lib/utils/date'
+import { AppContext } from 'libts'
+import routes from 'routes'
 
 const ArticlePreview = ({ article }) => {
   const preview = article;

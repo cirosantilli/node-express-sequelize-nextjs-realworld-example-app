@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react'
 
-import useLoggedInUser from "lib/utils/useLoggedInUser";
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
 
 export const AppContext = React.createContext<{
   page: number

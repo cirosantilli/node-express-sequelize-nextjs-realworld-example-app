@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react'
 
-import CustomLink from "front/CustomLink";
-import CustomImage from "front/CustomImage";
-import Maybe from "front/Maybe";
-import DeleteButton from "front/DeleteButton";
-import { formatDate } from "lib/utils/date";
-import useLoggedInUser from "lib/utils/useLoggedInUser";
-import routes from "routes";
+import CustomLink from 'front/CustomLink'
+import CustomImage from 'front/CustomImage'
+import Maybe from 'front/Maybe'
+import DeleteButton from 'front/DeleteButton'
+import { formatDate } from 'lib/utils/date'
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import routes from 'routes'
 
 const Comment = ({ comment }) => {
   const loggedInUser = useLoggedInUser()

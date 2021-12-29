@@ -1,11 +1,11 @@
-import Head from "next/head";
-import Router from "next/router";
-import React from "react";
-import { mutate, trigger } from "swr";
+import Head from 'next/head'
+import Router from 'next/router'
+import React from 'react'
+import { mutate, trigger } from 'swr'
 
-import SettingsForm from "front/SettingsForm";
-import checkLogin from "lib/utils/checkLogin";
-import storage from "lib/utils/storage";
+import SettingsForm from 'front/SettingsForm'
+import checkLogin from 'lib/utils/checkLogin'
+import storage from 'lib/utils/storage'
 import { AppContext } from 'libts'
 import { deleteCookie } from 'front'
 

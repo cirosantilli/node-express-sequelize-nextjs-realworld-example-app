@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios'
 
-import { SERVER_BASE_URL } from "lib/utils/constant";
+import { SERVER_BASE_URL } from 'lib/utils/constant'
 
 const CommentAPI = {
   create: async (slug, comment) => {

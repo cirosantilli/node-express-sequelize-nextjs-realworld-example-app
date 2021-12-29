@@ -1,9 +1,9 @@
 import { GetServerSideProps, GetStaticProps } from 'next'
 
-import { revalidate } from "config";
-import sequelize from "back/db";
+import { revalidate } from 'config'
+import sequelize from 'back/db'
 import { getIndexTags } from 'lib'
-import { DEFAULT_LIMIT  } from "lib/utils/constant";
+import { DEFAULT_LIMIT  } from 'lib/utils/constant'
 
 async function getLoggedOutProps() {
   const articles = await sequelize.models.Article.findAndCountAll({
@@ -19,7 +19,7 @@ async function getLoggedOutProps() {
 
 import { secret } from 'config'
 import { verify } from 'jsonwebtoken'
-import { getCookieFromReq } from "front"
+import { getCookieFromReq } from 'front'
 
 function useLoggedInUser(req) {
   const authCookie = getCookieFromReq(req, 'auth')

@@ -1,7 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
-import { fallback, revalidate, prerenderAll } from "config";
-import sequelize from "back/db";
+import { fallback, revalidate, prerenderAll } from 'config'
+import sequelize from 'back/db'
 
 export const getStaticPathsArticle: GetStaticPaths = async () => {
   let paths;

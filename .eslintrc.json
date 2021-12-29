@@ -1,6 +1,12 @@
 {
+  "extends": [
+    "eslint:recommended",
+    "plugin:@next/next/recommended"
+
+  ],
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "plugins": ["prettier"],
   "rules": {

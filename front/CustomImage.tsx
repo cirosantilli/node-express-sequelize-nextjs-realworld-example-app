@@ -1,4 +1,4 @@
-import { DEFAULT_PROFILE_IMAGE } from "lib/utils/constant";
+import { DEFAULT_PROFILE_IMAGE } from 'lib/utils/constant'
 
 // https://stackoverflow.com/questions/34097560/react-js-replace-img-src-onerror
 // https://stackoverflow.com/questions/66949606/what-is-the-best-way-to-have-a-fallback-image-in-nextjs

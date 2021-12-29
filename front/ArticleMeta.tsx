@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react'
 
-import ArticleActions from "front/ArticleActions";
-import CustomImage from "front/CustomImage";
-import CustomLink from "front/CustomLink";
-import { formatDate } from "lib/utils/date";
-import routes from "routes";
+import ArticleActions from 'front/ArticleActions'
+import CustomImage from 'front/CustomImage'
+import CustomLink from 'front/CustomLink'
+import { formatDate } from 'lib/utils/date'
+import routes from 'routes'
 
 const ArticleMeta = ({ article }) => {
   if (!article) return;

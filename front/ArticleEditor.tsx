@@ -1,13 +1,13 @@
-import Head from "next/head";
-import Router, { useRouter } from "next/router";
-import React from "react";
+import Head from 'next/head'
+import Router, { useRouter } from 'next/router'
+import React from 'react'
 
-import ListErrors from "front/ListErrors";
-import TagInput from "front/TagInput";
-import ArticleAPI from "front/api/article";
-import { SERVER_BASE_URL } from "lib/utils/constant";
-import useLoggedInUser from "lib/utils/useLoggedInUser";
-import { useCtrlEnterSubmit } from "libts";
+import ListErrors from 'front/ListErrors'
+import TagInput from 'front/TagInput'
+import ArticleAPI from 'front/api/article'
+import { SERVER_BASE_URL } from 'lib/utils/constant'
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import { useCtrlEnterSubmit } from 'libts'
 import { AppContext } from 'libts'
 
 function editorReducer(state, action) {

@@ -1,11 +1,11 @@
-import Router from "next/router";
-import React from "react";
-import { mutate } from "swr";
+import Router from 'next/router'
+import React from 'react'
+import { mutate } from 'swr'
 
-import ListErrors from "front/ListErrors";
-import UserAPI from "front/api/user";
-import { setCookie } from "front";
-import { useCtrlEnterSubmit } from "libts";
+import ListErrors from 'front/ListErrors'
+import UserAPI from 'front/api/user'
+import { setCookie } from 'front'
+import { useCtrlEnterSubmit } from 'libts'
 
 const LoginForm = ({ register = false }) => {
   const [isLoading, setLoading] = React.useState(false);

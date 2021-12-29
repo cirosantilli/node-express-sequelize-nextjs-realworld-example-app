@@ -1,17 +1,17 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import React from "react";
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import React from 'react'
 import { SWRConfig } from 'swr'
 
-import CustomLink from "front/CustomLink";
-import Navbar from "front/Navbar";
-import { googleAnalyticsId, isDemo, isProduction } from "config";
-import { APP_NAME } from "lib/utils/constant";
+import CustomLink from 'front/CustomLink'
+import Navbar from 'front/Navbar'
+import { googleAnalyticsId, isDemo, isProduction } from 'config'
+import { APP_NAME } from 'lib/utils/constant'
 import { AppContext, AppContextProvider } from 'libts'
-import routes from "routes";
+import routes from 'routes'
 
-import "ionicons/css/ionicons.min.css";
-import "style.scss";
+import 'ionicons/css/ionicons.min.css'
+import 'style.scss'
 
 function MyHead() {
   const { title } = React.useContext(AppContext)

@@ -12,6 +12,7 @@
     "dev": "NODE_OPTIONS='--unhandled-rejections=strict' nodemon ./app.js",
     "dev-demo": "NEXT_PUBLIC_DEMO=true npm run dev",
     "dev-pg": "REALWORLD_PG=true npm run dev",
+    "lint": "next lint",
     "seed-prod": "./prod.sh ./bin/generate-demo-data.js --force-production",
     "start": "node --unhandled-rejections=strict ./app.js",
     "start-dev": "NEXT_PUBLIC_NODE_ENV=development NODE_ENV_NEXT_SERVER_ONLY=production node --unhandled-rejections=strict ./app.js",
@@ -51,10 +52,11 @@
     "termit": "0.4.4"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "12.0.7",
     "@types/gtag.js": "0.0.7",
     "@types/node": "14.0.27",
     "@types/react": "17.0.38",
-    "eslint": "7.11.0",
+    "eslint": "8.5.0",
     "eslint-plugin-prettier": "2.6.0",
     "mocha": "6.2.2",
     "newman": "5.2.3",

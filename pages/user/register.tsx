@@ -1,3 +1,3 @@
-import makeLoginPage from "front/LoginPage";
+import makeLoginPage from 'front/LoginPage'
 
 export default makeLoginPage({ register: true });

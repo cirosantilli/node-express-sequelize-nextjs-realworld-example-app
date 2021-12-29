@@ -1,10 +1,10 @@
-import React from "react";
-import { mutate } from "swr";
-import Router from "next/router";
+import React from 'react'
+import { mutate } from 'swr'
+import Router from 'next/router'
 
-import UserAPI from "front/api/user";
-import { SERVER_BASE_URL } from "lib/utils/constant";
-import useLoggedInUser from "lib/utils/useLoggedInUser";
+import UserAPI from 'front/api/user'
+import { SERVER_BASE_URL } from 'lib/utils/constant'
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
 
 export const FollowUserButtonContext = React.createContext(undefined);
 

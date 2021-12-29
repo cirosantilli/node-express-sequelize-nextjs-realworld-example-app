@@ -1,14 +1,14 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import React from "react";
-import { trigger } from "swr";
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import React from 'react'
+import { trigger } from 'swr'
 
-import CustomImage from "front/CustomImage";
-import CustomLink from "front/CustomLink";
-import { SERVER_BASE_URL } from "lib/utils/constant";
-import useLoggedInUser from "lib/utils/useLoggedInUser";
-import { useCtrlEnterSubmit } from "libts";
-import routes from "routes";
+import CustomImage from 'front/CustomImage'
+import CustomLink from 'front/CustomLink'
+import { SERVER_BASE_URL } from 'lib/utils/constant'
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import { useCtrlEnterSubmit } from 'libts'
+import routes from 'routes'
 
 const CommentInput = () => {
   const loggedInUser = useLoggedInUser()

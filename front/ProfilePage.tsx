@@ -1,20 +1,20 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import React from "react";
-import useSWR  from "swr";
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import React from 'react'
+import useSWR  from 'swr'
 
-import ArticleList from "front/ArticleList";
-import CustomLink from "front/CustomLink";
-import CustomImage from "front/CustomImage";
-import LoadingSpinner from "front/LoadingSpinner";
-import Maybe from "front/Maybe";
-import EditProfileButton from "front/EditProfileButton";
-import FollowUserButton, { FollowUserButtonContext } from "front/FollowUserButton";
-import { SERVER_BASE_URL } from "lib/utils/constant";
-import fetcher from "lib/utils/fetcher";
-import useLoggedInUser from "lib/utils/useLoggedInUser";
+import ArticleList from 'front/ArticleList'
+import CustomLink from 'front/CustomLink'
+import CustomImage from 'front/CustomImage'
+import LoadingSpinner from 'front/LoadingSpinner'
+import Maybe from 'front/Maybe'
+import EditProfileButton from 'front/EditProfileButton'
+import FollowUserButton, { FollowUserButtonContext } from 'front/FollowUserButton'
+import { SERVER_BASE_URL } from 'lib/utils/constant'
+import fetcher from 'lib/utils/fetcher'
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
 import { AppContext } from 'libts'
-import routes from "routes";
+import routes from 'routes'
 
 const ProfileHoc = tab => {
   return ({ profile, articles, articlesCount }) => {

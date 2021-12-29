@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react'
 
-import CustomImage from "front/CustomImage";
-import CustomLink from "front/CustomLink";
-import Maybe from "front/Maybe";
-import NavLink from "front/NavLink";
-import { APP_NAME } from "lib/utils/constant";
-import useLoggedInUser from "lib/utils/useLoggedInUser";
+import CustomImage from 'front/CustomImage'
+import CustomLink from 'front/CustomLink'
+import Maybe from 'front/Maybe'
+import NavLink from 'front/NavLink'
+import { APP_NAME } from 'lib/utils/constant'
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
 import { AppContext, resetIndexState } from 'libts'
-import routes from "routes";
+import routes from 'routes'
 
 const NavbarItem = ({ children }) => (
   <li className="nav-item">{children}</li>

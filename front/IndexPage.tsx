@@ -1,14 +1,14 @@
-import Head from "next/head";
-import React from "react";
+import Head from 'next/head'
+import React from 'react'
 
-import ArticleList from "front/ArticleList";
-import CustomLink from "front/CustomLink";
-import Maybe from "front/Maybe";
-import Tags from "front/Tags";
-import { APP_NAME } from "lib/utils/constant";
-import useLoggedInUser from "lib/utils/useLoggedInUser";
+import ArticleList from 'front/ArticleList'
+import CustomLink from 'front/CustomLink'
+import Maybe from 'front/Maybe'
+import Tags from 'front/Tags'
+import { APP_NAME } from 'lib/utils/constant'
+import useLoggedInUser from 'lib/utils/useLoggedInUser'
 import { AppContext, resetIndexState } from 'libts'
-import routes from "routes";
+import routes from 'routes'
 
 const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
   const { page, setPage, tab, setTab, tag, setTag } = React.useContext(AppContext)
