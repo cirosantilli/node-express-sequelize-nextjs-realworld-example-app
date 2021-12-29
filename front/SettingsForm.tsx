@@ -13,11 +13,11 @@ const SettingsForm = () => {
   const [isLoading, setLoading] = React.useState(false)
   const [errors, setErrors] = React.useState([])
   const [userInfo, setUserInfo] = React.useState({
-    image: "",
-    username: "",
-    bio: "",
-    email: "",
-    password: "",
+    image: '',
+    username: '',
+    bio: '',
+    email: '',
+    password: '',
   })
   const loggedInUser = useLoggedInUser()
   React.useEffect(() => {
@@ -41,7 +41,7 @@ const SettingsForm = () => {
       JSON.stringify({ user }),
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Token ${loggedInUser?.token}`,
         },
       }
@@ -51,13 +51,15 @@ const SettingsForm = () => {
       setErrors(data.errors.body)
     }
     if (data?.user) {
-      const { data: profileData, status: profileStatus } = await UserAPI.get(data.user.username)
+      const { data: profileData, status: profileStatus } = await UserAPI.get(
+        data.user.username
+      )
       if (profileStatus !== 200) {
         setErrors(profileData.errors)
       }
       data.user.effectiveImage = profileData.profile.image
-      window.localStorage.setItem("user", JSON.stringify(data.user))
-      mutate("user", data.user)
+      window.localStorage.setItem('user', JSON.stringify(data.user))
+      mutate('user', data.user)
       Router.push(`/profile/${user.username}`)
     }
   }
@@ -72,8 +74,8 @@ const SettingsForm = () => {
               className="form-control"
               type="text"
               placeholder="URL of profile picture"
-              value={userInfo.image ? userInfo.image : ""}
-              onChange={updateState("image")}
+              value={userInfo.image ? userInfo.image : ''}
+              onChange={updateState('image')}
             />
           </fieldset>
           <fieldset className="form-group">
@@ -82,7 +84,7 @@ const SettingsForm = () => {
               type="text"
               placeholder="Username"
               value={userInfo.username}
-              onChange={updateState("username")}
+              onChange={updateState('username')}
             />
           </fieldset>
           <fieldset className="form-group">
@@ -91,7 +93,7 @@ const SettingsForm = () => {
               rows={8}
               placeholder="Short bio about you"
               value={userInfo.bio}
-              onChange={updateState("bio")}
+              onChange={updateState('bio')}
             />
           </fieldset>
           <fieldset className="form-group">
@@ -100,7 +102,7 @@ const SettingsForm = () => {
               type="email"
               placeholder="Email"
               value={userInfo.email}
-              onChange={updateState("email")}
+              onChange={updateState('email')}
             />
           </fieldset>
           <fieldset className="form-group">
@@ -109,7 +111,7 @@ const SettingsForm = () => {
               type="password"
               placeholder="New Password"
               value={userInfo.password}
-              onChange={updateState("password")}
+              onChange={updateState('password')}
             />
           </fieldset>
           <button

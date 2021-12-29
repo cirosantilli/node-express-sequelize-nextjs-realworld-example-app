@@ -6,15 +6,13 @@ import sequelize from 'back/db'
 export const getStaticPathsArticle: GetStaticPaths = async () => {
   let paths
   if (prerenderAll) {
-    paths = (await sequelize.models.Article.findAll()).map(
-      article => {
-        return {
-          params: {
-            pid: article.slug,
-          }
-        }
+    paths = (await sequelize.models.Article.findAll()).map((article) => {
+      return {
+        params: {
+          pid: article.slug,
+        },
       }
-    )
+    })
   } else {
     paths = []
   }
@@ -24,7 +22,10 @@ export const getStaticPathsArticle: GetStaticPaths = async () => {
   }
 }
 
-export function getStaticPropsArticle(addRevalidate?, addComments?) : GetStaticProps {
+export function getStaticPropsArticle(
+  addRevalidate?,
+  addComments?
+): GetStaticProps {
   return async ({ params: { pid } }) => {
     const article = await sequelize.models.Article.findOne({
       where: { slug: pid },
@@ -32,7 +33,7 @@ export function getStaticPropsArticle(addRevalidate?, addComments?) : GetStaticP
     })
     if (!article) {
       return {
-        notFound: true
+        notFound: true,
       }
     }
     let comments
@@ -50,7 +51,9 @@ export function getStaticPropsArticle(addRevalidate?, addComments?) : GetStaticP
       ret.revalidate = revalidate
     }
     if (addComments) {
-      ret.props.comments = await Promise.all(comments.map(comment => comment.toJson()))
+      ret.props.comments = await Promise.all(
+        comments.map((comment) => comment.toJson())
+      )
     }
     return ret
   }

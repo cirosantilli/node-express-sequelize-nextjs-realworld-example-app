@@ -12,25 +12,25 @@ function getSequelize(toplevelDir, toplevelBasename) {
     define: {
       freezeTableName: true,
     },
-  };
-  let sequelize;
+  }
+  let sequelize
   if (config.isProduction || config.postgres) {
-    sequelizeParams.dialect = config.production.dialect;
-    sequelizeParams.dialectOptions = config.production.dialectOptions;
-    sequelize = new Sequelize(config.production.url, sequelizeParams);
+    sequelizeParams.dialect = config.production.dialect
+    sequelizeParams.dialectOptions = config.production.dialectOptions
+    sequelize = new Sequelize(config.production.url, sequelizeParams)
   } else {
-    sequelizeParams.dialect = config.development.dialect;
-    let storage;
+    sequelizeParams.dialect = config.development.dialect
+    let storage
     if (process.env.NODE_ENV === 'test' || toplevelDir === undefined) {
-      storage = ':memory:';
+      storage = ':memory:'
     } else {
       if (toplevelBasename === undefined) {
-        toplevelBasename = config.development.storage;
+        toplevelBasename = config.development.storage
       }
-      storage = path.join(toplevelDir, toplevelBasename);
+      storage = path.join(toplevelDir, toplevelBasename)
     }
-    sequelizeParams.storage = storage;
-    sequelize = new Sequelize(sequelizeParams);
+    sequelizeParams.storage = storage
+    sequelize = new Sequelize(sequelizeParams)
   }
   const Article = require('./article')(sequelize)
   const Comment = require('./comment')(sequelize)
@@ -41,77 +41,76 @@ function getSequelize(toplevelDir, toplevelBasename) {
   // Associations.
 
   // User follow user (super many to many)
-  const UserFollowUser = sequelize.define('UserFollowUser',
+  const UserFollowUser = sequelize.define(
+    'UserFollowUser',
     {
       userId: {
         type: DataTypes.INTEGER,
         references: {
           model: User,
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       followId: {
         type: DataTypes.INTEGER,
         references: {
           model: User,
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
     },
     {
-      tableName: 'UserFollowUser'
+      tableName: 'UserFollowUser',
     }
-  );
+  )
   User.belongsToMany(User, {
     through: UserFollowUser,
     as: 'follows',
     foreignKey: 'userId',
-    otherKey: 'followId'
-  });
+    otherKey: 'followId',
+  })
   User.belongsToMany(User, {
     through: UserFollowUser,
     as: 'followed',
     foreignKey: 'followId',
     otherKey: 'userId',
-  });
-  UserFollowUser.belongsTo(User, {foreignKey: 'userId'})
-  User.hasMany(UserFollowUser, {foreignKey: 'followId'})
+  })
+  UserFollowUser.belongsTo(User, { foreignKey: 'userId' })
+  User.hasMany(UserFollowUser, { foreignKey: 'followId' })
 
   // User favorite Article (super many to many)
-  const UserFavoriteArticle = sequelize.define('UserFavoriteArticle',
-    {
-      userId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: User,
-          key: 'id'
-        }
-      },
-      articleId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: Article,
-          key: 'id'
-        }
+  const UserFavoriteArticle = sequelize.define('UserFavoriteArticle', {
+    userId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: User,
+        key: 'id',
       },
     },
-  );
+    articleId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Article,
+        key: 'id',
+      },
+    },
+  })
   Article.belongsToMany(User, {
     through: UserFavoriteArticle,
     as: 'favoritedBy',
     foreignKey: 'articleId',
     otherKey: 'userId',
-  });
+  })
   User.belongsToMany(Article, {
     through: UserFavoriteArticle,
     as: 'favorites',
     foreignKey: 'userId',
     otherKey: 'articleId',
-  });
-  Article.hasMany(UserFavoriteArticle, { foreignKey: 'articleId' });
-  UserFavoriteArticle.belongsTo(Article, { foreignKey: 'articleId' });
-  User.hasMany(UserFavoriteArticle, { foreignKey: 'userId' });
-  UserFavoriteArticle.belongsTo(User, { foreignKey: 'userId' });
+  })
+  Article.hasMany(UserFavoriteArticle, { foreignKey: 'articleId' })
+  UserFavoriteArticle.belongsTo(Article, { foreignKey: 'articleId' })
+  User.hasMany(UserFavoriteArticle, { foreignKey: 'userId' })
+  UserFavoriteArticle.belongsTo(User, { foreignKey: 'userId' })
 
   // User authors Article
   User.hasMany(Article, {
@@ -145,40 +144,40 @@ function getSequelize(toplevelDir, toplevelBasename) {
   User.hasMany(Comment, {
     foreignKey: 'authorId',
     onDelete: 'CASCADE',
-  });
+  })
   Comment.belongsTo(User, {
     as: 'author',
     foreignKey: {
       name: 'authorId',
       allowNull: false,
     },
-  });
+  })
 
   // Tag Article
   Article.belongsToMany(Tag, {
     through: 'ArticleTag',
     as: 'tags',
     foreignKey: 'articleId',
-    otherKey: 'tagId'
-  });
+    otherKey: 'tagId',
+  })
   Tag.belongsToMany(Article, {
     through: 'ArticleTag',
     as: 'taggedArticles',
     foreignKey: 'tagId',
-    otherKey: 'articleId'
-  });
+    otherKey: 'articleId',
+  })
 
-  return sequelize;
+  return sequelize
 }
 
 // Do sequelize.sync, and then also populate SequelizeMeta with migrations
 // that might not be needed if we've just done a full sync.
-async function sync(sequelize, opts={}) {
+async function sync(sequelize, opts = {}) {
   let dbExists
   try {
     await sequelize.models.SequelizeMeta.findOne()
     dbExists = true
-  } catch(e) {
+  } catch (e) {
     if (e instanceof DatabaseError) {
       dbExists = false
     }
@@ -186,9 +185,11 @@ async function sync(sequelize, opts={}) {
   await sequelize.sync(opts)
   if (!dbExists || opts.force) {
     await sequelize.models.SequelizeMeta.bulkCreate(
-      fs.readdirSync(path.join(path.dirname(__dirname), 'migrations')).map(
-        basename => { return { name: basename } }
-      )
+      fs
+        .readdirSync(path.join(path.dirname(__dirname), 'migrations'))
+        .map((basename) => {
+          return { name: basename }
+        })
     )
   }
   return dbExists

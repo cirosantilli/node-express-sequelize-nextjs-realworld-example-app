@@ -5,14 +5,15 @@ import Router from 'next/router'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
 import useLoggedInUser from 'lib/utils/useLoggedInUser'
 
-const FAVORITED_CLASS = "btn btn-sm btn-primary"
-const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary"
+const FAVORITED_CLASS = 'btn btn-sm btn-primary'
+const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary'
 
 export const FavoriteArticleButtonContext = React.createContext(undefined)
 
 const FavoriteArticleButton = (props) => {
   const loggedInUser = useLoggedInUser()
-  const {favorited, setFavorited, favoritesCount, setFavoritesCount} = React.useContext(FavoriteArticleButtonContext)
+  const { favorited, setFavorited, favoritesCount, setFavoritesCount } =
+    React.useContext(FavoriteArticleButtonContext)
   let buttonText
   if (props.showText) {
     if (favorited) {
@@ -30,14 +31,17 @@ const FavoriteArticleButton = (props) => {
       return
     }
     setFavorited(!favorited)
-    setFavoritesCount(favoritesCount + (favorited ? - 1 : 1))
+    setFavoritesCount(favoritesCount + (favorited ? -1 : 1))
     try {
       if (favorited) {
-        await axios.delete(`${SERVER_BASE_URL}/articles/${props.slug}/favorite`, {
-          headers: {
-            Authorization: `Token ${loggedInUser?.token}`,
-          },
-        })
+        await axios.delete(
+          `${SERVER_BASE_URL}/articles/${props.slug}/favorite`,
+          {
+            headers: {
+              Authorization: `Token ${loggedInUser?.token}`,
+            },
+          }
+        )
       } else {
         await axios.post(
           `${SERVER_BASE_URL}/articles/${props.slug}/favorite`,
@@ -56,17 +60,16 @@ const FavoriteArticleButton = (props) => {
   }
   let count = favoritesCount
   if (props.showText) {
-    count = (<span className="counter">({count})</span>)
+    count = <span className="counter">({count})</span>
   }
   return (
     <button
-      className={
-        favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS
-      }
+      className={favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS}
       onClick={() => handleClickFavorite()}
     >
-      <i className="ion-heart" />{props.showText ? ' ' : ''}{buttonText}
-      {' '}{count}
+      <i className="ion-heart" />
+      {props.showText ? ' ' : ''}
+      {buttonText} {count}
     </button>
   )
 }

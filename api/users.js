@@ -4,21 +4,25 @@ const passport = require('passport')
 const auth = require('../auth')
 const lib = require('../lib')
 
-router.get('/user', auth.required, async function(req, res, next) {
+router.get('/user', auth.required, async function (req, res, next) {
   try {
-    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    const user = await req.app
+      .get('sequelize')
+      .models.User.findByPk(req.payload.id)
     if (!user) {
       return res.sendStatus(401)
     }
     return res.json({ user: user.toAuthJSON() })
-  } catch(error) {
-    next(error);
+  } catch (error) {
+    next(error)
   }
 })
 
-router.put('/user', auth.required, async function(req, res, next) {
+router.put('/user', auth.required, async function (req, res, next) {
   try {
-    const user = await req.app.get('sequelize').models.User.findByPk(req.payload.id)
+    const user = await req.app
+      .get('sequelize')
+      .models.User.findByPk(req.payload.id)
     if (!user) {
       return res.sendStatus(401)
     }
@@ -37,17 +41,19 @@ router.put('/user', auth.required, async function(req, res, next) {
         user.image = req.body.user.image
       }
       if (typeof req.body.user.password !== 'undefined') {
-        req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
+        req.app
+          .get('sequelize')
+          .models.User.setPassword(user, req.body.user.password)
       }
       await user.save()
     }
     return res.json({ user: user.toAuthJSON() })
-  } catch(error) {
-    next(error);
+  } catch (error) {
+    next(error)
   }
 })
 
-router.post('/users/login', function(req, res, next) {
+router.post('/users/login', function (req, res, next) {
   if (!req.body.user) {
     return res.status(422).json({ errors: { user: "can't be blank" } })
   }
@@ -57,20 +63,24 @@ router.post('/users/login', function(req, res, next) {
   if (!req.body.user.password) {
     return res.status(422).json({ errors: { password: "can't be blank" } })
   }
-  passport.authenticate('local', { session: false }, function(err, user, info) {
-    if (err) {
-      return next(err)
+  passport.authenticate(
+    'local',
+    { session: false },
+    function (err, user, info) {
+      if (err) {
+        return next(err)
+      }
+      if (user) {
+        user.token = user.generateJWT()
+        return res.json({ user: user.toAuthJSON() })
+      } else {
+        return res.status(422).json(info)
+      }
     }
-    if (user) {
-      user.token = user.generateJWT()
-      return res.json({ user: user.toAuthJSON() })
-    } else {
-      return res.status(422).json(info)
-    }
-  })(req, res, next)
+  )(req, res, next)
 })
 
-router.post('/users', async function(req, res, next) {
+router.post('/users', async function (req, res, next) {
   try {
     let user = new (req.app.get('sequelize').models.User)()
     if (!req.body.user) {
@@ -82,12 +92,14 @@ router.post('/users', async function(req, res, next) {
     user.username = req.body.user.username
     user.email = req.body.user.email
     user.ip = lib.getClientIp(req)
-    req.app.get('sequelize').models.User.setPassword(user, req.body.user.password)
+    req.app
+      .get('sequelize')
+      .models.User.setPassword(user, req.body.user.password)
     await user.save()
     await lib.deleteOldestForDemo(req.app.get('sequelize').models.User)
     return res.json({ user: user.toAuthJSON() })
-  } catch(error) {
-    next(error);
+  } catch (error) {
+    next(error)
   }
 })
 

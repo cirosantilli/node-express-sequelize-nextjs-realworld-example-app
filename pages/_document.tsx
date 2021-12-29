@@ -18,7 +18,10 @@ class MyDocument extends Document<IProps> {
         <Head>
           {isProduction && (
             <>
-              <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
+              <script
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+              ></script>
               <script
                 dangerouslySetInnerHTML={{
                   __html: `window.dataLayer = window.dataLayer || []

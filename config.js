@@ -1,11 +1,11 @@
-let isProduction;
+let isProduction
 if (process.env.NEXT_PUBLIC_NODE_ENV === undefined) {
   isProduction = process.env.NODE_ENV === 'production'
 } else {
   isProduction = process.env.NEXT_PUBLIC_NODE_ENV === 'production'
 }
 
-let demoMaxObjs;
+let demoMaxObjs
 if (isProduction) {
   demoMaxObjs = 1000
 } else {
@@ -30,9 +30,10 @@ module.exports = {
   // * in browser effects, e.g. show Google Analytics or not?
   isProduction,
   // Overrides isProduction for the "is Next.js server dev or prod?" only.
-  isProductionNext: process.env.NODE_ENV_NEXT_SERVER_ONLY === undefined ?
-    (isProduction) :
-    (process.env.NODE_ENV_NEXT_SERVER_ONLY === 'production'),
+  isProductionNext:
+    process.env.NODE_ENV_NEXT_SERVER_ONLY === undefined
+      ? isProduction
+      : process.env.NODE_ENV_NEXT_SERVER_ONLY === 'production',
   port: process.env.PORT || 3000,
   // Makes deployment impossibly slow if there are lots of pages
   // like in a real-world production public website.
@@ -41,9 +42,7 @@ module.exports = {
   revalidate: 10,
   secret: isProduction ? process.env.SECRET : 'secret',
   verbose: process.env.VERBOSE,
-  blacklistTags: new Set([
-    'cypress',
-  ]),
+  blacklistTags: new Set(['cypress']),
 
   // Used by sequelize-cli as well as our source code.
   development: {
@@ -52,7 +51,9 @@ module.exports = {
     storage: 'db.sqlite3',
   },
   production: {
-    url: process.env.DATABASE_URL || 'postgres://realworld_next_user:a@localhost:5432/realworld_next',
+    url:
+      process.env.DATABASE_URL ||
+      'postgres://realworld_next_user:a@localhost:5432/realworld_next',
     dialect: 'postgres',
     dialectOptions: {
       // https://stackoverflow.com/questions/27687546/cant-connect-to-heroku-postgresql-database-from-local-node-app-with-sequelize
@@ -61,8 +62,8 @@ module.exports = {
       ssl: {
         require: true,
         rejectUnauthorized: false,
-      }
+      },
     },
     logging: true,
-  }
+  },
 }

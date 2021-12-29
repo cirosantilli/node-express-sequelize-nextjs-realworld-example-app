@@ -15,7 +15,9 @@ const NavLink = ({ href, onClick, children }: NavLinkProps) => {
       <a
         onClick={onClick}
         className={`${
-          encodeURIComponent(asPath) === encodeURIComponent(href) && 'active ' || ''
+          (encodeURIComponent(asPath) === encodeURIComponent(href) &&
+            'active ') ||
+          ''
         }nav-link`}
       >
         {children}

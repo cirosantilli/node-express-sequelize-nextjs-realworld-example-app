@@ -61,8 +61,11 @@ const MyApp = ({ Component, pageProps }) => {
         <MyHead />
         <Navbar />
         {isDemo && (
-          <div className="container" style={{marginBottom: '20px'}}>
-            Source code for this website: <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app</a>
+          <div className="container" style={{ marginBottom: '20px' }}>
+            Source code for this website:{' '}
+            <a href="https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app">
+              https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app
+            </a>
           </div>
         )}
         <Component {...pageProps} />
@@ -72,8 +75,10 @@ const MyApp = ({ Component, pageProps }) => {
               {APP_NAME.toLowerCase()}
             </CustomLink>
             <span className="attribution">
-              {" "}© 2021. An interactive learning project from{" "}
-              <a href="https://thinkster.io">Thinkster</a>. Code licensed under MIT.
+              {' '}
+              © 2021. An interactive learning project from{' '}
+              <a href="https://thinkster.io">Thinkster</a>. Code licensed under
+              MIT.
             </span>
           </div>
         </footer>

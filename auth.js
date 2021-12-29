@@ -15,8 +15,7 @@ function getTokenFromHeader(authorization) {
 
 function getTokenFromRequest(req) {
   let ret = getTokenFromHeader(req.headers.authorization)
-  if (ret)
-    return ret
+  if (ret) return ret
   // If one day we want to allow API GET requests with the cookie.
   // Does not work for Next.js routes.
   //if (
@@ -35,12 +34,12 @@ module.exports = {
   required: jwt({
     secret: secret,
     userProperty: 'payload',
-    getToken: getTokenFromRequest
+    getToken: getTokenFromRequest,
   }),
   optional: jwt({
     secret: secret,
     userProperty: 'payload',
     credentialsRequired: false,
-    getToken: getTokenFromRequest
-  })
+    getToken: getTokenFromRequest,
+  }),
 }

@@ -6,35 +6,33 @@
 // Originally added for next build since we don't know how to run hooks.
 // before next build, and the database wouldn't exist otherwise.
 
-(async () => {
-const path = require('path')
-const child_process = require('child_process');
-const { DatabaseError } = require('sequelize')
-const config = require('../config')
-const models = require('../models')
+;(async () => {
+  const path = require('path')
+  const child_process = require('child_process')
+  const { DatabaseError } = require('sequelize')
+  const config = require('../config')
+  const models = require('../models')
 
-const sequelize = models.getSequelize(path.dirname(__dirname));
-let dbEmpty = true;
-try {
-  await sequelize.models.SequelizeMeta.findOne()
-  dbEmpty = false
-} catch(e) {
-  if (e instanceof DatabaseError) {
-    await models.sync(sequelize)
+  const sequelize = models.getSequelize(path.dirname(__dirname))
+  let dbEmpty = true
+  try {
+    await sequelize.models.SequelizeMeta.findOne()
+    dbEmpty = false
+  } catch (e) {
+    if (e instanceof DatabaseError) {
+      await models.sync(sequelize)
+    }
   }
-}
-if (!dbEmpty) {
-  const env = process.env
-  if (config.postgres) {
-    env.NODE_ENV = 'production'
+  if (!dbEmpty) {
+    const env = process.env
+    if (config.postgres) {
+      env.NODE_ENV = 'production'
+    }
+    out = child_process.spawnSync('npx', ['sequelize-cli', 'db:migrate'], {
+      env,
+    })
+    console.error(out.stdout.toString())
+    console.error(out.stderr.toString())
+    process.exit(out.status)
   }
-  out = child_process.spawnSync(
-    'npx',
-    ['sequelize-cli', 'db:migrate'],
-    { env }
-  )
-  console.error(out.stdout.toString());
-  console.error(out.stderr.toString());
-  process.exit(out.status)
-}
 })()

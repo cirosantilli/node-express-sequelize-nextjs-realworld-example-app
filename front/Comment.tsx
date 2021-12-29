@@ -14,9 +14,7 @@ const Comment = ({ comment }) => {
     loggedInUser && loggedInUser?.username === comment?.author?.username
   return (
     <div className="card">
-      <div className="card-block">
-        {comment.body}
-      </div>
+      <div className="card-block">{comment.body}</div>
       <div className="card-footer">
         <CustomLink
           href={routes.userView(comment.author.username)}

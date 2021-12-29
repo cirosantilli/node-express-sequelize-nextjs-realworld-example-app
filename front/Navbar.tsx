@@ -9,9 +9,7 @@ import useLoggedInUser from 'lib/utils/useLoggedInUser'
 import { AppContext, resetIndexState } from 'libts'
 import routes from 'routes'
 
-const NavbarItem = ({ children }) => (
-  <li className="nav-item">{children}</li>
-)
+const NavbarItem = ({ children }) => <li className="nav-item">{children}</li>
 
 const Navbar = () => {
   const loggedInUser = useLoggedInUser()
@@ -20,7 +18,11 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <CustomLink href={routes.home()} onClick={clickHandler} className="navbar-brand">
+        <CustomLink
+          href={routes.home()}
+          onClick={clickHandler}
+          className="navbar-brand"
+        >
           {APP_NAME.toLowerCase()}
         </CustomLink>
         <ul className="nav navbar-nav pull-xs-right">
@@ -43,9 +45,7 @@ const Navbar = () => {
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink
-                href={routes.userView(loggedInUser?.username)}
-              >
+              <NavLink href={routes.userView(loggedInUser?.username)}>
                 <CustomImage
                   className="user-pic"
                   src={loggedInUser?.effectiveImage}
@@ -57,14 +57,10 @@ const Navbar = () => {
           </Maybe>
           <Maybe test={!loggedInUser}>
             <NavbarItem>
-              <NavLink href={routes.userLogin()}>
-                Sign in
-              </NavLink>
+              <NavLink href={routes.userLogin()}>Sign in</NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink href={routes.userNew()}>
-                Sign up
-              </NavLink>
+              <NavLink href={routes.userNew()}>Sign up</NavLink>
             </NavbarItem>
           </Maybe>
         </ul>

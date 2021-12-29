@@ -11,7 +11,8 @@ import { AppContext, resetIndexState } from 'libts'
 import routes from 'routes'
 
 const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
-  const { page, setPage, tab, setTab, tag, setTag } = React.useContext(AppContext)
+  const { page, setPage, tab, setTab, tag, setTag } =
+    React.useContext(AppContext)
   const loggedInUser = useLoggedInUser()
   React.useEffect(() => {
     resetIndexState(setPage, setTab, loggedInUser)
@@ -41,7 +42,9 @@ const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
                   <Maybe test={loggedInUser}>
                     <li className="nav-item">
                       <a
-                        className={`link nav-link${tab === 'feed' ? ' active' : ''}`}
+                        className={`link nav-link${
+                          tab === 'feed' ? ' active' : ''
+                        }`}
                         onClick={() => {
                           setPage(0)
                           setTab('feed')
@@ -53,7 +56,9 @@ const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
                   </Maybe>
                   <li className="nav-item">
                     <a
-                      className={`link nav-link${tab === 'global' ? ' active' : ''}`}
+                      className={`link nav-link${
+                        tab === 'global' ? ' active' : ''
+                      }`}
                       onClick={() => {
                         setPage(0)
                         setTab('global')
@@ -64,28 +69,30 @@ const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
                   </li>
                   <Maybe test={tab === 'tag'}>
                     <li className="nav-item">
-                      <a className="link nav-link active" >
+                      <a className="link nav-link active">
                         <i className="ion-pound" /> {tag}
                       </a>
                     </li>
                   </Maybe>
                 </ul>
               </div>
-              <ArticleList {...{
-                articles,
-                articlesCount,
-                loggedInUser,
-                page,
-                setPage,
-                what: tab,
-                ssr,
-                tag,
-              }}/>
+              <ArticleList
+                {...{
+                  articles,
+                  articlesCount,
+                  loggedInUser,
+                  page,
+                  setPage,
+                  what: tab,
+                  ssr,
+                  tag,
+                }}
+              />
             </div>
             <div className="col-md-3">
               <div className="sidebar">
                 <p>Popular Tags</p>
-                <Tags {...{tags, ssr, setTab, setTag, setPage}} />
+                <Tags {...{ tags, ssr, setTab, setTag, setPage }} />
               </div>
             </div>
           </div>

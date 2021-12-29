@@ -8,15 +8,18 @@ import fetcher from 'lib/utils/fetcher'
 import ErrorMessage from 'front/ErrorMessage'
 import { AppContext } from 'libts'
 
-const Tags = ({tags, ssr, setTab, setPage, setTag}) => {
-  const { data, error } = useSWR(ssr ? null : `${SERVER_BASE_URL}/tags`, fetcher())
+const Tags = ({ tags, ssr, setTab, setPage, setTag }) => {
+  const { data, error } = useSWR(
+    ssr ? null : `${SERVER_BASE_URL}/tags`,
+    fetcher()
+  )
   if (error) return <ErrorMessage message="Cannot load popular tags..." />
   if (data) {
-    ({ tags } = data)
+    ;({ tags } = data)
   }
   return (
     <div className="tag-list">
-      {tags?.map(tag => (
+      {tags?.map((tag) => (
         <a
           className="link tag-default tag-pill"
           key={tag}

@@ -12,7 +12,7 @@ async function deleteOldestForDemo(Model) {
       attributes: ['id'],
     })
     if (old.length) {
-      await Model.destroy({ where: { id: old.map(row => row.id) } })
+      await Model.destroy({ where: { id: old.map((row) => row.id) } })
     }
   }
 }
@@ -22,12 +22,12 @@ exports.deleteOldestForDemo = deleteOldestForDemo
 // Works on Heroku 2021.
 function getClientIp(req) {
   return req.header('x-forwarded-for')
-};
+}
 exports.getClientIp = getClientIp
 
 class ValidationError extends Error {
   constructor(errors, status) {
-    super();
+    super()
     this.errors = errors
     this.status = status
   }
@@ -35,9 +35,14 @@ class ValidationError extends Error {
 exports.ValidationError = ValidationError
 
 async function getIndexTags(sequelize) {
-  return (await sequelize.models.Tag.findAll({
-    order: [['createdAt', 'DESC'], ['name', 'ASC']],
-  })).map(tag => tag.name)
+  return (
+    await sequelize.models.Tag.findAll({
+      order: [
+        ['createdAt', 'DESC'],
+        ['name', 'ASC'],
+      ],
+    })
+  ).map((tag) => tag.name)
 }
 exports.getIndexTags = getIndexTags
 
@@ -58,8 +63,12 @@ function validateParam(obj, prop, validator, defaultValue) {
       return val
     } else {
       throw new ValidationError(
-        { [prop]: [`validator ${validator.name} failed on ${prop} = "${param}"`] },
-        422,
+        {
+          [prop]: [
+            `validator ${validator.name} failed on ${prop} = "${param}"`,
+          ],
+        },
+        422
       )
     }
   }

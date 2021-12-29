@@ -10,9 +10,9 @@ const now = perf_hooks.performance.now
 
 // https://stackoverflow.com/questions/563406/add-days-to-javascript-date
 function addDays(oldDate, days) {
-  const newDate = new Date(oldDate.valueOf());
-  newDate.setDate(oldDate.getDate() + days);
-  return newDate;
+  const newDate = new Date(oldDate.valueOf())
+  newDate.setDate(oldDate.getDate() + days)
+  return newDate
 }
 const DATE0 = new Date(2000, 0, 0, 0, 0, 0, 0)
 
@@ -25,7 +25,7 @@ function makeComment(articleId, authorId, i) {
 }
 exports.makeComment = makeComment
 
-function makeArticle(i=0, opts) {
+function makeArticle(i = 0, opts) {
   let ret = {
     title: `My title ${i}`,
     description: `My description ${i}`,
@@ -83,7 +83,7 @@ function makeTag(i) {
 }
 exports.makeTag = makeTag
 
-function makeUser(sequelize, i=0) {
+function makeUser(sequelize, i = 0) {
   const userArg = {
     username: `user${i}`,
     email: `user${i}@mail.com`,
@@ -97,24 +97,31 @@ function makeUser(sequelize, i=0) {
   } else {
     userArg.password = password
   }
-  return userArg;
+  return userArg
 }
 exports.makeUser = makeUser
 
-let printTimeNow;
+let printTimeNow
 function printTime() {
   const newNow = now()
-  console.error((newNow - printTimeNow)/1000.0)
+  console.error((newNow - printTimeNow) / 1000.0)
   printTimeNow = newNow
 }
 
 async function generateDemoData(params) {
   const nUsers = params.nUsers === undefined ? 10 : params.nUsers
-  const nArticlesPerUser = params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
-  const nMaxCommentsPerArticle = params.nMaxCommentsPerArticle === undefined ? 3 : params.nMaxCommentsPerArticle
-  const nMaxTagsPerArticle = params.nMaxTagsPerArticle === undefined ? 3 : params.nMaxTagsPerArticle
-  const nFollowsPerUser = params.nFollowsPerUser === undefined ? 2 : params.nFollowsPerUser
-  const nFavoritesPerUser = params.nFavoritesPerUser === undefined ? 5 : params.nFavoritesPerUser
+  const nArticlesPerUser =
+    params.nArticlesPerUser === undefined ? 10 : params.nArticlesPerUser
+  const nMaxCommentsPerArticle =
+    params.nMaxCommentsPerArticle === undefined
+      ? 3
+      : params.nMaxCommentsPerArticle
+  const nMaxTagsPerArticle =
+    params.nMaxTagsPerArticle === undefined ? 3 : params.nMaxTagsPerArticle
+  const nFollowsPerUser =
+    params.nFollowsPerUser === undefined ? 2 : params.nFollowsPerUser
+  const nFavoritesPerUser =
+    params.nFavoritesPerUser === undefined ? 5 : params.nFavoritesPerUser
   const nTags = params.nTags === undefined ? 10 : params.nTags
   const directory = params.directory
   const basename = params.basename
@@ -122,19 +129,19 @@ async function generateDemoData(params) {
 
   const nArticles = nUsers * nArticlesPerUser
 
-  const sequelize = models.getSequelize(directory, basename);
+  const sequelize = models.getSequelize(directory, basename)
   await models.sync(sequelize, { force: true })
 
   printTimeNow = now()
-  if (verbose) console.error('User');
-  const userArgs = [];
+  if (verbose) console.error('User')
+  const userArgs = []
   for (var i = 0; i < nUsers; i++) {
     userArgs.push(makeUser(sequelize, i))
   }
   const users = await sequelize.models.User.bulkCreate(userArgs)
   if (verbose) printTime()
 
-  if (verbose) console.error('UserFollowUser');
+  if (verbose) console.error('UserFollowUser')
   const followArgs = []
   for (var i = 0; i < nUsers; i++) {
     const userId = users[i].id
@@ -148,23 +155,20 @@ async function generateDemoData(params) {
   await sequelize.models.UserFollowUser.bulkCreate(followArgs)
   if (verbose) printTime()
 
-  if (verbose) console.error('Article');
-  const articleArgs = [];
+  if (verbose) console.error('Article')
+  const articleArgs = []
   for (var i = 0; i < nArticles; i++) {
     const userIdx = i % nUsers
     const date = addDays(DATE0, i)
     articleArgs.push(makeArticle(i, { authorId: users[userIdx].id, date }))
   }
-  const articles = await sequelize.models.Article.bulkCreate(
-    articleArgs,
-    {
-      validate: true,
-      individualHooks: true,
-    }
-  )
+  const articles = await sequelize.models.Article.bulkCreate(articleArgs, {
+    validate: true,
+    individualHooks: true,
+  })
   if (verbose) printTime()
 
-  if (verbose) console.error('UserFavoriteArticle');
+  if (verbose) console.error('UserFavoriteArticle')
   let articleIdx = 0
   const favoriteArgs = []
   for (var i = 0; i < nUsers; i++) {
@@ -180,7 +184,7 @@ async function generateDemoData(params) {
   await sequelize.models.UserFavoriteArticle.bulkCreate(favoriteArgs)
   if (verbose) printTime()
 
-  if (verbose) console.error('Tag');
+  if (verbose) console.error('Tag')
   const tagArgs = []
   for (var i = 0; i < nTags; i++) {
     tagArgs.push(makeTag(i))
@@ -188,11 +192,11 @@ async function generateDemoData(params) {
   const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
   if (verbose) printTime()
 
-  if (verbose) console.error('ArticleTag');
+  if (verbose) console.error('ArticleTag')
   let tagIdx = 0
   const articleTagArgs = []
   for (var i = 0; i < nArticles; i++) {
-    for (var j = 0; j < (i % (nMaxTagsPerArticle + 1)); j++) {
+    for (var j = 0; j < i % (nMaxTagsPerArticle + 1); j++) {
       articleTagArgs.push({
         articleId: articles[i].id,
         tagId: tags[tagIdx % nTags].id,
@@ -203,16 +207,14 @@ async function generateDemoData(params) {
   await sequelize.models.ArticleTag.bulkCreate(articleTagArgs)
   if (verbose) printTime()
 
-  if (verbose) console.error('Comment');
-  const commentArgs = [];
-  let commentIdx = 0;
+  if (verbose) console.error('Comment')
+  const commentArgs = []
+  let commentIdx = 0
   for (var i = 0; i < nArticles; i++) {
-    for (var j = 0; j < (i % (nMaxCommentsPerArticle + 1)); j++) {
-      commentArgs.push(makeComment(
-        articles[i].id,
-        users[commentIdx % nUsers].id,
-        commentIdx
-      ))
+    for (var j = 0; j < i % (nMaxCommentsPerArticle + 1); j++) {
+      commentArgs.push(
+        makeComment(articles[i].id, users[commentIdx % nUsers].id, commentIdx)
+      )
     }
   }
   const comments = await sequelize.models.Comment.bulkCreate(commentArgs)

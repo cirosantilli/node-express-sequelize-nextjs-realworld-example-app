@@ -12,33 +12,33 @@ import { AppContext } from 'libts'
 
 function editorReducer(state, action) {
   switch (action.type) {
-    case "SET_TITLE":
+    case 'SET_TITLE':
       return {
         ...state,
-        title: action.text
+        title: action.text,
       }
-    case "SET_DESCRIPTION":
+    case 'SET_DESCRIPTION':
       return {
         ...state,
-        description: action.text
+        description: action.text,
       }
-    case "SET_BODY":
+    case 'SET_BODY':
       return {
         ...state,
-        body: action.text
+        body: action.text,
       }
-    case "ADD_TAG":
+    case 'ADD_TAG':
       return {
         ...state,
-        tagList: state.tagList.concat(action.tag)
+        tagList: state.tagList.concat(action.tag),
       }
-    case "REMOVE_TAG":
+    case 'REMOVE_TAG':
       return {
         ...state,
-        tagList: state.tagList.filter(tag => tag !== action.tag)
+        tagList: state.tagList.filter((tag) => tag !== action.tag),
       }
     default:
-      throw new Error("Unhandled action")
+      throw new Error('Unhandled action')
   }
 }
 
@@ -54,9 +54,9 @@ export default function makeArticleEditor(isnew: boolean = false) {
       }
     } else {
       initialState = {
-        title: "",
-        description: "",
-        body: "",
+        title: '',
+        description: '',
+        body: '',
         tagList: [],
       }
     }
@@ -69,24 +69,24 @@ export default function makeArticleEditor(isnew: boolean = false) {
       query: { pid },
     } = router
     const handleTitle = (e) =>
-      dispatch({ type: "SET_TITLE", text: e.target.value })
+      dispatch({ type: 'SET_TITLE', text: e.target.value })
     const handleDescription = (e) =>
-      dispatch({ type: "SET_DESCRIPTION", text: e.target.value })
+      dispatch({ type: 'SET_DESCRIPTION', text: e.target.value })
     const handleBody = (e) =>
-      dispatch({ type: "SET_BODY", text: e.target.value })
-    const addTag = (tag) => dispatch({ type: "ADD_TAG", tag: tag })
-    const removeTag = (tag) => dispatch({ type: "REMOVE_TAG", tag: tag })
+      dispatch({ type: 'SET_BODY', text: e.target.value })
+    const addTag = (tag) => dispatch({ type: 'ADD_TAG', tag: tag })
+    const removeTag = (tag) => dispatch({ type: 'REMOVE_TAG', tag: tag })
     const handleSubmit = async (e) => {
       e.preventDefault()
       setLoading(true)
       let data, status
       if (isnew) {
-        ({ data, status } = await ArticleAPI.create(
+        ;({ data, status } = await ArticleAPI.create(
           posting,
           loggedInUser?.token
         ))
       } else {
-        ({ data, status } = await ArticleAPI.update(
+        ;({ data, status } = await ArticleAPI.update(
           posting,
           router.query.pid,
           loggedInUser?.token
@@ -99,7 +99,7 @@ export default function makeArticleEditor(isnew: boolean = false) {
       Router.push(`/article/${data.article.slug}`)
     }
     useCtrlEnterSubmit(handleSubmit)
-    const {setTitle} = React.useContext(AppContext)
+    const { setTitle } = React.useContext(AppContext)
     React.useEffect(() => {
       setTitle(isnew ? 'New article' : `Editing: ${initialArticle?.title}`)
     }, [isnew, initialArticle?.title])

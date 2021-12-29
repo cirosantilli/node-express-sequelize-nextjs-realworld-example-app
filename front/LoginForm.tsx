@@ -12,10 +12,10 @@ const LoginForm = ({ register = false }) => {
   const [errors, setErrors] = React.useState([])
   let username, setUsername
   if (register) {
-    [username, setUsername] = React.useState("")
+    ;[username, setUsername] = React.useState('')
   }
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
   let handleUsernameChange
   if (register) {
     handleUsernameChange = React.useCallback(
@@ -37,9 +37,9 @@ const LoginForm = ({ register = false }) => {
     try {
       let data, status
       if (register) {
-        ({ data, status } = await UserAPI.register(username, email, password))
+        ;({ data, status } = await UserAPI.register(username, email, password))
       } else {
-        ({ data, status } = await UserAPI.login(email, password))
+        ;({ data, status } = await UserAPI.login(email, password))
       }
       if (status !== 200 && data?.errors) {
         setErrors(data.errors)
@@ -47,15 +47,17 @@ const LoginForm = ({ register = false }) => {
       if (data?.user) {
         // We fetch from /profiles/:username again because the return from /users/login above
         // does not contain the image placeholder.
-        const { data: profileData, status: profileStatus } = await UserAPI.get(data.user.username)
+        const { data: profileData, status: profileStatus } = await UserAPI.get(
+          data.user.username
+        )
         if (profileStatus !== 200) {
           setErrors(profileData.errors)
         }
         data.user.effectiveImage = profileData.profile.image
-        window.localStorage.setItem("user", JSON.stringify(data.user))
+        window.localStorage.setItem('user', JSON.stringify(data.user))
         setCookie('auth', data.user.token)
-        mutate("user", data.user)
-        Router.push("/")
+        mutate('user', data.user)
+        Router.push('/')
       }
     } catch (error) {
       console.error(error)
@@ -69,7 +71,7 @@ const LoginForm = ({ register = false }) => {
       <ListErrors errors={errors} />
       <form onSubmit={handleSubmit}>
         <fieldset>
-          {register &&
+          {register && (
             <fieldset className="form-group">
               <input
                 className="form-control form-control-lg"
@@ -79,7 +81,7 @@ const LoginForm = ({ register = false }) => {
                 onChange={handleUsernameChange}
               />
             </fieldset>
-          }
+          )}
           <fieldset className="form-group">
             <input
               className="form-control form-control-lg"

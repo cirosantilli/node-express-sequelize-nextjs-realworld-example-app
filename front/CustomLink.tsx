@@ -21,11 +21,13 @@ const CustomLink = ({
   if (shallow === undefined) {
     shallow = false
   }
-  return (<Link href={href} passHref shallow={shallow}>
-    <a onClick={onClick} className={className || ""}>
-      {children}
-    </a>
-  </Link>)
+  return (
+    <Link href={href} passHref shallow={shallow}>
+      <a onClick={onClick} className={className || ''}>
+        {children}
+      </a>
+    </Link>
+  )
 }
 
 export default CustomLink

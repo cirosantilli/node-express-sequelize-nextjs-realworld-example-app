@@ -7,7 +7,9 @@ function setCookie(name, value, days, path = '/') {
     delta = days * 864e5
   }
   const expires = new Date(Date.now() + delta).toUTCString()
-  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=${path}`
+  document.cookie = `${name}=${encodeURIComponent(
+    value
+  )};expires=${expires};path=${path}`
 }
 exports.setCookie = setCookie
 
@@ -41,10 +43,10 @@ exports.getCookieFromString = getCookieFromString
 // https://stackoverflow.com/questions/5047346/converting-strings-like-document-cookie-to-objects
 function getCookiesFromString(s) {
   return s.split('; ').reduce((prev, current) => {
-    const [name, ...value] = current.split('=');
-    prev[name] = value.join('=');
-    return prev;
-  }, {});
+    const [name, ...value] = current.split('=')
+    prev[name] = value.join('=')
+    return prev
+  }, {})
 }
 exports.getCookieFromString = getCookieFromString
 

@@ -2,22 +2,22 @@ import { GetStaticProps, GetStaticPaths } from 'next'
 
 import { fallback, revalidate, prerenderAll } from 'config'
 import sequelize from 'back/db'
-import { DEFAULT_LIMIT  } from 'lib/utils/constant'
+import { DEFAULT_LIMIT } from 'lib/utils/constant'
 
 export const getStaticPathsProfile: GetStaticPaths = async () => {
   let paths
   if (prerenderAll) {
-    paths = (await sequelize.models.User.findAll({
-      order: [['username', 'ASC']],
-    })).map(
-      user => {
-        return {
-          params: {
-            pid: user.username,
-          }
-        }
+    paths = (
+      await sequelize.models.User.findAll({
+        order: [['username', 'ASC']],
+      })
+    ).map((user) => {
+      return {
+        params: {
+          pid: user.username,
+        },
       }
-    )
+    })
   } else {
     paths = []
   }
@@ -47,7 +47,7 @@ export function getStaticPropsProfile(tab): GetStaticProps {
       sequelize.models.Article.findAndCountAll({
         order: [['createdAt', 'DESC']],
         limit: DEFAULT_LIMIT,
-        include
+        include,
       }),
       sequelize.models.User.findOne({
         where: { username: pid },
@@ -55,14 +55,16 @@ export function getStaticPropsProfile(tab): GetStaticProps {
     ])
     if (!user) {
       return {
-        notFound: true
+        notFound: true,
       }
     }
     return {
       revalidate,
       props: {
         profile: await user.toProfileJSONFor(),
-        articles: await Promise.all(articles.rows.map(article => article.toJson())),
+        articles: await Promise.all(
+          articles.rows.map((article) => article.toJson())
+        ),
         articlesCount: articles.count,
       },
     }

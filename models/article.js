@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
       slug: {
         type: DataTypes.STRING,
         unique: {
-          message: 'Slug must be unique.'
+          message: 'Slug must be unique.',
         },
         set(v) {
           this.setDataValue('slug', v.toLowerCase())
@@ -32,7 +32,10 @@ module.exports = (sequelize) => {
       hooks: {
         beforeValidate: (article, options) => {
           if (!article.slug) {
-            article.slug = slug(article.title) + '-' + ((Math.random() * Math.pow(36, 6)) | 0).toString(36)
+            article.slug =
+              slug(article.title) +
+              '-' +
+              ((Math.random() * Math.pow(36, 6)) | 0).toString(36)
           }
         },
         beforeDestroy: async (article, options) => {
@@ -49,7 +52,7 @@ module.exports = (sequelize) => {
 
   // Delete tags that are only associated to this article, and which will therefore be
   // deleted after this article is deleted.
-  Article.prototype.deleteEmptyTags = async function(transaction) {
+  Article.prototype.deleteEmptyTags = async function (transaction) {
     // This should alwas be run inside a transaction, as it is an unsafe read modify write loop,
     // otherwise could fail if a new article is created in the middle: we could end up destroying
     // the tag of that article incorrectly. Converting to a single join delete statement
@@ -75,14 +78,18 @@ module.exports = (sequelize) => {
             {
               model: sequelize.models.Article,
               as: 'taggedArticles',
-              required: false
-            }
-          ]
+              required: false,
+            },
+          ],
         },
       ],
       group: ['Tags.id'],
       order: [[sequelize.col('count'), 'DESC']],
-      having: sequelize.where(sequelize.fn('COUNT', sequelize.col('Article.id')), Op.eq, 1),
+      having: sequelize.where(
+        sequelize.fn('COUNT', sequelize.col('Article.id')),
+        Op.eq,
+        1
+      ),
       transaction,
     })
 
@@ -97,7 +104,7 @@ module.exports = (sequelize) => {
     //}
     if (emptyTags.length) {
       sequelize.models.Tag.destroy({
-        where: { id: emptyTags.map(tag => tag.id) },
+        where: { id: emptyTags.map((tag) => tag.id) },
         transaction,
       })
     }
@@ -107,16 +114,16 @@ module.exports = (sequelize) => {
   // tags that might now have no articles, and this need to be in a SERIALIZABLE transaction
   // with post + tag creation to prevent a race condition where the tag of a new post gets
   // wrongly deleted before it is assigned to the post.
-  Article.prototype.destroy2 = async function() {
+  Article.prototype.destroy2 = async function () {
     await sequelize.transaction(
       Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-      async t => {
+      async (t) => {
         await this.destroy({ transaction: t })
       }
     )
   }
 
-  Article.prototype.toJson = async function(user, opts={}) {
+  Article.prototype.toJson = async function (user, opts = {}) {
     // We first check if those have already been fetched. This is ideally done
     // for example from JOINs on a query that fetches multiple articles like the
     // queries that show article lists on the home page.
@@ -125,8 +132,10 @@ module.exports = (sequelize) => {
     const tagPromise = opts.tags ? opts.tags : this.getTags()
     let favoritePromise
     if (user) {
-      favoritePromise = opts.favorited === undefined ?
-        user.hasFavorite(this.id) : opts.favorited
+      favoritePromise =
+        opts.favorited === undefined
+          ? user.hasFavorite(this.id)
+          : opts.favorited
     } else {
       favoritePromise = false
     }
@@ -143,7 +152,7 @@ module.exports = (sequelize) => {
       body: this.body,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
-      tagList: tags.map(tag => tag.name),
+      tagList: tags.map((tag) => tag.name),
       favorited,
       favoritesCount,
       author,

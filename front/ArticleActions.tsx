@@ -19,7 +19,7 @@ const ArticleActions = ({ article }) => {
   } = router
   const handleDelete = async () => {
     if (!loggedInUser) return
-    const result = window.confirm("Do you really want to delete it?")
+    const result = window.confirm('Do you really want to delete it?')
     if (!result) return
     await ArticleAPI.delete(pid, loggedInUser?.token)
     trigger(`${SERVER_BASE_URL}/articles/${pid}`)

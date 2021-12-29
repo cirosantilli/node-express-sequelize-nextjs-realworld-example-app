@@ -13,10 +13,7 @@ const ArticleMeta = ({ article }) => {
       <CustomLink
         href={routes.userView(encodeURIComponent(article.author?.username))}
       >
-        <CustomImage
-          src={article.author?.image}
-          alt="author profile image"
-        />
+        <CustomImage src={article.author?.image} alt="author profile image" />
       </CustomLink>
       <div className="info">
         <CustomLink

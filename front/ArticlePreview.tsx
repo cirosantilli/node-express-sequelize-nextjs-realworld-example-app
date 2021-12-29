@@ -15,13 +15,8 @@ const ArticlePreview = ({ article }) => {
   return (
     <div className="article-preview">
       <div className="article-meta">
-        <CustomLink
-          href={routes.userView(preview.author.username)}
-        >
-          <CustomImage
-            src={preview.author.image}
-            alt="author profile image"
-          />
+        <CustomLink href={routes.userView(preview.author.username)}>
+          <CustomImage src={preview.author.image} alt="author profile image" />
         </CustomLink>
         <div className="info">
           <CustomLink
@@ -30,15 +25,14 @@ const ArticlePreview = ({ article }) => {
           >
             {preview.author.username}
           </CustomLink>
-          <span className="date">
-            {formatDate(preview.createdAt)}
-          </span>
+          <span className="date">{formatDate(preview.createdAt)}</span>
         </div>
         <div className="pull-xs-right">
           <FavoriteArticleButton
             favorited={preview.favorited}
             favoritesCount={preview.favoritesCount}
-            slug={preview.slug} />
+            slug={preview.slug}
+          />
         </div>
       </div>
       <CustomLink
@@ -52,11 +46,7 @@ const ArticlePreview = ({ article }) => {
           {preview.tagList.map((tag, index) => {
             return (
               <Link href={routes.home()} key={index}>
-                <li
-                  className="tag-default tag-pill tag-outline"
-                >
-                  {tag}
-                </li>
+                <li className="tag-default tag-pill tag-outline">{tag}</li>
               </Link>
             )
           })}

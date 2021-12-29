@@ -54,7 +54,7 @@ const ArticleAPI = {
       JSON.stringify({ article }),
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Token ${encodeURIComponent(token)}`,
         },
       }
@@ -71,7 +71,7 @@ const ArticleAPI = {
       JSON.stringify({ article }),
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Token ${encodeURIComponent(token)}`,
         },
       }

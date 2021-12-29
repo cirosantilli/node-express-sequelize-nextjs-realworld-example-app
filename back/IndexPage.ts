@@ -3,7 +3,7 @@ import { GetServerSideProps, GetStaticProps } from 'next'
 import { revalidate } from 'config'
 import sequelize from 'back/db'
 import { getIndexTags } from 'lib'
-import { DEFAULT_LIMIT  } from 'lib/utils/constant'
+import { DEFAULT_LIMIT } from 'lib/utils/constant'
 
 async function getLoggedOutProps() {
   const articles = await sequelize.models.Article.findAndCountAll({
@@ -11,7 +11,9 @@ async function getLoggedOutProps() {
     limit: DEFAULT_LIMIT,
   })
   return {
-    articles: await Promise.all(articles.rows.map(article => article.toJson())),
+    articles: await Promise.all(
+      articles.rows.map((article) => article.toJson())
+    ),
     articlesCount: articles.count,
     tags: await getIndexTags(sequelize),
   }
@@ -30,17 +32,20 @@ function useLoggedInUser(req) {
   }
 }
 
-export const getServerSidePropsHoc: GetServerSideProps = async ({ req, res }) => {
+export const getServerSidePropsHoc: GetServerSideProps = async ({
+  req,
+  res,
+}) => {
   const loggedInUser = useLoggedInUser(req)
   let props
   if (loggedInUser) {
     const [articles, tags] = await Promise.all([
-      sequelize.models.User.findByPk(loggedInUser.id).then(
-        user => user.findAndCountArticlesByFollowedToJson(0, DEFAULT_LIMIT)
+      sequelize.models.User.findByPk(loggedInUser.id).then((user) =>
+        user.findAndCountArticlesByFollowedToJson(0, DEFAULT_LIMIT)
       ),
-      getIndexTags(sequelize)
+      getIndexTags(sequelize),
     ])
-    props = Object.assign(articles, {tags})
+    props = Object.assign(articles, { tags })
   } else {
     props = await getLoggedOutProps()
   }

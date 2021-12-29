@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
     },
     {
       timestamps: false,
-    },
+    }
   )
   return SequelizeMeta
 }

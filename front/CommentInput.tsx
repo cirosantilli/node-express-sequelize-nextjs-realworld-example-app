@@ -16,7 +16,7 @@ const CommentInput = () => {
   const {
     query: { pid },
   } = router
-  const [content, setContent] = React.useState("")
+  const [content, setContent] = React.useState('')
   const [isLoading, setLoading] = React.useState(false)
   const handleChange = React.useCallback((e) => {
     setContent(e.target.value)
@@ -33,34 +33,31 @@ const CommentInput = () => {
       }),
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Token ${encodeURIComponent(loggedInUser?.token)}`,
         },
       }
     )
     setLoading(false)
-    setContent("")
+    setContent('')
     trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`)
   }
   useCtrlEnterSubmit(handleSubmit)
   if (!loggedInUser) {
     return (
       <>
-        <CustomLink href={routes.userLogin()}>
-          Sign in
-        </CustomLink>
-        {' '}or{' '}
-        <CustomLink href={routes.userNew()}>
-          sign up
-        </CustomLink>
-        {' '}to add comments on this article.
+        <CustomLink href={routes.userLogin()}>Sign in</CustomLink> or{' '}
+        <CustomLink href={routes.userNew()}>sign up</CustomLink> to add comments
+        on this article.
       </>
     )
   }
   return (
     <>
-      <ul className="error-messages">{/* TODO. Reference does not handle those errors either right now.
-        but the unconditional (and likely buggy) presence of this is visible. */}</ul>
+      <ul className="error-messages">
+        {/* TODO. Reference does not handle those errors either right now.
+        but the unconditional (and likely buggy) presence of this is visible. */}
+      </ul>
       <form className="card comment-form" onSubmit={handleSubmit}>
         <fieldset>
           <div className="card-block">

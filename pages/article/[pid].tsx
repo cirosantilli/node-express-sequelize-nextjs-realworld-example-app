@@ -68,14 +68,18 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   // Fetch user-specific data.
   // Article determines if the curent user favorited the article or not
   const { data: articleApi } = useSWR(
-  `${SERVER_BASE_URL}/articles/${article?.slug}`, fetcher(router.isFallback))
+    `${SERVER_BASE_URL}/articles/${article?.slug}`,
+    fetcher(router.isFallback)
+  )
   if (articleApi !== undefined) {
     article = articleApi.article
   }
   // We fetch comments so that the new posted comment will appear immediately after posted.
   // Note that we cannot calculate the exact new coment element because we need the server datetime.
   const { data: commentApi } = useSWR(
-    `${SERVER_BASE_URL}/articles/${article?.slug}/comments`, fetcher(router.isFallback))
+    `${SERVER_BASE_URL}/articles/${article?.slug}/comments`,
+    fetcher(router.isFallback)
+  )
   if (commentApi !== undefined) {
     comments = commentApi.comments
   }
@@ -89,17 +93,21 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
     setFollowing(article?.author.following)
   }, [article?.author.following])
   const [favorited, setFavorited] = React.useState(false)
-  const [favoritesCount, setFavoritesCount] = React.useState(article?.favoritesCount)
+  const [favoritesCount, setFavoritesCount] = React.useState(
+    article?.favoritesCount
+  )
   React.useEffect(() => {
     setFavorited(article?.favorited)
     setFavoritesCount(article?.favoritesCount)
   }, [article?.favorited, article?.favoritesCount])
-  const {setPage, setTab, setTag, setTitle} = React.useContext(AppContext)
+  const { setPage, setTab, setTag, setTitle } = React.useContext(AppContext)
   React.useEffect(() => {
     setTitle(article?.title)
   }, [setTitle, article?.title])
 
-  if (router.isFallback) { return <LoadingSpinner />; }
+  if (router.isFallback) {
+    return <LoadingSpinner />
+  }
   const markup = { __html: marked(article.body) }
   return (
     <>
@@ -107,13 +115,21 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
         <div className="banner">
           <div className="container">
             <h1>{article.title}</h1>
-            <FavoriteArticleButtonContext.Provider value={{
-              favorited, setFavorited, favoritesCount, setFavoritesCount
-            }}>
-              <FollowUserButtonContext.Provider value={{
-                following, setFollowing
-              }}>
-                <ArticleMeta article={article}/>
+            <FavoriteArticleButtonContext.Provider
+              value={{
+                favorited,
+                setFavorited,
+                favoritesCount,
+                setFavoritesCount,
+              }}
+            >
+              <FollowUserButtonContext.Provider
+                value={{
+                  following,
+                  setFollowing,
+                }}
+              >
+                <ArticleMeta article={article} />
               </FollowUserButtonContext.Provider>
             </FavoriteArticleButtonContext.Provider>
           </div>
@@ -124,33 +140,34 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
               <div dangerouslySetInnerHTML={markup} />
               <ul className="tag-list">
                 {article.tagList?.map((tag) => (
-                  <li
-                    className="tag-default tag-pill tag-outline"
-                    key={tag}
-                  >
+                  <li className="tag-default tag-pill tag-outline" key={tag}>
                     {tag}
-                    {false && <>
-                      TODO link to index tag list from here. This code almost works, but fails because 
-                      of the resetIndexState call on pages/index.jsx. The problem is I dont know how to
-                      differentiate between clicking a link like this (we want non-default state) and 
-                      first visit/page refresh (we want default state).
-                      This was not in the original Realworld app, but would be an obvious addition:
-                      https://github.com/gothinkster/realworld/issues/649
-
-                      I also tried to add a global flag to make index reset only once, but since each
-                      page re-renders several times due to hooks, that didnt work.
-                      <Link href={routes.home()}>
-                        <a
-                          onClick={() => {
-                            setTab('tag')
-                            setTag(tag)
-                            setPage(0)
-                          }}
-                        >
-                          {tag}
-                        </a>
-                      </Link>
-                    </>}
+                    {false && (
+                      <>
+                        TODO link to index tag list from here. This code almost
+                        works, but fails because of the resetIndexState call on
+                        pages/index.jsx. The problem is I dont know how to
+                        differentiate between clicking a link like this (we want
+                        non-default state) and first visit/page refresh (we want
+                        default state). This was not in the original Realworld
+                        app, but would be an obvious addition:
+                        https://github.com/gothinkster/realworld/issues/649 I
+                        also tried to add a global flag to make index reset only
+                        once, but since each page re-renders several times due
+                        to hooks, that didnt work.
+                        <Link href={routes.home()}>
+                          <a
+                            onClick={() => {
+                              setTab('tag')
+                              setTag(tag)
+                              setPage(0)
+                            }}
+                          >
+                            {tag}
+                          </a>
+                        </Link>
+                      </>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -158,13 +175,21 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
           </div>
           <hr />
           <div className="article-actions">
-            <FavoriteArticleButtonContext.Provider value={{
-              favorited, setFavorited, favoritesCount, setFavoritesCount
-            }}>
-              <FollowUserButtonContext.Provider value={{
-                following, setFollowing
-              }}>
-                <ArticleMeta article={article}/>
+            <FavoriteArticleButtonContext.Provider
+              value={{
+                favorited,
+                setFavorited,
+                favoritesCount,
+                setFavoritesCount,
+              }}
+            >
+              <FollowUserButtonContext.Provider
+                value={{
+                  following,
+                  setFollowing,
+                }}
+              >
+                <ArticleMeta article={article} />
               </FollowUserButtonContext.Provider>
             </FavoriteArticleButtonContext.Provider>
           </div>

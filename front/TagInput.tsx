@@ -2,7 +2,7 @@ import { isDemo } from 'config'
 import React from 'react'
 
 const TagInput = ({ tagList, addTag, removeTag }) => {
-  const [tag, setTag] = React.useState("")
+  const [tag, setTag] = React.useState('')
   const changeTagInput = (e) => setTag(e.target.value)
   const handleTagInputKeyDown = (e) => {
     switch (e.keyCode) {
@@ -19,7 +19,7 @@ const TagInput = ({ tagList, addTag, removeTag }) => {
   const handleAddTag = () => {
     if (!!tag) {
       addTag(tag)
-      setTag("")
+      setTag('')
     }
   }
   const handleRemoveTag = (tag) => {
@@ -31,7 +31,9 @@ const TagInput = ({ tagList, addTag, removeTag }) => {
         <input
           className="form-control"
           type="text"
-          placeholder={isDemo ? "Press Enter, Tab or Comma to add a tag" : "Enter tags"}
+          placeholder={
+            isDemo ? 'Press Enter, Tab or Comma to add a tag' : 'Enter tags'
+          }
           value={tag}
           onChange={changeTagInput}
           onBlur={handleAddTag}

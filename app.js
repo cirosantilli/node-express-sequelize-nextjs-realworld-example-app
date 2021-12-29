@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // https://stackoverflow.com/questions/7697038/more-than-10-lines-in-a-node-js-stack-error
-Error.stackTraceLimit = Infinity;
+Error.stackTraceLimit = Infinity
 
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -11,7 +11,7 @@ const methods = require('methods')
 const morgan = require('morgan')
 const next = require('next')
 const passport = require('passport')
-const passport_local = require('passport-local');
+const passport_local = require('passport-local')
 const path = require('path')
 const session = require('express-session')
 
@@ -33,19 +33,21 @@ async function start(port, startNext, cb) {
     nextHandle = nextApp.getRequestHandler()
   }
 
-  const sequelize = models.getSequelize(__dirname);
+  const sequelize = models.getSequelize(__dirname)
   app.set('sequelize', sequelize)
   passport.use(
     new passport_local.Strategy(
       {
         usernameField: 'user[email]',
-        passwordField: 'user[password]'
+        passwordField: 'user[password]',
       },
-      function(email, password, done) {
+      function (email, password, done) {
         sequelize.models.User.findOne({ where: { email: email } })
-          .then(function(user) {
+          .then(function (user) {
             if (!user || !sequelize.models.User.validPassword(user, password)) {
-              return done(null, false, { errors: { 'email or password': 'is invalid' } })
+              return done(null, false, {
+                errors: { 'email or password': 'is invalid' },
+              })
             }
             return done(null, user)
           })
@@ -66,9 +68,16 @@ async function start(port, startNext, cb) {
 
   // Next handles anything outside of /api.
   app.get(new RegExp('^(?!' + config.apiPath + '(/|$))'), function (req, res) {
-    return nextHandle(req, res);
-  });
-  app.use(session({ secret: config.secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }))
+    return nextHandle(req, res)
+  })
+  app.use(
+    session({
+      secret: config.secret,
+      cookie: { maxAge: 60000 },
+      resave: false,
+      saveUninitialized: false,
+    })
+  )
 
   // Handle API routes.
   {
@@ -83,12 +92,12 @@ async function start(port, startNext, cb) {
   })
 
   // Error handlers
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     // Automatiaclly handle Sequelize validation errors.
     if (err instanceof sequelize.Sequelize.ValidationError) {
       if (!config.isProduction) {
         // The fuller errors can be helpful during development.
-        console.error(err);
+        console.error(err)
       }
       const errors = {}
       for (let errItem of err.errors) {
@@ -111,13 +120,13 @@ async function start(port, startNext, cb) {
   if (startNext) {
     await nextApp.prepare()
   }
-  await sequelize.authenticate();
+  await sequelize.authenticate()
   // Just a convenience DB create so we don't have to force new users to do it manually.
-  await models.sync(sequelize);
+  await models.sync(sequelize)
   return new Promise((resolve, reject) => {
-    const server = app.listen(port, async function() {
+    const server = app.listen(port, async function () {
       try {
-        cb && await cb(server)
+        cb && (await cb(server))
       } catch (e) {
         reject(e)
         this.close()
@@ -129,7 +138,7 @@ async function start(port, startNext, cb) {
 }
 
 if (require.main === module) {
-  start(config.port, true, server => {
+  start(config.port, true, (server) => {
     console.log('Listening on: http://localhost:' + server.address().port)
   })
 }
