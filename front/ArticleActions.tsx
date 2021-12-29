@@ -6,7 +6,7 @@ import FavoriteArticleButton from "front/FavoriteArticleButton";
 import FollowUserButton from "front/FollowUserButton";
 import CustomLink from "front/CustomLink";
 import Maybe from "front/Maybe";
-import ArticleAPI from "lib/api/article";
+import ArticleAPI from "front/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import useLoggedInUser from "lib/utils/useLoggedInUser";
 import routes from "routes";

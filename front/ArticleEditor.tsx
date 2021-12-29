@@ -4,7 +4,7 @@ import React from "react";
 
 import ListErrors from "front/ListErrors";
 import TagInput from "front/TagInput";
-import ArticleAPI from "lib/api/article";
+import ArticleAPI from "front/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import useLoggedInUser from "lib/utils/useLoggedInUser";
 import { useCtrlEnterSubmit } from "libts";

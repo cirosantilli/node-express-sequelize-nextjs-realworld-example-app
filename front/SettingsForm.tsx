@@ -6,7 +6,7 @@ import { mutate } from "swr";
 import ListErrors from "front/ListErrors";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import useLoggedInUser from "lib/utils/useLoggedInUser";
-import UserAPI from "lib/api/user";
+import UserAPI from "front/api/user";
 import { useCtrlEnterSubmit } from "libts";
 
 const SettingsForm = () => {

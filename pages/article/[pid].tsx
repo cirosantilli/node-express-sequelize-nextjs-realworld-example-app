@@ -11,19 +11,58 @@ import CommentInput from "front/CommentInput";
 import { FavoriteArticleButtonContext } from "front/FavoriteArticleButton";
 import LoadingSpinner from "front/LoadingSpinner";
 import { FollowUserButtonContext } from "front/FollowUserButton";
-import ArticleAPI from "lib/api/article";
-import { ArticleType } from "lib/types/articleType";
-import { CommentType } from "lib/types/commentType";
+import ArticleAPI from "front/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
 import { AppContext } from 'libts'
 import routes from "routes";
+
+export interface ArticleList {
+  articles: ArticleType[];
+}
+
+export interface Article {
+  article: ArticleType;
+}
+
+export type ArticleType = {
+  tagList: string[];
+  createdAt: number;
+  author: Author;
+  description: string;
+  title: string;
+  body: string;
+  slug: string;
+  updatedAt: number;
+  favoritesCount: number;
+  favorited: boolean;
+};
+
+export type Author = {
+  username: string;
+  bio: string;
+  image: string;
+  following: boolean;
+};
 
 interface ArticlePageProps {
   article: ArticleType;
   comments: CommentType[];
   pid: string;
 }
+
+export interface Comments {
+  comments: CommentType[];
+}
+
+export type CommentType = {
+  createdAt: number;
+  id: string;
+  body: string;
+  slug: string;
+  author: Author;
+  updatedAt: number;
+};
 
 const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   const router = useRouter();
