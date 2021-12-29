@@ -108,8 +108,8 @@ const ArticleList = ({
   // and calling hooks like useState different number of times is a capital sin
   // in React and makes everything blow up.
   for (let i = 0; i < DEFAULT_LIMIT; i++) {
-    [favorited[i], setFavorited[i]] = React.useState(false)
-    [favoritesCount[i], setFavoritesCount[i]] = React.useState(0)
+    ;[favorited[i], setFavorited[i]] = React.useState(false)
+    ;[favoritesCount[i], setFavoritesCount[i]] = React.useState(0)
   }
   React.useEffect(() => {
     const nArticles = articles?.length || 0

@@ -507,6 +507,28 @@ This gives you time to setup e.g. Network recording in Chrome Developer Tools to
 
 This is a big problem during development, not sure how to solve it: https://github.com/sequelize/sequelize/issues/8199#issuecomment-863943835
 
+== Linting
+
+The following lint checks are run automatically as part of:
+
+....
+npm run build-dev
+....
+
+from <<local-optimized-frontend>>, but it can be good to isolate the command to speed up the development loop.
+
+Run typescript type checks:
+
+....
+npm run type-check
+....
+
+Run eslint checks:
+
+....
+npm run lint
+....
+
 == Testing
 
 When running:
