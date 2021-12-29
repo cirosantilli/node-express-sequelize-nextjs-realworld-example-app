@@ -5,12 +5,12 @@ import { useRouter } from 'next/router'
 import React from "react";
 import useSWR  from "swr";
 
-import ArticleMeta from "components/ArticleMeta";
-import Comment from "components/Comment";
-import CommentInput from "components/CommentInput";
-import { FavoriteArticleButtonContext } from "components/FavoriteArticleButton";
-import LoadingSpinner from "components/LoadingSpinner";
-import { FollowUserButtonContext } from "components/FollowUserButton";
+import ArticleMeta from "front/ArticleMeta";
+import Comment from "front/Comment";
+import CommentInput from "front/CommentInput";
+import { FavoriteArticleButtonContext } from "front/FavoriteArticleButton";
+import LoadingSpinner from "front/LoadingSpinner";
+import { FollowUserButtonContext } from "front/FollowUserButton";
 import ArticleAPI from "lib/api/article";
 import { ArticleType } from "lib/types/articleType";
 import { CommentType } from "lib/types/commentType";

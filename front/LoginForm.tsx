@@ -2,7 +2,7 @@ import Router from "next/router";
 import React from "react";
 import { mutate } from "swr";
 
-import ListErrors from "components/ListErrors";
+import ListErrors from "front/ListErrors";
 import UserAPI from "lib/api/user";
 import { setCookie } from "front";
 import { useCtrlEnterSubmit } from "libts";

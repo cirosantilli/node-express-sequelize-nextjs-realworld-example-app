@@ -2,10 +2,10 @@ import Router, { useRouter } from "next/router";
 import React from "react";
 import { trigger } from "swr";
 
-import FavoriteArticleButton from "components/FavoriteArticleButton";
-import FollowUserButton from "components/FollowUserButton";
-import CustomLink from "components/CustomLink";
-import Maybe from "components/Maybe";
+import FavoriteArticleButton from "front/FavoriteArticleButton";
+import FollowUserButton from "front/FollowUserButton";
+import CustomLink from "front/CustomLink";
+import Maybe from "front/Maybe";
 import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import useLoggedInUser from "lib/utils/useLoggedInUser";

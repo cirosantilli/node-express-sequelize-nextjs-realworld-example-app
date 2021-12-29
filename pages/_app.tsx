@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import { SWRConfig } from 'swr'
 
-import CustomLink from "components/CustomLink";
-import Navbar from "components/Navbar";
+import CustomLink from "front/CustomLink";
+import Navbar from "front/Navbar";
 import { googleAnalyticsId, isDemo, isProduction } from "config";
 import { APP_NAME } from "lib/utils/constant";
 import { AppContext, AppContextProvider } from 'libts'

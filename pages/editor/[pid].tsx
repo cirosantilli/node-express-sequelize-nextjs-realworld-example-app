@@ -1,4 +1,4 @@
-import makeArticleEditor from "components/ArticleEditor";
+import makeArticleEditor from "front/ArticleEditor";
 
 import { getStaticPropsArticle } from "lib/article";
 

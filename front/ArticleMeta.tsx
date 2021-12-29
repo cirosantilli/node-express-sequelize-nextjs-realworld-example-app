@@ -1,8 +1,8 @@
 import React from "react";
 
-import ArticleActions from "components/ArticleActions";
-import CustomImage from "components/CustomImage";
-import CustomLink from "components/CustomLink";
+import ArticleActions from "front/ArticleActions";
+import CustomImage from "front/CustomImage";
+import CustomLink from "front/CustomLink";
 import { formatDate } from "lib/utils/date";
 import routes from "routes";
 

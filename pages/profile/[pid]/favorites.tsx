@@ -1,5 +1,5 @@
 import { getStaticPathsProfile, getStaticPropsProfile } from "lib/profile"
-import ProfileHoc from "components/Profile"
+import ProfileHoc from "front/Profile"
 export const getStaticPaths = getStaticPathsProfile
 const type = 'favorites'
 export const getStaticProps = getStaticPropsProfile('favorites')

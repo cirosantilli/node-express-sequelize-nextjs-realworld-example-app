@@ -1,9 +1,9 @@
 import React from "react";
 
-import CustomLink from "components/CustomLink";
-import CustomImage from "components/CustomImage";
-import Maybe from "components/Maybe";
-import DeleteButton from "components/DeleteButton";
+import CustomLink from "front/CustomLink";
+import CustomImage from "front/CustomImage";
+import Maybe from "front/Maybe";
+import DeleteButton from "front/DeleteButton";
 import { formatDate } from "lib/utils/date";
 import useLoggedInUser from "lib/utils/useLoggedInUser";
 import routes from "routes";

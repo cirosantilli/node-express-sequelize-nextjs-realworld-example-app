@@ -1,9 +1,9 @@
 import Link from "next/link";
 import React from "react";
 
-import CustomLink from "components/CustomLink";
-import CustomImage from "components/CustomImage";
-import FavoriteArticleButton from "components/FavoriteArticleButton";
+import CustomLink from "front/CustomLink";
+import CustomImage from "front/CustomImage";
+import FavoriteArticleButton from "front/FavoriteArticleButton";
 import { formatDate } from "lib/utils/date";
 import { AppContext } from "libts";
 import routes from "routes";

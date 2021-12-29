@@ -1,11 +1,11 @@
 import React from "react";
 
-import CustomLink from "components/CustomLink";
-import LoadingSpinner from "components/LoadingSpinner";
+import CustomLink from "front/CustomLink";
+import LoadingSpinner from "front/LoadingSpinner";
 import useSWR from "swr";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import fetcher from "lib/utils/fetcher";
-import ErrorMessage from "components/ErrorMessage";
+import ErrorMessage from "front/ErrorMessage";
 import { AppContext } from "libts";
 
 const Tags = ({tags, ssr, setTab, setPage, setTag}) => {

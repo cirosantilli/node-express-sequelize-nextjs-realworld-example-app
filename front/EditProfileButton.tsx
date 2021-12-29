@@ -1,7 +1,7 @@
 import React from "react";
 
-import CustomLink from "components/CustomLink";
-import Maybe from "components/Maybe";
+import CustomLink from "front/CustomLink";
+import Maybe from "front/Maybe";
 import routes from "routes";
 
 interface EditProfileButtonProps {

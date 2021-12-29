@@ -1,9 +1,9 @@
 import React from "react";
 
-import CustomImage from "components/CustomImage";
-import CustomLink from "components/CustomLink";
-import Maybe from "components/Maybe";
-import NavLink from "components/NavLink";
+import CustomImage from "front/CustomImage";
+import CustomLink from "front/CustomLink";
+import Maybe from "front/Maybe";
+import NavLink from "front/NavLink";
 import { APP_NAME } from "lib/utils/constant";
 import useLoggedInUser from "lib/utils/useLoggedInUser";
 import { AppContext, resetIndexState } from 'libts'

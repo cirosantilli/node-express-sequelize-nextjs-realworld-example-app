@@ -2,8 +2,8 @@ import Head from "next/head";
 import Router, { useRouter } from "next/router";
 import React from "react";
 
-import ListErrors from "components/ListErrors";
-import TagInput from "components/TagInput";
+import ListErrors from "front/ListErrors";
+import TagInput from "front/TagInput";
 import ArticleAPI from "lib/api/article";
 import { SERVER_BASE_URL } from "lib/utils/constant";
 import useLoggedInUser from "lib/utils/useLoggedInUser";
