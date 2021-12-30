@@ -4,7 +4,7 @@ import React from 'react'
 import CustomLink from 'front/CustomLink'
 import CustomImage from 'front/CustomImage'
 import FavoriteArticleButton from 'front/FavoriteArticleButton'
-import { formatDate } from 'lib/utils/date'
+import { formatDate } from 'front/date'
 import { AppContext } from 'libts'
 import routes from 'routes'
 

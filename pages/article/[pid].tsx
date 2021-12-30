@@ -11,7 +11,7 @@ import { FavoriteArticleButtonContext } from 'front/FavoriteArticleButton'
 import LoadingSpinner from 'front/LoadingSpinner'
 import { FollowUserButtonContext } from 'front/FollowUserButton'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import fetcher from 'lib/utils/fetcher'
+import fetcher from 'front/api'
 import { AppContext } from 'libts'
 import routes from 'routes'
 

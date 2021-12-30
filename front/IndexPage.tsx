@@ -6,7 +6,7 @@ import CustomLink from 'front/CustomLink'
 import Maybe from 'front/Maybe'
 import Tags from 'front/Tags'
 import { APP_NAME } from 'lib/utils/constant'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import useLoggedInUser from 'front/useLoggedInUser'
 import { AppContext, resetIndexState } from 'libts'
 import routes from 'routes'
 

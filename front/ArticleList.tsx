@@ -9,7 +9,7 @@ import LoadingSpinner from 'front/LoadingSpinner'
 import Maybe from 'front/Maybe'
 import Pagination from 'front/Pagination'
 import { SERVER_BASE_URL, DEFAULT_LIMIT } from 'lib/utils/constant'
-import fetcher from 'lib/utils/fetcher'
+import fetcher from 'front/api'
 import { AppContext } from 'libts'
 
 const ArticleList = ({

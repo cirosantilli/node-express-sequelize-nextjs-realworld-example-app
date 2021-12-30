@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { trigger } from 'swr'
 
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import useLoggedInUser from 'front/useLoggedInUser'
 
 const DeleteButton = ({ commentId }) => {
   const loggedInUser = useLoggedInUser()

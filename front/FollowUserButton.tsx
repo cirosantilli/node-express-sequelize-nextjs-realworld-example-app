@@ -4,7 +4,7 @@ import Router from 'next/router'
 
 import UserAPI from 'front/api/user'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import useLoggedInUser from 'front/useLoggedInUser'
 
 export const FollowUserButtonContext = React.createContext(undefined)
 

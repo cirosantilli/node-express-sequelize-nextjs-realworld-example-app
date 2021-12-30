@@ -3,7 +3,7 @@ import React from 'react'
 import Router from 'next/router'
 
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import useLoggedInUser from 'front/useLoggedInUser'
 
 const FAVORITED_CLASS = 'btn btn-sm btn-primary'
 const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary'

@@ -13,8 +13,8 @@ import FollowUserButton, {
   FollowUserButtonContext,
 } from 'front/FollowUserButton'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import fetcher from 'lib/utils/fetcher'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import fetcher from 'front/api'
+import useLoggedInUser from 'front/useLoggedInUser'
 import { AppContext } from 'libts'
 import routes from 'routes'
 

@@ -8,7 +8,7 @@ import CustomLink from 'front/CustomLink'
 import Maybe from 'front/Maybe'
 import ArticleAPI from 'front/api/article'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import useLoggedInUser from 'front/useLoggedInUser'
 import routes from 'routes'
 
 const ArticleActions = ({ article }) => {

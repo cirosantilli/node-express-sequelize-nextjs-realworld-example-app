@@ -6,7 +6,7 @@ import { trigger } from 'swr'
 import CustomImage from 'front/CustomImage'
 import CustomLink from 'front/CustomLink'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import useLoggedInUser from 'front/useLoggedInUser'
 import { useCtrlEnterSubmit } from 'libts'
 import routes from 'routes'
 

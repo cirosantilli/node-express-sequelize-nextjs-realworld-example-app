@@ -4,7 +4,7 @@ import CustomLink from 'front/CustomLink'
 import LoadingSpinner from 'front/LoadingSpinner'
 import useSWR from 'swr'
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import fetcher from 'lib/utils/fetcher'
+import fetcher from 'front/api'
 import ErrorMessage from 'front/ErrorMessage'
 import { AppContext } from 'libts'
 

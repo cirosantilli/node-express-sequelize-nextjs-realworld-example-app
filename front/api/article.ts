@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 import { SERVER_BASE_URL } from 'lib/utils/constant'
-import { getQuery } from 'lib/utils/getQuery'
+
+const getQuery = (limit: number, page: number): string =>
+  `limit=${limit}&offset=${page ? page * limit : 0}`
 
 const ArticleAPI = {
   all: (page, limit = 10) =>

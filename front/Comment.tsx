@@ -4,8 +4,8 @@ import CustomLink from 'front/CustomLink'
 import CustomImage from 'front/CustomImage'
 import Maybe from 'front/Maybe'
 import DeleteButton from 'front/DeleteButton'
-import { formatDate } from 'lib/utils/date'
-import useLoggedInUser from 'lib/utils/useLoggedInUser'
+import { formatDate } from 'front/date'
+import useLoggedInUser from 'front/useLoggedInUser'
 import routes from 'routes'
 
 const Comment = ({ comment }) => {

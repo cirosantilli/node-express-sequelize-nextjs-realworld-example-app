@@ -3,7 +3,7 @@ import React from 'react'
 import ArticleActions from 'front/ArticleActions'
 import CustomImage from 'front/CustomImage'
 import CustomLink from 'front/CustomLink'
-import { formatDate } from 'lib/utils/date'
+import { formatDate } from 'front/date'
 import routes from 'routes'
 
 const ArticleMeta = ({ article }) => {
