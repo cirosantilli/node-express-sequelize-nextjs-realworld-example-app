@@ -145,8 +145,6 @@ The setup is analogous to: https://github.com/cirosantilli/node-express-sequeliz
 ....
 git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-next.git
 ./heroku.sh config:set --app cirosantilli-realworld-next NEXT_PUBLIC_DEMO=true addons:create heroku-postgresql:hobby-dev
-./heroku.sh config:set --app cirosantilli-realworld-next DISABLE_ESLINT_PLUGIN=true
-./heroku.sh config:set --app cirosantilli-realworld-next NPM_CONFIG_PRODUCTION=true YARN_PRODUCTION=true
 ./heroku.sh config:set --app cirosantilli-realworld-next SECRET="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 256)"
 # Optional. If set, enables demo mode. We must use the NEXT_PUBLIC_* prefix for the variable name,
 # otherwise it is not visible in the page renders.
@@ -174,6 +172,12 @@ e.g. to delete, recreate and reseed the database:
 ....
 
 We are not sure if Next.js ISR can be deployed reliably due to the ephemeral filesystem such as those in Heroku...: https://stackoverflow.com/questions/67684780/how-to-set-where-the-prerendered-html-of-new-pages-generated-at-runtime-is-store but it has worked so far.
+
+=== `devDependencies` vs `dependencies`
+
+Note that any dependencies required only for the build e.g. typescript are put under `devDependencies`.
+
+Our current <<heroku-deployment>> setup installs both `dependencies` and `devDependencies`, builds, and then removes `devDependencies` from the deployed code to make it smaller.
 
 === Demo mode
 
@@ -663,6 +667,12 @@ e.g.:
 +
 ....
 ./heroku.sh psql -c 'SELECT username, email, ip, "createdAt" FROM "User" WHERE ip IS NOT NULL ORDER BY ip ASC, "createdAt" ASC'
+....
++
+or maybe to find potential bots by IPs with most accounts:
++
+....
+./heroku.sh psql -c 'SELECT ip, COUNT(ip) FROM "User" WHERE ip IS NOT NULL GROUP BY ip ORDER BY COUNT(ip) DESC, ip ASC'
 ....
 +
 Of course, IP checks can be overcome with Tor, and blocking IPs is really messy because you can take down entire institutions.
