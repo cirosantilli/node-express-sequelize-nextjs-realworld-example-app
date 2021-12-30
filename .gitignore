@@ -54,3 +54,6 @@ tmp.*
 /out/
 /.now/
 .now
+
+# typescript
+*.tsbuildinfo

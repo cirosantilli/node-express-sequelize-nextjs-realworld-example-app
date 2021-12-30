@@ -12,7 +12,7 @@
     "dev": "NODE_OPTIONS='--unhandled-rejections=strict' nodemon ./app.js",
     "dev-demo": "NEXT_PUBLIC_DEMO=true npm run dev",
     "dev-pg": "REALWORLD_PG=true npm run dev",
-    "format": "prettier --ignore-path .gitignore --ignore-path .prettierignore --write .",
+    "format": "prettier --ignore-path .prettierignore --write .",
     "lint": "next lint",
     "seed-prod": "./prod.sh ./bin/generate-demo-data.js --force-production",
     "start": "node --unhandled-rejections=strict ./app.js",
