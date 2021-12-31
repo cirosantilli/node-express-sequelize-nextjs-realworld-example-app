@@ -1,5 +1,3 @@
-const http = require('http')
-
 const config = require('./config')
 
 async function deleteOldestForDemo(Model) {

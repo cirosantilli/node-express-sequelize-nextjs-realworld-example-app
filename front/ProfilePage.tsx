@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import useSWR from 'swr'
@@ -7,7 +6,6 @@ import ArticleList from 'front/ArticleList'
 import CustomLink from 'front/CustomLink'
 import CustomImage from 'front/CustomImage'
 import LoadingSpinner from 'front/LoadingSpinner'
-import Maybe from 'front/Maybe'
 import EditProfileButton from 'front/EditProfileButton'
 import FollowUserButton, {
   FollowUserButtonContext,
@@ -19,10 +17,10 @@ import { AppContext } from 'libts'
 import routes from 'routes'
 
 const ProfileHoc = (tab) => {
-  return ({ profile, articles, articlesCount }) => {
+  return function ProfilePage({ profile, articles, articlesCount }) {
     const [page, setPage] = React.useState(0)
     const router = useRouter()
-    const { data: profileApi, error } = useSWR(
+    const { data: profileApi } = useSWR(
       `${SERVER_BASE_URL}/profiles/${profile?.username}`,
       fetcher(router.isFallback)
     )
@@ -41,7 +39,7 @@ const ProfileHoc = (tab) => {
     const { setTitle } = React.useContext(AppContext)
     React.useEffect(() => {
       setTitle(username)
-    }, [username])
+    }, [setTitle, username])
     if (router.isFallback) {
       return <LoadingSpinner />
     }

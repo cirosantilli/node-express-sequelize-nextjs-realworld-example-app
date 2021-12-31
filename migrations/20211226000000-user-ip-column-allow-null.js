@@ -1,7 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) =>
     queryInterface.sequelize.transaction(async (transaction) => {
-      debugger
       await queryInterface.changeColumn(
         'User',
         'ip',

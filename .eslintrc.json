@@ -1,7 +1,11 @@
 {
   "extends": ["eslint:recommended", "next", "prettier"],
+  "env": {
+    "es6": true
+  },
   "plugins": ["prettier"],
   "rules": {
+    "import/no-anonymous-default-export": "off",
     "prettier/prettier": "error"
   }
 }

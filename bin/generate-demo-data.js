@@ -5,7 +5,7 @@ const path = require('path')
 
 const config = require('../config')
 
-function myParseInt(value, dummyPrevious) {
+function myParseInt(value) {
   const parsedValue = parseInt(value)
   if (isNaN(parsedValue)) {
     throw new commander.InvalidOptionArgumentError('Not a number.')

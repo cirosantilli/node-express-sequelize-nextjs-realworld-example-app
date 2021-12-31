@@ -11,8 +11,8 @@ module.exports = {
         { transaction }
       )
     }),
-  down: async (queryInterface, Sequelize) =>
+  down: async (queryInterface) =>
     queryInterface.sequelize.transaction(async (transaction) => {
-      await queryInterface.removeColumn('User', 'ip', { transactioni })
+      await queryInterface.removeColumn('User', 'ip', { transaction })
     }),
 }

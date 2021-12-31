@@ -34,7 +34,7 @@ function getSequelize(toplevelDir, toplevelBasename) {
   }
   const Article = require('./article')(sequelize)
   const Comment = require('./comment')(sequelize)
-  const SequelizeMeta = require('./sequelize_meta')(sequelize)
+  require('./sequelize_meta')(sequelize)
   const Tag = require('./tag')(sequelize)
   const User = require('./user')(sequelize)
 

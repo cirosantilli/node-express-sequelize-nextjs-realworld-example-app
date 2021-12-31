@@ -23,7 +23,7 @@ const SettingsForm = () => {
   React.useEffect(() => {
     if (!loggedInUser) return
     setUserInfo({ ...userInfo, ...loggedInUser })
-  }, [loggedInUser])
+  }, [userInfo, loggedInUser])
   const updateState = (field) => (e) => {
     const state = userInfo
     const newState = { ...state, [field]: e.target.value }

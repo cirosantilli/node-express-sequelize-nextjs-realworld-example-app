@@ -23,7 +23,7 @@ import { secret } from 'config'
 import { verify } from 'jsonwebtoken'
 import { getCookieFromReq } from 'front'
 
-function useLoggedInUser(req) {
+function getLoggedInUser(req) {
   const authCookie = getCookieFromReq(req, 'auth')
   if (authCookie) {
     return verify(authCookie, secret)
@@ -32,11 +32,8 @@ function useLoggedInUser(req) {
   }
 }
 
-export const getServerSidePropsHoc: GetServerSideProps = async ({
-  req,
-  res,
-}) => {
-  const loggedInUser = useLoggedInUser(req)
+export const getServerSidePropsHoc: GetServerSideProps = async ({ req }) => {
+  const loggedInUser = getLoggedInUser(req)
   let props
   if (loggedInUser) {
     const [articles, tags] = await Promise.all([

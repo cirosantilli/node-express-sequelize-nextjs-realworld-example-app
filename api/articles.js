@@ -1,12 +1,12 @@
 const router = require('express').Router()
 const auth = require('../auth')
-const { Op, Transaction } = require('sequelize')
+const { Transaction } = require('sequelize')
 
 const config = require('../config.js')
 const lib = require('../lib.js')
 
 async function setArticleTags(req, article, tagList, transaction) {
-  const tags = await req.app.get('sequelize').models.Tag.bulkCreate(
+  await req.app.get('sequelize').models.Tag.bulkCreate(
     tagList.map((tag) => {
       return { name: tag }
     }),
@@ -27,7 +27,7 @@ function validateArticle(req, res, article, tagList) {
       if (tagList.length > 10) {
         ret = `too many tags: ${tagList.length}`
       }
-      for (tag of tagList) {
+      for (let tag of tagList) {
         if (config.blacklistTags.has(tag.toLowerCase())) {
           ret = `blacklisted tag: ${tag}`
         }
@@ -176,7 +176,7 @@ router.get('/', auth.optional, async function (req, res, next) {
             : undefined
           // TODO get if user follows author on JOIN here.
           //console.error(article.author.followed.map(u => u.id));
-          const authorFollowed = loggedUserId ? undefined : undefined
+          //const authorFollowed = loggedUserId ? undefined : undefined
           return article.toJson(user, { tags, favorited })
         })
       ),
@@ -269,7 +269,7 @@ router.get('/:article', auth.optional, async function (req, res, next) {
         : null,
       req.article.getAuthor(),
     ])
-    const [user, author] = results
+    const [user] = results
     return res.json({ article: await req.article.toJson(user) })
   } catch (error) {
     next(error)

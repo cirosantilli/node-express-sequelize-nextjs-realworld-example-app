@@ -6,13 +6,13 @@ import LoginForm from 'front/LoginForm'
 import { AppContext } from 'libts'
 import routes from 'routes'
 
-const makeLoginPage = ({ register = false }) => {
+const LoginPageHoc = ({ register = false }) => {
   const title = register ? 'Sign up' : 'Sign in'
-  return () => {
+  return function Loginpage() {
     const { setTitle } = React.useContext(AppContext)
     React.useEffect(() => {
       setTitle(title)
-    }, [title])
+    }, [setTitle, title])
     return (
       <>
         <Head>
@@ -47,4 +47,4 @@ const makeLoginPage = ({ register = false }) => {
   }
 }
 
-export default makeLoginPage
+export default LoginPageHoc

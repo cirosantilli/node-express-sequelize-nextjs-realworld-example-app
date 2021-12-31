@@ -18,7 +18,7 @@ function setCookies(cookieDict, days, path = '/') {
     setCookie(key, cookieDict[key], days, path)
   }
 }
-exports.setCookie = setCookie
+exports.setCookies = setCookies
 
 function getCookie(name) {
   return getCookieFromString(document.cookie, name)

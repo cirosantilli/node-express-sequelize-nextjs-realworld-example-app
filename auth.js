@@ -1,6 +1,5 @@
 const jwt = require('express-jwt')
 
-const front = require('./front')
 const secret = require('./config').secret
 
 function getTokenFromHeader(authorization) {

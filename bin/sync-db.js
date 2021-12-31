@@ -28,9 +28,13 @@
     if (config.postgres) {
       env.NODE_ENV = 'production'
     }
-    out = child_process.spawnSync('npx', ['sequelize-cli', 'db:migrate'], {
-      env,
-    })
+    const out = child_process.spawnSync(
+      'npx',
+      ['sequelize-cli', 'db:migrate'],
+      {
+        env,
+      }
+    )
     console.error(out.stdout.toString())
     console.error(out.stderr.toString())
     process.exit(out.status)

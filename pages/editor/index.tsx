@@ -1,3 +1,3 @@
-import makeArticleEditor from 'front/ArticleEditor'
+import ArticleEditorHoc from 'front/ArticleEditor'
 
-export default makeArticleEditor(true)
+export default ArticleEditorHoc(true)

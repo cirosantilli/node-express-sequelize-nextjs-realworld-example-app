@@ -1,6 +1,6 @@
 module.exports = {
   // https://github.com/sequelize/sequelize/issues/12789
-  up: async (queryInterface, Sequelize) =>
+  up: async (queryInterface) =>
     queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.changeColumn('Article', 'authorId', {
         onDelete: 'CASCADE',
@@ -15,8 +15,8 @@ module.exports = {
         transaction,
       })
     }),
-  down: async (queryInterface, Sequelize) =>
-    queryInterface.sequelize.transaction(async (t) => {
+  down: async (queryInterface) =>
+    queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.changeColumn('Article', 'authorId', {
         onDelete: 'NO ACTION',
         transaction,

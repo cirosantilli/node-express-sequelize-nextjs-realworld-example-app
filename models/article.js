@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
     },
     {
       hooks: {
-        beforeValidate: (article, options) => {
+        beforeValidate: (article) => {
           if (!article.slug) {
             article.slug =
               slug(article.title) +

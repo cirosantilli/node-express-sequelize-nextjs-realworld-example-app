@@ -2,13 +2,11 @@ import Head from 'next/head'
 import React from 'react'
 
 import ArticleList from 'front/ArticleList'
-import CustomLink from 'front/CustomLink'
 import Maybe from 'front/Maybe'
 import Tags from 'front/Tags'
 import { APP_NAME } from 'lib/utils/constant'
 import useLoggedInUser from 'front/useLoggedInUser'
 import { AppContext, resetIndexState } from 'libts'
-import routes from 'routes'
 
 const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
   const { page, setPage, tab, setTab, tag, setTag } =
@@ -16,7 +14,7 @@ const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
   const loggedInUser = useLoggedInUser()
   React.useEffect(() => {
     resetIndexState(setPage, setTab, loggedInUser)
-  }, [loggedInUser])
+  }, [loggedInUser, setPage, setTab])
   return (
     <>
       <Head>

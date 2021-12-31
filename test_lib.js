@@ -1,7 +1,6 @@
 /// Need a separate file from test.js because Mocha automatically defines stuff like it,
 // which would break non-Mocha requirers.
 
-const path = require('path')
 const perf_hooks = require('perf_hooks')
 
 const models = require('./models')
@@ -135,7 +134,7 @@ async function generateDemoData(params) {
   printTimeNow = now()
   if (verbose) console.error('User')
   const userArgs = []
-  for (var i = 0; i < nUsers; i++) {
+  for (let i = 0; i < nUsers; i++) {
     userArgs.push(makeUser(sequelize, i))
   }
   const users = await sequelize.models.User.bulkCreate(userArgs)
@@ -143,9 +142,9 @@ async function generateDemoData(params) {
 
   if (verbose) console.error('UserFollowUser')
   const followArgs = []
-  for (var i = 0; i < nUsers; i++) {
+  for (let i = 0; i < nUsers; i++) {
     const userId = users[i].id
-    for (var j = 0; j < nFollowsPerUser; j++) {
+    for (let j = 0; j < nFollowsPerUser; j++) {
       followArgs.push({
         userId: userId,
         followId: users[(i + 1 + j) % nUsers].id,
@@ -157,7 +156,7 @@ async function generateDemoData(params) {
 
   if (verbose) console.error('Article')
   const articleArgs = []
-  for (var i = 0; i < nArticles; i++) {
+  for (let i = 0; i < nArticles; i++) {
     const userIdx = i % nUsers
     const date = addDays(DATE0, i)
     articleArgs.push(makeArticle(i, { authorId: users[userIdx].id, date }))
@@ -171,9 +170,9 @@ async function generateDemoData(params) {
   if (verbose) console.error('UserFavoriteArticle')
   let articleIdx = 0
   const favoriteArgs = []
-  for (var i = 0; i < nUsers; i++) {
+  for (let i = 0; i < nUsers; i++) {
     const userId = users[i].id
-    for (var j = 0; j < nFavoritesPerUser; j++) {
+    for (let j = 0; j < nFavoritesPerUser; j++) {
       favoriteArgs.push({
         userId: userId,
         articleId: articles[articleIdx % nArticles].id,
@@ -186,7 +185,7 @@ async function generateDemoData(params) {
 
   if (verbose) console.error('Tag')
   const tagArgs = []
-  for (var i = 0; i < nTags; i++) {
+  for (let i = 0; i < nTags; i++) {
     tagArgs.push(makeTag(i))
   }
   const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
@@ -195,8 +194,8 @@ async function generateDemoData(params) {
   if (verbose) console.error('ArticleTag')
   let tagIdx = 0
   const articleTagArgs = []
-  for (var i = 0; i < nArticles; i++) {
-    for (var j = 0; j < i % (nMaxTagsPerArticle + 1); j++) {
+  for (let i = 0; i < nArticles; i++) {
+    for (let j = 0; j < i % (nMaxTagsPerArticle + 1); j++) {
       articleTagArgs.push({
         articleId: articles[i].id,
         tagId: tags[tagIdx % nTags].id,
@@ -210,14 +209,14 @@ async function generateDemoData(params) {
   if (verbose) console.error('Comment')
   const commentArgs = []
   let commentIdx = 0
-  for (var i = 0; i < nArticles; i++) {
-    for (var j = 0; j < i % (nMaxCommentsPerArticle + 1); j++) {
+  for (let i = 0; i < nArticles; i++) {
+    for (let j = 0; j < i % (nMaxCommentsPerArticle + 1); j++) {
       commentArgs.push(
         makeComment(articles[i].id, users[commentIdx % nUsers].id, commentIdx)
       )
     }
   }
-  const comments = await sequelize.models.Comment.bulkCreate(commentArgs)
+  await sequelize.models.Comment.bulkCreate(commentArgs)
   if (verbose) printTime()
 
   return sequelize

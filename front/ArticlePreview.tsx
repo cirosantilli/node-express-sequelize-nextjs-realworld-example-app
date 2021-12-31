@@ -5,12 +5,10 @@ import CustomLink from 'front/CustomLink'
 import CustomImage from 'front/CustomImage'
 import FavoriteArticleButton from 'front/FavoriteArticleButton'
 import { formatDate } from 'front/date'
-import { AppContext } from 'libts'
 import routes from 'routes'
 
 const ArticlePreview = ({ article }) => {
   const preview = article
-  const [hover, setHover] = React.useState(false)
   if (!article) return
   return (
     <div className="article-preview">

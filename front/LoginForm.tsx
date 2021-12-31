@@ -20,7 +20,7 @@ const LoginForm = ({ register = false }) => {
   if (register) {
     handleUsernameChange = React.useCallback(
       (e) => setUsername(e.target.value),
-      []
+      [setUsername]
     )
   }
   const handleEmailChange = React.useCallback(

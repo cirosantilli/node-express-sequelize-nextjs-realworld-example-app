@@ -155,10 +155,10 @@ it('users can be deleted and deletion cascades to all relations', async () => {
   const article1 = await sequelize.models.Article.create(
     test_lib.makeArticle(1, { authorId: user.id })
   )
-  const comment0 = await sequelize.models.Comment.create(
+  await sequelize.models.Comment.create(
     test_lib.makeComment(article0.id, user.id, 0)
   )
-  const comment1 = await sequelize.models.Comment.create(
+  await sequelize.models.Comment.create(
     test_lib.makeComment(article0.id, user.id, 1)
   )
   const tag0 = await sequelize.models.Tag.create(test_lib.makeTag(0))
@@ -186,8 +186,7 @@ it('api: create an article and see it on global feed', () => {
   return testApp(async (server) => {
     let res,
       data,
-      article,
-      tags
+      article
 
       // Create user.
     ;[res, data] = await sendJsonHttp({

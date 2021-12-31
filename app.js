@@ -6,13 +6,10 @@ Error.stackTraceLimit = Infinity
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
-const http = require('http')
-const methods = require('methods')
 const morgan = require('morgan')
 const next = require('next')
 const passport = require('passport')
 const passport_local = require('passport-local')
-const path = require('path')
 const session = require('express-session')
 
 const api = require('./api')

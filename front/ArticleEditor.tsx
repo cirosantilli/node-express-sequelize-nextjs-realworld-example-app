@@ -1,11 +1,9 @@
-import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
 
 import ListErrors from 'front/ListErrors'
 import TagInput from 'front/TagInput'
 import ArticleAPI from 'front/api/article'
-import { SERVER_BASE_URL } from 'lib/utils/constant'
 import useLoggedInUser from 'front/useLoggedInUser'
 import { useCtrlEnterSubmit } from 'libts'
 import { AppContext } from 'libts'
@@ -42,8 +40,8 @@ function editorReducer(state, action) {
   }
 }
 
-export default function makeArticleEditor(isnew: boolean = false) {
-  return ({ article: initialArticle }) => {
+export default function ArticleEditorHoc(isnew: boolean = false) {
+  return function ArticleEditor({ article: initialArticle }) {
     let initialState
     if (initialArticle) {
       initialState = {
@@ -65,9 +63,6 @@ export default function makeArticleEditor(isnew: boolean = false) {
     const [posting, dispatch] = React.useReducer(editorReducer, initialState)
     const loggedInUser = useLoggedInUser()
     const router = useRouter()
-    const {
-      query: { pid },
-    } = router
     const handleTitle = (e) =>
       dispatch({ type: 'SET_TITLE', text: e.target.value })
     const handleDescription = (e) =>
@@ -102,7 +97,7 @@ export default function makeArticleEditor(isnew: boolean = false) {
     const { setTitle } = React.useContext(AppContext)
     React.useEffect(() => {
       setTitle(isnew ? 'New article' : `Editing: ${initialArticle?.title}`)
-    }, [isnew, initialArticle?.title])
+    }, [setTitle, isnew, initialArticle?.title])
     return (
       <>
         <div className="editor-page">
