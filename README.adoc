@@ -553,6 +553,8 @@ npm run format
 * more functional checks, including important checks such as those provided by eslint-config-react-hooks  as opposed to more functional thing 
 
 Rationale for some rules we've disabled:
+
+* `@next/next/no-img-element`: Next insist that you whitelist servers, which is only possible if we implement profile picture upload: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/16 We will actually do this at some point.
 * `import/no-anonymous-default-export`: what's the point??? It just duplicates module names as pointed in comments. https://stackoverflow.com/questions/64729264/how-can-i-get-rid-of-the-warning-import-no-anonymous-default-export-in-react
 
 == Testing

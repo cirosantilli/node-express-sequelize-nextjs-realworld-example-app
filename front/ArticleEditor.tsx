@@ -97,7 +97,7 @@ export default function ArticleEditorHoc(isnew: boolean = false) {
     const { setTitle } = React.useContext(AppContext)
     React.useEffect(() => {
       setTitle(isnew ? 'New article' : `Editing: ${initialArticle?.title}`)
-    }, [setTitle, isnew, initialArticle?.title])
+    }, [setTitle, initialArticle?.title])
     return (
       <>
         <div className="editor-page">

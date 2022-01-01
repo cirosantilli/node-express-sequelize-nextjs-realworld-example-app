@@ -12,7 +12,7 @@ const LoginPageHoc = ({ register = false }) => {
     const { setTitle } = React.useContext(AppContext)
     React.useEffect(() => {
       setTitle(title)
-    }, [setTitle, title])
+    }, [setTitle])
     return (
       <>
         <Head>

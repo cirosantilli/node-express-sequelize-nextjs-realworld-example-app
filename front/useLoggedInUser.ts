@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
 import checkLogin from 'front/checkLogin'
-import storage from 'front/localStorage'
+import storage from 'front/localStorageHelper'
 
 // @return:
 //   - undefined if we don't know

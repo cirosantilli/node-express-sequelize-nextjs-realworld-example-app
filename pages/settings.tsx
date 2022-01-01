@@ -4,7 +4,7 @@ import { mutate, trigger } from 'swr'
 
 import SettingsForm from 'front/SettingsForm'
 import checkLogin from 'front/checkLogin'
-import storage from 'front/localStorage'
+import storage from 'front/localStorageHelper'
 import { AppContext } from 'libts'
 import { deleteCookie } from 'front'
 

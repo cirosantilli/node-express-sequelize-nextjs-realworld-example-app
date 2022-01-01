@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React from 'react'
 
 import CustomLink from 'front/CustomLink'
@@ -43,9 +42,9 @@ const ArticlePreview = ({ article }) => {
         <ul className="tag-list">
           {preview.tagList.map((tag, index) => {
             return (
-              <Link href={routes.home()} key={index}>
-                <li className="tag-default tag-pill tag-outline">{tag}</li>
-              </Link>
+              <li className="tag-default tag-pill tag-outline" key={index}>
+                {tag}
+              </li>
             )
           })}
         </ul>

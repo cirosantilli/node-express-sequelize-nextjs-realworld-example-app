@@ -1,10 +1,12 @@
 {
   "extends": ["eslint:recommended", "next", "prettier"],
   "env": {
-    "es6": true
+    "es6": true,
+    "mocha": true
   },
   "plugins": ["prettier"],
   "rules": {
+    "@next/next/no-img-element": "off",
     "import/no-anonymous-default-export": "off",
     "prettier/prettier": "error"
   }

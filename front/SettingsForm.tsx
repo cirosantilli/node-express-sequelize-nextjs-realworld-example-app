@@ -22,12 +22,10 @@ const SettingsForm = () => {
   const loggedInUser = useLoggedInUser()
   React.useEffect(() => {
     if (!loggedInUser) return
-    setUserInfo({ ...userInfo, ...loggedInUser })
-  }, [userInfo, loggedInUser])
+    setUserInfo((prev) => Object.assign(prev, loggedInUser))
+  }, [loggedInUser])
   const updateState = (field) => (e) => {
-    const state = userInfo
-    const newState = { ...state, [field]: e.target.value }
-    setUserInfo(newState)
+    setUserInfo({ ...userInfo, [field]: e.target.value })
   }
   const handleSubmit = async (e) => {
     e.preventDefault()

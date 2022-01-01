@@ -10,19 +10,13 @@ import { useCtrlEnterSubmit } from 'libts'
 const LoginForm = ({ register = false }) => {
   const [isLoading, setLoading] = React.useState(false)
   const [errors, setErrors] = React.useState([])
-  let username, setUsername
-  if (register) {
-    ;[username, setUsername] = React.useState('')
-  }
+  const [username, setUsername] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
-  let handleUsernameChange
-  if (register) {
-    handleUsernameChange = React.useCallback(
-      (e) => setUsername(e.target.value),
-      [setUsername]
-    )
-  }
+  const handleUsernameChange = React.useCallback(
+    (e) => setUsername(e.target.value),
+    [setUsername]
+  )
   const handleEmailChange = React.useCallback(
     (e) => setEmail(e.target.value),
     []
