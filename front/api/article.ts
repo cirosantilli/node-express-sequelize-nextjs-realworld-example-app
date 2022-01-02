@@ -1,58 +1,58 @@
 import axios from 'axios'
 
-import { SERVER_BASE_URL } from 'lib/utils/constant'
+import { apiPath } from 'front/config'
 
 const getQuery = (limit: number, page: number): string =>
   `limit=${limit}&offset=${page ? page * limit : 0}`
 
 const ArticleAPI = {
   all: (page, limit = 10) =>
-    axios.get(`${SERVER_BASE_URL}/articles?${getQuery(limit, page)}`),
+    axios.get(`${apiPath}/articles?${getQuery(limit, page)}`),
 
   byAuthor: (author, page = 0, limit = 5) =>
     axios.get(
-      `${SERVER_BASE_URL}/articles?author=${encodeURIComponent(
+      `${apiPath}/articles?author=${encodeURIComponent(
         author
       )}&${getQuery(limit, page)}`
     ),
 
   byTag: (tag, page = 0, limit = 10) =>
     axios.get(
-      `${SERVER_BASE_URL}/articles?tag=${encodeURIComponent(tag)}&${getQuery(
+      `${apiPath}/articles?tag=${encodeURIComponent(tag)}&${getQuery(
         limit,
         page
       )}`
     ),
 
   delete: (id, token) =>
-    axios.delete(`${SERVER_BASE_URL}/articles/${id}`, {
+    axios.delete(`${apiPath}/articles/${id}`, {
       headers: {
         Authorization: `Token ${token}`,
       },
     }),
 
   favorite: (slug) =>
-    axios.post(`${SERVER_BASE_URL}/articles/${slug}/favorite`),
+    axios.post(`${apiPath}/articles/${slug}/favorite`),
 
   favoritedBy: (author, page) =>
     axios.get(
-      `${SERVER_BASE_URL}/articles?favorited=${encodeURIComponent(
+      `${apiPath}/articles?favorited=${encodeURIComponent(
         author
       )}&${getQuery(10, page)}`
     ),
 
   feed: (page, limit = 10) =>
-    axios.get(`${SERVER_BASE_URL}/articles/feed?${getQuery(limit, page)}`),
+    axios.get(`${apiPath}/articles/feed?${getQuery(limit, page)}`),
 
   get: (slug) =>
-    axios.get(`${SERVER_BASE_URL}/articles/${encodeURIComponent(slug)}`),
+    axios.get(`${apiPath}/articles/${encodeURIComponent(slug)}`),
 
   unfavorite: (slug) =>
-    axios.delete(`${SERVER_BASE_URL}/articles/${slug}/favorite`),
+    axios.delete(`${apiPath}/articles/${slug}/favorite`),
 
   update: async (article, pid, token) => {
     const { data, status } = await axios.put(
-      `${SERVER_BASE_URL}/articles/${pid}`,
+      `${apiPath}/articles/${pid}`,
       JSON.stringify({ article }),
       {
         headers: {
@@ -69,7 +69,7 @@ const ArticleAPI = {
 
   create: async (article, token) => {
     const { data, status } = await axios.post(
-      `${SERVER_BASE_URL}/articles`,
+      `${apiPath}/articles`,
       JSON.stringify({ article }),
       {
         headers: {

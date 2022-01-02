@@ -4,10 +4,10 @@ import CustomImage from 'front/CustomImage'
 import CustomLink from 'front/CustomLink'
 import Maybe from 'front/Maybe'
 import NavLink from 'front/NavLink'
-import { APP_NAME } from 'lib/utils/constant'
+import { appName } from 'front/config'
 import useLoggedInUser from 'front/useLoggedInUser'
-import { AppContext, resetIndexState } from 'libts'
-import routes from 'routes'
+import { AppContext, resetIndexState } from 'front/ts'
+import routes from 'front/routes'
 
 const NavbarItem = ({ children }) => <li className="nav-item">{children}</li>
 
@@ -23,7 +23,7 @@ const Navbar = () => {
           onClick={clickHandler}
           className="navbar-brand"
         >
-          {APP_NAME.toLowerCase()}
+          {appName.toLowerCase()}
         </CustomLink>
         <ul className="nav navbar-nav pull-xs-right">
           <NavbarItem>

@@ -10,10 +10,10 @@ import CommentInput from 'front/CommentInput'
 import { FavoriteArticleButtonContext } from 'front/FavoriteArticleButton'
 import LoadingSpinner from 'front/LoadingSpinner'
 import { FollowUserButtonContext } from 'front/FollowUserButton'
-import { SERVER_BASE_URL } from 'lib/utils/constant'
 import fetcher from 'front/api'
-import { AppContext } from 'libts'
-import routes from 'routes'
+import { apiPath } from 'front/config'
+import { AppContext } from 'front/ts'
+import routes from 'front/routes'
 
 export interface ArticleList {
   articles: ArticleType[]
@@ -68,7 +68,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   // Fetch user-specific data.
   // Article determines if the curent user favorited the article or not
   const { data: articleApi } = useSWR(
-    `${SERVER_BASE_URL}/articles/${article?.slug}`,
+    `${apiPath}/articles/${article?.slug}`,
     fetcher(router.isFallback)
   )
   if (articleApi !== undefined) {
@@ -77,7 +77,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   // We fetch comments so that the new posted comment will appear immediately after posted.
   // Note that we cannot calculate the exact new coment element because we need the server datetime.
   const { data: commentApi } = useSWR(
-    `${SERVER_BASE_URL}/articles/${article?.slug}/comments`,
+    `${apiPath}/articles/${article?.slug}/comments`,
     fetcher(router.isFallback)
   )
   if (commentApi !== undefined) {

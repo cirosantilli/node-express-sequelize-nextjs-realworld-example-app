@@ -1,8 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
-import { fallback, revalidate, prerenderAll } from 'config'
+import { articleLimit, fallback, revalidate, prerenderAll } from 'front/config'
 import sequelize from 'back/db'
-import { DEFAULT_LIMIT } from 'lib/utils/constant'
 
 export const getStaticPathsProfile: GetStaticPaths = async () => {
   let paths
@@ -46,7 +45,7 @@ export function getStaticPropsProfile(tab): GetStaticProps {
     const [articles, user] = await Promise.all([
       sequelize.models.Article.findAndCountAll({
         order: [['createdAt', 'DESC']],
-        limit: DEFAULT_LIMIT,
+        limit: articleLimit,
         include,
       }),
       sequelize.models.User.findOne({

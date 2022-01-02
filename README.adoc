@@ -716,3 +716,13 @@ We tried a bit to achieve the following, TODOing where we know we failed:
 
 * minimize API calls to the minimum. It can be easy to make multiple unecessary API calls with React if don't have a clue what you are doing, especially while waiting to decide if we are logged in or not, which must be done from `useEffect`: https://stackoverflow.com/questions/54819721/next-js-access-localstorage-before-rendering-page/68136224#68136224[]. We often have to differentiate between: "we are logged off" and "we don't know our logged in status yet". 
 * minimize database calls, notably use single JOINs wherever possible, especially on the index page where lots of articles are brought in. This is hard in part due to the inflexibility of sequelize, some notes at: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/5
+*
+
+== Directory structure
+
+* <<database-migrations>> related:
+** link:[bin/sync-db.js]
+** link:[migrations]
+* <<testing>> related:
+** link:test.js[]: <<test-js>>
+** link:front/[]: files that are safe to import from the frontend, all requires from inside `front/` should also be inside `front/` see: https://stackoverflow.com/questions/64926174/module-not-found-cant-resolve-fs-in-next-js-application/70363153#70363153 As mentioned there, everything that is usable in the frontend is also usable in the backend since we are an SSR setup. But not the other way around. `pages/` can contain a mixture of frontend and backend in each file however when HoCs are not being used and things don't blow up.

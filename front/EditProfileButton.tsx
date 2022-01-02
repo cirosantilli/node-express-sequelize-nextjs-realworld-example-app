@@ -2,7 +2,7 @@ import React from 'react'
 
 import CustomLink from 'front/CustomLink'
 import Maybe from 'front/Maybe'
-import routes from 'routes'
+import routes from 'front/routes'
 
 interface EditProfileButtonProps {
   isCurrentUser: boolean

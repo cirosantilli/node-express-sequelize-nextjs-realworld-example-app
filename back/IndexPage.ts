@@ -1,14 +1,13 @@
 import { GetServerSideProps, GetStaticProps } from 'next'
 
-import { revalidate } from 'config'
+import { articleLimit, revalidate } from 'front/config'
 import sequelize from 'back/db'
 import { getIndexTags } from 'lib'
-import { DEFAULT_LIMIT } from 'lib/utils/constant'
 
 async function getLoggedOutProps() {
   const articles = await sequelize.models.Article.findAndCountAll({
     order: [['createdAt', 'DESC']],
-    limit: DEFAULT_LIMIT,
+    limit: articleLimit,
   })
   return {
     articles: await Promise.all(
@@ -19,7 +18,7 @@ async function getLoggedOutProps() {
   }
 }
 
-import { secret } from 'config'
+import { secret } from 'front/config'
 import { verify } from 'jsonwebtoken'
 import { getCookieFromReq } from 'front'
 
@@ -38,7 +37,7 @@ export const getServerSidePropsHoc: GetServerSideProps = async ({ req }) => {
   if (loggedInUser) {
     const [articles, tags] = await Promise.all([
       sequelize.models.User.findByPk(loggedInUser.id).then((user) =>
-        user.findAndCountArticlesByFollowedToJson(0, DEFAULT_LIMIT)
+        user.findAndCountArticlesByFollowedToJson(0, articleLimit)
       ),
       getIndexTags(sequelize),
     ])

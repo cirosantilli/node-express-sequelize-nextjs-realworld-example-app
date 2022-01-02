@@ -5,8 +5,8 @@ import ListErrors from 'front/ListErrors'
 import TagInput from 'front/TagInput'
 import ArticleAPI from 'front/api/article'
 import useLoggedInUser from 'front/useLoggedInUser'
-import { useCtrlEnterSubmit } from 'libts'
-import { AppContext } from 'libts'
+import { useCtrlEnterSubmit } from 'front/ts'
+import { AppContext } from 'front/ts'
 
 function editorReducer(state, action) {
   switch (action.type) {

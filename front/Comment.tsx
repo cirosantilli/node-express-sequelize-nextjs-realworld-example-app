@@ -6,7 +6,7 @@ import Maybe from 'front/Maybe'
 import DeleteButton from 'front/DeleteButton'
 import { formatDate } from 'front/date'
 import useLoggedInUser from 'front/useLoggedInUser'
-import routes from 'routes'
+import routes from 'front/routes'
 
 const Comment = ({ comment }) => {
   const loggedInUser = useLoggedInUser()

@@ -4,7 +4,7 @@ import ArticleActions from 'front/ArticleActions'
 import CustomImage from 'front/CustomImage'
 import CustomLink from 'front/CustomLink'
 import { formatDate } from 'front/date'
-import routes from 'routes'
+import routes from 'front/routes'
 
 const ArticleMeta = ({ article }) => {
   if (!article) return

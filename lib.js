@@ -1,4 +1,4 @@
-const config = require('./config')
+const config = require('./front/config')
 
 async function deleteOldestForDemo(Model) {
   if (config.isDemo) {

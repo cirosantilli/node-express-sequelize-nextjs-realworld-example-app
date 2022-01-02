@@ -4,7 +4,7 @@ import CustomLink from 'front/CustomLink'
 import CustomImage from 'front/CustomImage'
 import FavoriteArticleButton from 'front/FavoriteArticleButton'
 import { formatDate } from 'front/date'
-import routes from 'routes'
+import routes from 'front/routes'
 
 const ArticlePreview = ({ article }) => {
   const preview = article

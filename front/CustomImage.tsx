@@ -1,9 +1,9 @@
-import { DEFAULT_PROFILE_IMAGE } from 'lib/utils/constant'
+import { defaultProfileImage } from 'front/config'
 
 // https://stackoverflow.com/questions/34097560/react-js-replace-img-src-onerror
 // https://stackoverflow.com/questions/66949606/what-is-the-best-way-to-have-a-fallback-image-in-nextjs
 const handleBrokenImage = (e) => {
-  e.target.src = DEFAULT_PROFILE_IMAGE
+  e.target.src = defaultProfileImage
   e.target.onerror = null
 }
 

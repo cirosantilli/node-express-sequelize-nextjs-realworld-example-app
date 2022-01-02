@@ -10,7 +10,7 @@
   const path = require('path')
   const child_process = require('child_process')
   const { DatabaseError } = require('sequelize')
-  const config = require('../config')
+  const config = require('../front/config')
   const models = require('../models')
 
   const sequelize = models.getSequelize(path.dirname(__dirname))

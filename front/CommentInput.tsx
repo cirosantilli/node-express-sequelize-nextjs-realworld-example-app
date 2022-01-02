@@ -5,10 +5,10 @@ import { trigger } from 'swr'
 
 import CustomImage from 'front/CustomImage'
 import CustomLink from 'front/CustomLink'
-import { SERVER_BASE_URL } from 'lib/utils/constant'
+import { apiPath } from 'front/config'
 import useLoggedInUser from 'front/useLoggedInUser'
-import { useCtrlEnterSubmit } from 'libts'
-import routes from 'routes'
+import { useCtrlEnterSubmit } from 'front/ts'
+import routes from 'front/routes'
 
 const CommentInput = () => {
   const loggedInUser = useLoggedInUser()
@@ -25,7 +25,7 @@ const CommentInput = () => {
     e.preventDefault()
     setLoading(true)
     await axios.post(
-      `${SERVER_BASE_URL}/articles/${encodeURIComponent(String(pid))}/comments`,
+      `${apiPath}/articles/${encodeURIComponent(String(pid))}/comments`,
       JSON.stringify({
         comment: {
           body: content,
@@ -40,7 +40,7 @@ const CommentInput = () => {
     )
     setLoading(false)
     setContent('')
-    trigger(`${SERVER_BASE_URL}/articles/${pid}/comments`)
+    trigger(`${apiPath}/articles/${pid}/comments`)
   }
   useCtrlEnterSubmit(handleSubmit)
   if (!loggedInUser) {

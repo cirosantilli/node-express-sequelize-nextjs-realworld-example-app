@@ -15,7 +15,7 @@ const session = require('express-session')
 const api = require('./api')
 const lib = require('./lib')
 const models = require('./models')
-const config = require('./config')
+const config = require('./front/config')
 
 /**
  * - port: 0 means find random empty port

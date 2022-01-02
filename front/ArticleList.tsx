@@ -3,12 +3,12 @@ import React from 'react'
 import useSWR from 'swr'
 
 import ArticlePreview from 'front/ArticlePreview'
+import { apiPath, articleLimit } from 'front/config'
 import ErrorMessage from 'front/ErrorMessage'
 import { FavoriteArticleButtonContext } from 'front/FavoriteArticleButton'
 import LoadingSpinner from 'front/LoadingSpinner'
 import Maybe from 'front/Maybe'
 import Pagination from 'front/Pagination'
-import { SERVER_BASE_URL, DEFAULT_LIMIT } from 'lib/utils/constant'
 import fetcher from 'front/api'
 
 const ArticleList = ({
@@ -36,24 +36,24 @@ const ArticleList = ({
     }
     switch (what) {
       case 'favorites':
-        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&favorited=${encodeURIComponent(
+        return `${apiPath}/articles?limit=${articleLimit}&favorited=${encodeURIComponent(
           String(pid)
-        )}&offset=${page * DEFAULT_LIMIT}`
+        )}&offset=${page * articleLimit}`
       case 'my-posts':
-        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&author=${encodeURIComponent(
+        return `${apiPath}/articles?limit=${articleLimit}&author=${encodeURIComponent(
           String(pid)
-        )}&offset=${page * DEFAULT_LIMIT}`
+        )}&offset=${page * articleLimit}`
       case 'tag':
-        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&tag=${encodeURIComponent(
+        return `${apiPath}/articles?limit=${articleLimit}&tag=${encodeURIComponent(
           tag
-        )}&offset=${page * DEFAULT_LIMIT}`
+        )}&offset=${page * articleLimit}`
       case 'feed':
-        return `${SERVER_BASE_URL}/articles/feed?limit=${DEFAULT_LIMIT}&offset=${
-          page * DEFAULT_LIMIT
+        return `${apiPath}/articles/feed?limit=${articleLimit}&offset=${
+          page * articleLimit
         }`
       case 'global':
-        return `${SERVER_BASE_URL}/articles?limit=${DEFAULT_LIMIT}&offset=${
-          page * DEFAULT_LIMIT
+        return `${apiPath}/articles?limit=${articleLimit}&offset=${
+          page * articleLimit
         }`
       case undefined:
         // We haven't decided yet because we haven't decided if we are logged in or out yet.
@@ -90,13 +90,13 @@ const ArticleList = ({
   const setFavorited = []
   const favoritesCount = []
   const setFavoritesCount = []
-  // MUST be DEFAULT_LIMIT and not articles.length, because articles.length
+  // MUST be articleLimit and not articles.length, because articles.length
   // can happen a variable number of times on index page due to:
   // * load ISR page logged off on global
   // * login, which leads to feed instead of global
   // and calling hooks like useState different number of times is a capital sin
   // in React and makes everything blow up.
-  for (let i = 0; i < DEFAULT_LIMIT; i++) {
+  for (let i = 0; i < articleLimit; i++) {
     // https://stackoverflow.com/questions/53906843/why-cant-react-hooks-be-called-inside-loops-or-nested-function
     // https://stackoverflow.com/questions/61345625/ignore-react-hook-react-useeffect-may-be-executed-more-than-once
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -111,7 +111,7 @@ const ArticleList = ({
       setFavoritesCount[i](articles[i].favoritesCount)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, Object.assign(articles.map((a) => a.favorited).concat(articles.map((a) => a.favoritesCount)), { length: DEFAULT_LIMIT }))
+  }, Object.assign(articles.map((a) => a.favorited).concat(articles.map((a) => a.favoritesCount)), { length: articleLimit }))
 
   if (error) return <ErrorMessage message="Cannot load recent articles..." />
   if (!data && showSpinner) return <LoadingSpinner />
@@ -133,10 +133,10 @@ const ArticleList = ({
           <ArticlePreview key={article.slug} article={article} />
         </FavoriteArticleButtonContext.Provider>
       ))}
-      <Maybe test={articlesCount && articlesCount > DEFAULT_LIMIT}>
+      <Maybe test={articlesCount && articlesCount > articleLimit}>
         <Pagination
           articlesCount={articlesCount}
-          articlesPerPage={DEFAULT_LIMIT}
+          articlesPerPage={articleLimit}
           showPagesMax={10}
           currentPage={page}
           setCurrentPage={setPage}

@@ -14,7 +14,10 @@ if (isProduction) {
 
 module.exports = {
   apiPath: '/api',
+  appName: 'Conduit',
+  articleLimit: 10,
   databaseUrl: process.env.DATABASE_URL || '',
+  defaultProfileImage: `https://static.productionready.io/images/smiley-cyrus.jpg`,
   demoMaxObjs: demoMaxObjs,
   // If Sequelize were better, we would be able to do much more in individual complex queries.
   // But as things stand, we just have to bring data into memory and do secondary requests.

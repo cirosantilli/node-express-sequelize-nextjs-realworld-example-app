@@ -2,7 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import Router from 'next/router'
 
-import { SERVER_BASE_URL } from 'lib/utils/constant'
+import { apiPath } from 'front/config'
 import useLoggedInUser from 'front/useLoggedInUser'
 
 const FAVORITED_CLASS = 'btn btn-sm btn-primary'
@@ -35,7 +35,7 @@ const FavoriteArticleButton = (props) => {
     try {
       if (favorited) {
         await axios.delete(
-          `${SERVER_BASE_URL}/articles/${props.slug}/favorite`,
+          `${apiPath}/articles/${props.slug}/favorite`,
           {
             headers: {
               Authorization: `Token ${loggedInUser?.token}`,
@@ -44,7 +44,7 @@ const FavoriteArticleButton = (props) => {
         )
       } else {
         await axios.post(
-          `${SERVER_BASE_URL}/articles/${props.slug}/favorite`,
+          `${apiPath}/articles/${props.slug}/favorite`,
           {},
           {
             headers: {

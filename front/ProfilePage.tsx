@@ -10,18 +10,18 @@ import EditProfileButton from 'front/EditProfileButton'
 import FollowUserButton, {
   FollowUserButtonContext,
 } from 'front/FollowUserButton'
-import { SERVER_BASE_URL } from 'lib/utils/constant'
 import fetcher from 'front/api'
+import { apiPath } from 'front/config'
 import useLoggedInUser from 'front/useLoggedInUser'
-import { AppContext } from 'libts'
-import routes from 'routes'
+import { AppContext } from 'front/ts'
+import routes from 'front/routes'
 
 const ProfileHoc = (tab) => {
   return function ProfilePage({ profile, articles, articlesCount }) {
     const [page, setPage] = React.useState(0)
     const router = useRouter()
     const { data: profileApi } = useSWR(
-      `${SERVER_BASE_URL}/profiles/${profile?.username}`,
+      `${apiPath}/profiles/${profile?.username}`,
       fetcher(router.isFallback)
     )
     if (profileApi !== undefined) {

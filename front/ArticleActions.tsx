@@ -7,9 +7,9 @@ import FollowUserButton from 'front/FollowUserButton'
 import CustomLink from 'front/CustomLink'
 import Maybe from 'front/Maybe'
 import ArticleAPI from 'front/api/article'
-import { SERVER_BASE_URL } from 'lib/utils/constant'
+import apiPath from 'front/config'
 import useLoggedInUser from 'front/useLoggedInUser'
-import routes from 'routes'
+import routes from 'front/routes'
 
 const ArticleActions = ({ article }) => {
   const loggedInUser = useLoggedInUser()
@@ -22,7 +22,7 @@ const ArticleActions = ({ article }) => {
     const result = window.confirm('Do you really want to delete it?')
     if (!result) return
     await ArticleAPI.delete(pid, loggedInUser?.token)
-    trigger(`${SERVER_BASE_URL}/articles/${pid}`)
+    trigger(`${apiPath}/articles/${pid}`)
     Router.push(`/`)
   }
   const canModify =

@@ -2,7 +2,7 @@ const router = require('express').Router()
 const auth = require('../auth')
 const { Transaction } = require('sequelize')
 
-const config = require('../config.js')
+const config = require('../front/config.js')
 const lib = require('../lib.js')
 
 async function setArticleTags(req, article, tagList, transaction) {

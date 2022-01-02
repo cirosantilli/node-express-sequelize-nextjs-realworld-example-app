@@ -5,10 +5,9 @@ import { SWRConfig } from 'swr'
 
 import CustomLink from 'front/CustomLink'
 import Navbar from 'front/Navbar'
-import { googleAnalyticsId, isDemo, isProduction } from 'config'
-import { APP_NAME } from 'lib/utils/constant'
-import { AppContext, AppContextProvider } from 'libts'
-import routes from 'routes'
+import { appName, googleAnalyticsId, isDemo, isProduction } from 'front/config'
+import { AppContext, AppContextProvider } from 'front/ts'
+import routes from 'front/routes'
 
 // Packages.
 import 'ionicons/css/ionicons.min.css'
@@ -37,7 +36,7 @@ function MyHead() {
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>{realTitle + APP_NAME}</title>
+      <title>{realTitle + appName}</title>
     </Head>
   )
 }
@@ -87,7 +86,7 @@ const MyApp = ({ Component, pageProps }) => {
         <footer>
           <div className="container">
             <CustomLink href={routes.home()} className="logo-font">
-              {APP_NAME.toLowerCase()}
+              {appName.toLowerCase()}
             </CustomLink>
             <span className="attribution">
               {' '}

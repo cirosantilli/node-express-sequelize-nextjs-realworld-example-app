@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-import { SERVER_BASE_URL } from 'lib/utils/constant'
+import { apiPath } from 'front/config'
 
 const CommentAPI = {
   create: async (slug, comment) => {
     try {
       const response = await axios.post(
-        `${SERVER_BASE_URL}/articles/${slug}/comments`,
+        `${apiPath}/articles/${slug}/comments`,
         JSON.stringify({ comment })
       )
       return response
@@ -17,7 +17,7 @@ const CommentAPI = {
   delete: async (slug, commentId) => {
     try {
       const response = await axios.delete(
-        `${SERVER_BASE_URL}/articles/${slug}/comments/${commentId}`
+        `${apiPath}/articles/${slug}/comments/${commentId}`
       )
       return response
     } catch (error) {
@@ -26,7 +26,7 @@ const CommentAPI = {
   },
 
   forArticle: (slug) =>
-    axios.get(`${SERVER_BASE_URL}/articles/${slug}/comments`),
+    axios.get(`${apiPath}/articles/${slug}/comments`),
 }
 
 export default CommentAPI

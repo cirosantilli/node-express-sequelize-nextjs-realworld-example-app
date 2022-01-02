@@ -3,7 +3,7 @@ const path = require('path')
 
 const { Sequelize, DataTypes } = require('sequelize')
 
-const config = require('../config')
+const config = require('../front/config')
 const { DatabaseError } = require('sequelize')
 
 function getSequelize(toplevelDir, toplevelBasename) {

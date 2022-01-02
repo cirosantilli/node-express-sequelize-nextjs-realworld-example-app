@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const Sequelize = require('sequelize')
 const { DataTypes, Op } = Sequelize
 
-const config = require('../config')
+const config = require('../front/config')
 
 module.exports = (sequelize) => {
   let User = sequelize.define(

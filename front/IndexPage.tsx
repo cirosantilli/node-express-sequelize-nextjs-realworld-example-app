@@ -4,9 +4,9 @@ import React from 'react'
 import ArticleList from 'front/ArticleList'
 import Maybe from 'front/Maybe'
 import Tags from 'front/Tags'
-import { APP_NAME } from 'lib/utils/constant'
+import { appName } from 'front/config'
 import useLoggedInUser from 'front/useLoggedInUser'
-import { AppContext, resetIndexState } from 'libts'
+import { AppContext, resetIndexState } from 'front/ts'
 
 const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
   const { page, setPage, tab, setTab, tag, setTag } =
@@ -27,7 +27,7 @@ const IndexPage = ({ articles, articlesCount, ssr, tags }) => {
         <Maybe test={!loggedInUser}>
           <div className="banner">
             <div className="container">
-              <h1 className="logo-font">{APP_NAME.toLowerCase()}</h1>
+              <h1 className="logo-font">{appName.toLowerCase()}</h1>
               <p>A place to share your knowledge.</p>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { mutate } from 'swr'
 import ListErrors from 'front/ListErrors'
 import UserAPI from 'front/api/user'
 import { setCookie } from 'front'
-import { useCtrlEnterSubmit } from 'libts'
+import { useCtrlEnterSubmit } from 'front/ts'
 
 const LoginForm = ({ register = false }) => {
   const [isLoading, setLoading] = React.useState(false)

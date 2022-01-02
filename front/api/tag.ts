@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import { SERVER_BASE_URL } from 'lib/utils/constant'
+import { apiPath } from 'front/config'
 
 const TagAPI = {
-  getAll: () => axios.get(`${SERVER_BASE_URL}/tags`),
+  getAll: () => axios.get(`${apiPath}/tags`),
 }
 export default TagAPI

@@ -3,8 +3,8 @@ import React from 'react'
 
 import CustomLink from 'front/CustomLink'
 import LoginForm from 'front/LoginForm'
-import { AppContext } from 'libts'
-import routes from 'routes'
+import { AppContext } from 'front/ts'
+import routes from 'front/routes'
 
 const LoginPageHoc = ({ register = false }) => {
   const title = register ? 'Sign up' : 'Sign in'

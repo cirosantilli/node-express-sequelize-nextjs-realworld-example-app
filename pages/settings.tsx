@@ -5,7 +5,7 @@ import { mutate, trigger } from 'swr'
 import SettingsForm from 'front/SettingsForm'
 import checkLogin from 'front/checkLogin'
 import storage from 'front/localStorageHelper'
-import { AppContext } from 'libts'
+import { AppContext } from 'front/ts'
 import { deleteCookie } from 'front'
 
 const Settings = () => {

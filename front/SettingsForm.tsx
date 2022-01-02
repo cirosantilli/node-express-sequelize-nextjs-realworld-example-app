@@ -3,11 +3,11 @@ import Router from 'next/router'
 import React from 'react'
 import { mutate } from 'swr'
 
+import { apiPath } from 'front/config'
 import ListErrors from 'front/ListErrors'
-import { SERVER_BASE_URL } from 'lib/utils/constant'
 import useLoggedInUser from 'front/useLoggedInUser'
 import UserAPI from 'front/api/user'
-import { useCtrlEnterSubmit } from 'libts'
+import { useCtrlEnterSubmit } from 'front/ts'
 
 const SettingsForm = () => {
   const [isLoading, setLoading] = React.useState(false)
@@ -35,7 +35,7 @@ const SettingsForm = () => {
       delete user.password
     }
     const { data, status } = await axios.put(
-      `${SERVER_BASE_URL}/user`,
+      `${apiPath}/user`,
       JSON.stringify({ user }),
       {
         headers: {

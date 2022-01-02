@@ -1,4 +1,4 @@
-import { isDemo } from 'config'
+import { isDemo } from 'front/config'
 import React from 'react'
 
 const TagInput = ({ tagList, addTag, removeTag }) => {

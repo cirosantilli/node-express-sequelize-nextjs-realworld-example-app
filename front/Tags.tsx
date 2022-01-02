@@ -1,13 +1,13 @@
 import React from 'react'
 
 import useSWR from 'swr'
-import { SERVER_BASE_URL } from 'lib/utils/constant'
 import fetcher from 'front/api'
+import { apiPath } from 'front/config'
 import ErrorMessage from 'front/ErrorMessage'
 
 const Tags = ({ tags, ssr, setTab, setPage, setTag }) => {
   const { data, error } = useSWR(
-    ssr ? null : `${SERVER_BASE_URL}/tags`,
+    ssr ? null : `${apiPath}/tags`,
     fetcher()
   )
   if (error) return <ErrorMessage message="Cannot load popular tags..." />
