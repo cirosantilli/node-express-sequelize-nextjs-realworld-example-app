@@ -34,14 +34,11 @@ const FavoriteArticleButton = (props) => {
     setFavoritesCount((prev) => prev + (favorited ? -1 : 1))
     try {
       if (favorited) {
-        await axios.delete(
-          `${apiPath}/articles/${props.slug}/favorite`,
-          {
-            headers: {
-              Authorization: `Token ${loggedInUser?.token}`,
-            },
-          }
-        )
+        await axios.delete(`${apiPath}/articles/${props.slug}/favorite`, {
+          headers: {
+            Authorization: `Token ${loggedInUser?.token}`,
+          },
+        })
       } else {
         await axios.post(
           `${apiPath}/articles/${props.slug}/favorite`,

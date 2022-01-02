@@ -11,9 +11,10 @@ const ArticleAPI = {
 
   byAuthor: (author, page = 0, limit = 5) =>
     axios.get(
-      `${apiPath}/articles?author=${encodeURIComponent(
-        author
-      )}&${getQuery(limit, page)}`
+      `${apiPath}/articles?author=${encodeURIComponent(author)}&${getQuery(
+        limit,
+        page
+      )}`
     ),
 
   byTag: (tag, page = 0, limit = 10) =>
@@ -31,24 +32,22 @@ const ArticleAPI = {
       },
     }),
 
-  favorite: (slug) =>
-    axios.post(`${apiPath}/articles/${slug}/favorite`),
+  favorite: (slug) => axios.post(`${apiPath}/articles/${slug}/favorite`),
 
   favoritedBy: (author, page) =>
     axios.get(
-      `${apiPath}/articles?favorited=${encodeURIComponent(
-        author
-      )}&${getQuery(10, page)}`
+      `${apiPath}/articles?favorited=${encodeURIComponent(author)}&${getQuery(
+        10,
+        page
+      )}`
     ),
 
   feed: (page, limit = 10) =>
     axios.get(`${apiPath}/articles/feed?${getQuery(limit, page)}`),
 
-  get: (slug) =>
-    axios.get(`${apiPath}/articles/${encodeURIComponent(slug)}`),
+  get: (slug) => axios.get(`${apiPath}/articles/${encodeURIComponent(slug)}`),
 
-  unfavorite: (slug) =>
-    axios.delete(`${apiPath}/articles/${slug}/favorite`),
+  unfavorite: (slug) => axios.delete(`${apiPath}/articles/${slug}/favorite`),
 
   update: async (article, pid, token) => {
     const { data, status } = await axios.put(

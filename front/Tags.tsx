@@ -6,10 +6,7 @@ import { apiPath } from 'front/config'
 import ErrorMessage from 'front/ErrorMessage'
 
 const Tags = ({ tags, ssr, setTab, setPage, setTag }) => {
-  const { data, error } = useSWR(
-    ssr ? null : `${apiPath}/tags`,
-    fetcher()
-  )
+  const { data, error } = useSWR(ssr ? null : `${apiPath}/tags`, fetcher())
   if (error) return <ErrorMessage message="Cannot load popular tags..." />
   if (data) {
     ;({ tags } = data)

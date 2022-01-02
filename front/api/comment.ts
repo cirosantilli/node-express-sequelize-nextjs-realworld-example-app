@@ -25,8 +25,7 @@ const CommentAPI = {
     }
   },
 
-  forArticle: (slug) =>
-    axios.get(`${apiPath}/articles/${slug}/comments`),
+  forArticle: (slug) => axios.get(`${apiPath}/articles/${slug}/comments`),
 }
 
 export default CommentAPI

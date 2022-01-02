@@ -12,14 +12,11 @@ const DeleteButton = ({ commentId }) => {
     query: { pid },
   } = router
   const handleDelete = async (commentId) => {
-    await axios.delete(
-      `${apiPath}/articles/${pid}/comments/${commentId}`,
-      {
-        headers: {
-          Authorization: `Token ${loggedInUser?.token}`,
-        },
-      }
-    )
+    await axios.delete(`${apiPath}/articles/${pid}/comments/${commentId}`, {
+      headers: {
+        Authorization: `Token ${loggedInUser?.token}`,
+      },
+    })
     trigger(`${apiPath}/articles/${pid}/comments`)
   }
 
