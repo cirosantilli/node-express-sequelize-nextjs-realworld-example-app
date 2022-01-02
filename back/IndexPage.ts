@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetStaticProps } from 'next'
 
 import { articleLimit, revalidate } from 'front/config'
-import sequelize from 'back/db'
+import sequelize from 'db'
 import { getIndexTags } from 'lib'
 
 async function getLoggedOutProps() {
