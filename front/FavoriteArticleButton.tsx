@@ -30,8 +30,8 @@ const FavoriteArticleButton = (props) => {
       Router.push(`/user/login`)
       return
     }
-    setFavorited(!favorited)
-    setFavoritesCount(favoritesCount + (favorited ? -1 : 1))
+    setFavorited((prev) => !prev)
+    setFavoritesCount((prev) => prev + (favorited ? -1 : 1))
     try {
       if (favorited) {
         await axios.delete(
@@ -54,8 +54,8 @@ const FavoriteArticleButton = (props) => {
         )
       }
     } catch (error) {
-      setFavorited(!favorited)
-      setFavoritesCount(favoritesCount + (favorited ? 1 : -1))
+      setFavorited((prev) => !prev)
+      setFavoritesCount((prev) => prev + (favorited ? 1 : -1))
     }
   }
   let count = favoritesCount

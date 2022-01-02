@@ -97,7 +97,11 @@ const ArticleList = ({
   // and calling hooks like useState different number of times is a capital sin
   // in React and makes everything blow up.
   for (let i = 0; i < DEFAULT_LIMIT; i++) {
+    // https://stackoverflow.com/questions/53906843/why-cant-react-hooks-be-called-inside-loops-or-nested-function
+    // https://stackoverflow.com/questions/61345625/ignore-react-hook-react-useeffect-may-be-executed-more-than-once
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     ;[favorited[i], setFavorited[i]] = React.useState(false)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     ;[favoritesCount[i], setFavoritesCount[i]] = React.useState(0)
   }
   React.useEffect(() => {
@@ -106,6 +110,7 @@ const ArticleList = ({
       setFavorited[i](articles[i].favorited)
       setFavoritesCount[i](articles[i].favoritesCount)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, Object.assign(articles.map((a) => a.favorited).concat(articles.map((a) => a.favoritesCount)), { length: DEFAULT_LIMIT }))
 
   if (error) return <ErrorMessage message="Cannot load recent articles..." />
