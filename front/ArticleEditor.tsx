@@ -5,8 +5,8 @@ import ListErrors from 'front/ListErrors'
 import TagInput from 'front/TagInput'
 import ArticleAPI from 'front/api/article'
 import useLoggedInUser from 'front/useLoggedInUser'
-import { useCtrlEnterSubmit } from 'front/ts'
-import { AppContext } from 'front/ts'
+import routes from 'front/routes'
+import { AppContext, useCtrlEnterSubmit } from 'front/ts'
 
 function editorReducer(state, action) {
   switch (action.type) {
@@ -91,7 +91,7 @@ export default function ArticleEditorHoc(isnew: boolean = false) {
       if (status !== 200) {
         setErrors(data.errors)
       }
-      Router.push(`/article/${data.article.slug}`)
+      Router.push(routes.previewArticle(data.article.slug))
     }
     useCtrlEnterSubmit(handleSubmit)
     const { setTitle } = React.useContext(AppContext)

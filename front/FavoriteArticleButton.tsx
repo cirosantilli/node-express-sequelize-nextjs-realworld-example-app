@@ -3,6 +3,7 @@ import React from 'react'
 import Router from 'next/router'
 
 import { apiPath } from 'front/config'
+import routes from 'front/routes'
 import useLoggedInUser from 'front/useLoggedInUser'
 
 const FAVORITED_CLASS = 'btn btn-sm btn-primary'
@@ -27,7 +28,7 @@ const FavoriteArticleButton = (props) => {
   }
   const handleClickFavorite = async () => {
     if (!loggedInUser) {
-      Router.push(`/user/login`)
+      Router.push(routes.userLogin())
       return
     }
     setFavorited((prev) => !prev)

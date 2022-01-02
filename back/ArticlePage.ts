@@ -1,7 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
 import { fallback, revalidate, prerenderAll } from 'front/config'
-import sequelize from 'back/db'
+import sequelize from 'db'
 
 export const getStaticPathsArticle: GetStaticPaths = async () => {
   let paths
@@ -24,7 +24,9 @@ export const getStaticPathsArticle: GetStaticPaths = async () => {
 
 export function getStaticPropsArticle(
   addRevalidate?,
-  addComments?
+  addComments?,
+  preview?,
+  previewData?
 ): GetStaticProps {
   return async ({ params: { pid } }) => {
     const article = await sequelize.models.Article.findOne({

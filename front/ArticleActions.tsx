@@ -23,7 +23,7 @@ const ArticleActions = ({ article }) => {
     if (!result) return
     await ArticleAPI.delete(pid, loggedInUser?.token)
     trigger(`${apiPath}/articles/${pid}`)
-    Router.push(`/`)
+    Router.push(routes.home())
   }
   const canModify =
     loggedInUser && loggedInUser?.username === article?.author?.username

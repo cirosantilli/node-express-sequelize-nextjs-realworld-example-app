@@ -3,6 +3,7 @@ import Router from 'next/router'
 
 import UserAPI from 'front/api/user'
 import useLoggedInUser from 'front/useLoggedInUser'
+import routes from 'front/routes'
 
 export const FollowUserButtonContext = React.createContext(undefined)
 
@@ -17,7 +18,7 @@ const FollowUserButton = ({ profile }) => {
   const handleClick = (e) => {
     e.preventDefault()
     if (!loggedInUser) {
-      Router.push(`/user/login`)
+      Router.push(routes.userLogin())
       return
     }
     if (following) {

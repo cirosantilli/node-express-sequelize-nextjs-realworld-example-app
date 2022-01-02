@@ -64,9 +64,12 @@ async function start(port, startNext, cb) {
   app.use(require('method-override')())
 
   // Next handles anything outside of /api.
-  app.get(new RegExp('^(?!' + config.apiPath + '(/|$))'), function (req, res) {
-    return nextHandle(req, res)
-  })
+  app.get(
+    new RegExp(`^((?!${config.apiPath})|${config.apiPath}/preview)(/|$)`),
+    function (req, res) {
+      return nextHandle(req, res)
+    }
+  )
   app.use(
     session({
       secret: config.secret,

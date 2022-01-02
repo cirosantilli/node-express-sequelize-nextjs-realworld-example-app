@@ -5,9 +5,10 @@ import { mutate } from 'swr'
 
 import { apiPath } from 'front/config'
 import ListErrors from 'front/ListErrors'
-import useLoggedInUser from 'front/useLoggedInUser'
 import UserAPI from 'front/api/user'
+import routes from 'front/routes'
 import { useCtrlEnterSubmit } from 'front/ts'
+import useLoggedInUser from 'front/useLoggedInUser'
 
 const SettingsForm = () => {
   const [isLoading, setLoading] = React.useState(false)
@@ -58,7 +59,7 @@ const SettingsForm = () => {
       data.user.effectiveImage = profileData.profile.image
       window.localStorage.setItem('user', JSON.stringify(data.user))
       mutate('user', data.user)
-      Router.push(`/profile/${user.username}`)
+      Router.push(routes.previewUser(user.username))
     }
   }
   useCtrlEnterSubmit(handleSubmit)

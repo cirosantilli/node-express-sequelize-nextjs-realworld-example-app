@@ -2,9 +2,10 @@ import Router from 'next/router'
 import React from 'react'
 import { mutate } from 'swr'
 
+import { setCookie } from 'front'
 import ListErrors from 'front/ListErrors'
 import UserAPI from 'front/api/user'
-import { setCookie } from 'front'
+import routes from 'front/routes'
 import { useCtrlEnterSubmit } from 'front/ts'
 
 const LoginForm = ({ register = false }) => {
@@ -51,7 +52,7 @@ const LoginForm = ({ register = false }) => {
         window.localStorage.setItem('user', JSON.stringify(data.user))
         setCookie('auth', data.user.token)
         mutate('user', data.user)
-        Router.push('/')
+        Router.push(routes.home())
       }
     } catch (error) {
       console.error(error)
