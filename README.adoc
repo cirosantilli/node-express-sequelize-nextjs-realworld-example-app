@@ -155,6 +155,8 @@ git remote add heroku-next https://git.heroku.com/cirosantilli-realworld-next.gi
 
 This is done because this repository is normally developed as a branch of that one, which would lead to a conflicting name for the branch `heroku`.
 
+Additionally, before deploying, you must also make sure that you can run the PostgreSQL tests by setting PG up as shown at: <<local-run-as-identical-to-deployment-as-possible>>. This is because before deployment we always run the tests to ensure that nothing broke. And running the tests in PostgreSQL is particularly crucial, because since Sequelize is not stellar, sometimes things work in SQLite but fail in PostgreSQL.
+
 Then, to deploy the latest commit run:
 
 ....
