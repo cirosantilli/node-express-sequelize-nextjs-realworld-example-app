@@ -136,7 +136,6 @@ async function generateDemoData(params) {
   }
   await models.sync(sequelize, { force: true })
   if (!params.empty) {
-
     printTimeNow = now()
     if (verbose) console.error('User')
     const userArgs = []

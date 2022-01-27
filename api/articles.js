@@ -13,7 +13,7 @@ async function setArticleTags(req, article, tagList, transaction) {
     {
       ignoreDuplicates: true,
       transaction,
-    },
+    }
   )
   // IDs may be missing from the above, so we have to do a find.
   // https://github.com/sequelize/sequelize/issues/11223#issuecomment-864185973

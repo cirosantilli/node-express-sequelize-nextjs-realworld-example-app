@@ -2,7 +2,6 @@ const assert = require('assert')
 const http = require('http')
 
 const app = require('./app')
-const models = require('./models')
 const test_lib = require('./test_lib')
 
 function testApp(cb) {
@@ -12,13 +11,13 @@ function testApp(cb) {
   })
 }
 
-beforeEach(async function() {
+beforeEach(async function () {
   this.currentTest.sequelize = await test_lib.generateDemoData({ empty: true })
-});
+})
 
-afterEach(async function() {
+afterEach(async function () {
   return this.currentTest.sequelize.close()
-});
+})
 
 // https://stackoverflow.com/questions/6048504/synchronous-request-in-node-js/53338670#53338670
 function sendJsonHttp(opts) {
@@ -116,7 +115,7 @@ it('feed shows articles by followers', async function () {
   assert.strictEqual(count, 6)
 })
 
-it('tags without articles are deleted automatically after their last article is deleted', async function() {
+it('tags without articles are deleted automatically after their last article is deleted', async function () {
   const sequelize = this.test.sequelize
   const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
   const article0 = await sequelize.models.Article.create(
@@ -148,7 +147,7 @@ it('tags without articles are deleted automatically after their last article is 
   assert.strictEqual(tags.length, 0)
 })
 
-it('users can be deleted and deletion cascades to all relations', async function() {
+it('users can be deleted and deletion cascades to all relations', async function () {
   // This was failing previously because of cascading madness.
   // It is also interesting to see if article deletion will cascade into the
   // empty tag deletion hooks or not.
@@ -244,7 +243,7 @@ it('api: create an article and see it on global feed', async () => {
 
     // Update article removing one tag and adding another.
     article.tagList = ['tag0', 'tag1']
-    console.error('0');
+    console.error('0')
     ;[res, data] = await sendJsonHttp({
       server,
       method: 'PUT',
