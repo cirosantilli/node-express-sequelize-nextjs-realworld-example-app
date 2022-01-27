@@ -27,6 +27,11 @@ commander.option(
   3
 )
 commander.option(
+  '--empty',
+  'ignore everything else and make an empty database instead',
+  false
+)
+commander.option(
   '-f, --n-follows-per-user <n>',
   'n follows per user',
   myParseInt,
@@ -60,6 +65,7 @@ if (!commander.forceProduction) {
   const test_lib = require('../test_lib')
   const sequelize = await test_lib.generateDemoData({
     directory: path.dirname(__dirname),
+    empty: commander.empty,
     nArticlesPerUser: commander.nArticlesPerUser,
     nMaxCommentsPerArticle: commander.nMaxCommentsPerArticle,
     nMaxTagsPerArticle: commander.nMaxTagsPerArticle,

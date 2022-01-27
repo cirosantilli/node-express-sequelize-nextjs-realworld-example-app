@@ -507,6 +507,12 @@ Test data size can be configured with CLI parameters, e.g.:
 ./bin/generate-demo-data.js --n-users 5 --n-articles-per-user 8 --n-follows-per-user 3
 ....
 
+If you just want to truncate the database with empty data use:
+
+....
+./bin/generate-demo-data.js --empty
+....
+
 === Prevent the browser from opening automatically
 
 In case you've broken things so bad that the very first GET blows up the website and further requests don't respond https://stackoverflow.com/questions/61927814/how-to-disable-open-browser-in-cra

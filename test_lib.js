@@ -130,94 +130,96 @@ async function generateDemoData(params) {
 
   const sequelize = models.getSequelize(directory, basename)
   await models.sync(sequelize, { force: true })
+  if (!params.empty) {
 
-  printTimeNow = now()
-  if (verbose) console.error('User')
-  const userArgs = []
-  for (let i = 0; i < nUsers; i++) {
-    userArgs.push(makeUser(sequelize, i))
-  }
-  const users = await sequelize.models.User.bulkCreate(userArgs)
-  if (verbose) printTime()
-
-  if (verbose) console.error('UserFollowUser')
-  const followArgs = []
-  for (let i = 0; i < nUsers; i++) {
-    const userId = users[i].id
-    for (let j = 0; j < nFollowsPerUser; j++) {
-      followArgs.push({
-        userId: userId,
-        followId: users[(i + 1 + j) % nUsers].id,
-      })
+    printTimeNow = now()
+    if (verbose) console.error('User')
+    const userArgs = []
+    for (let i = 0; i < nUsers; i++) {
+      userArgs.push(makeUser(sequelize, i))
     }
-  }
-  await sequelize.models.UserFollowUser.bulkCreate(followArgs)
-  if (verbose) printTime()
+    const users = await sequelize.models.User.bulkCreate(userArgs)
+    if (verbose) printTime()
 
-  if (verbose) console.error('Article')
-  const articleArgs = []
-  for (let i = 0; i < nArticles; i++) {
-    const userIdx = i % nUsers
-    const date = addDays(DATE0, i)
-    articleArgs.push(makeArticle(i, { authorId: users[userIdx].id, date }))
-  }
-  const articles = await sequelize.models.Article.bulkCreate(articleArgs, {
-    validate: true,
-    individualHooks: true,
-  })
-  if (verbose) printTime()
-
-  if (verbose) console.error('UserFavoriteArticle')
-  let articleIdx = 0
-  const favoriteArgs = []
-  for (let i = 0; i < nUsers; i++) {
-    const userId = users[i].id
-    for (let j = 0; j < nFavoritesPerUser; j++) {
-      favoriteArgs.push({
-        userId: userId,
-        articleId: articles[articleIdx % nArticles].id,
-      })
-      articleIdx += 1
+    if (verbose) console.error('UserFollowUser')
+    const followArgs = []
+    for (let i = 0; i < nUsers; i++) {
+      const userId = users[i].id
+      for (let j = 0; j < nFollowsPerUser; j++) {
+        followArgs.push({
+          userId: userId,
+          followId: users[(i + 1 + j) % nUsers].id,
+        })
+      }
     }
-  }
-  await sequelize.models.UserFavoriteArticle.bulkCreate(favoriteArgs)
-  if (verbose) printTime()
+    await sequelize.models.UserFollowUser.bulkCreate(followArgs)
+    if (verbose) printTime()
 
-  if (verbose) console.error('Tag')
-  const tagArgs = []
-  for (let i = 0; i < nTags; i++) {
-    tagArgs.push(makeTag(i))
-  }
-  const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
-  if (verbose) printTime()
-
-  if (verbose) console.error('ArticleTag')
-  let tagIdx = 0
-  const articleTagArgs = []
-  for (let i = 0; i < nArticles; i++) {
-    for (let j = 0; j < i % (nMaxTagsPerArticle + 1); j++) {
-      articleTagArgs.push({
-        articleId: articles[i].id,
-        tagId: tags[tagIdx % nTags].id,
-      })
-      tagIdx += 1
+    if (verbose) console.error('Article')
+    const articleArgs = []
+    for (let i = 0; i < nArticles; i++) {
+      const userIdx = i % nUsers
+      const date = addDays(DATE0, i)
+      articleArgs.push(makeArticle(i, { authorId: users[userIdx].id, date }))
     }
-  }
-  await sequelize.models.ArticleTag.bulkCreate(articleTagArgs)
-  if (verbose) printTime()
+    const articles = await sequelize.models.Article.bulkCreate(articleArgs, {
+      validate: true,
+      individualHooks: true,
+    })
+    if (verbose) printTime()
 
-  if (verbose) console.error('Comment')
-  const commentArgs = []
-  let commentIdx = 0
-  for (let i = 0; i < nArticles; i++) {
-    for (let j = 0; j < i % (nMaxCommentsPerArticle + 1); j++) {
-      commentArgs.push(
-        makeComment(articles[i].id, users[commentIdx % nUsers].id, commentIdx)
-      )
+    if (verbose) console.error('UserFavoriteArticle')
+    let articleIdx = 0
+    const favoriteArgs = []
+    for (let i = 0; i < nUsers; i++) {
+      const userId = users[i].id
+      for (let j = 0; j < nFavoritesPerUser; j++) {
+        favoriteArgs.push({
+          userId: userId,
+          articleId: articles[articleIdx % nArticles].id,
+        })
+        articleIdx += 1
+      }
     }
+    await sequelize.models.UserFavoriteArticle.bulkCreate(favoriteArgs)
+    if (verbose) printTime()
+
+    if (verbose) console.error('Tag')
+    const tagArgs = []
+    for (let i = 0; i < nTags; i++) {
+      tagArgs.push(makeTag(i))
+    }
+    const tags = await sequelize.models.Tag.bulkCreate(tagArgs)
+    if (verbose) printTime()
+
+    if (verbose) console.error('ArticleTag')
+    let tagIdx = 0
+    const articleTagArgs = []
+    for (let i = 0; i < nArticles; i++) {
+      for (let j = 0; j < i % (nMaxTagsPerArticle + 1); j++) {
+        articleTagArgs.push({
+          articleId: articles[i].id,
+          tagId: tags[tagIdx % nTags].id,
+        })
+        tagIdx += 1
+      }
+    }
+    await sequelize.models.ArticleTag.bulkCreate(articleTagArgs)
+    if (verbose) printTime()
+
+    if (verbose) console.error('Comment')
+    const commentArgs = []
+    let commentIdx = 0
+    for (let i = 0; i < nArticles; i++) {
+      for (let j = 0; j < i % (nMaxCommentsPerArticle + 1); j++) {
+        commentArgs.push(
+          makeComment(articles[i].id, users[commentIdx % nUsers].id, commentIdx)
+        )
+      }
+    }
+    await sequelize.models.Comment.bulkCreate(commentArgs)
+    if (verbose) printTime()
   }
-  await sequelize.models.Comment.bulkCreate(commentArgs)
-  if (verbose) printTime()
 
   return sequelize
 }
