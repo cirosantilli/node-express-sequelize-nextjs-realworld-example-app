@@ -586,13 +586,13 @@ npm test -- -g 'substring of test title'
 Show all queries done in the tests:
 
 ....
-DEBUG='sequelize:sql:*' npm test
+DEBUG='sequelize:sql:*' npm run test
 ....
 
 To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then 
 
 ....
-NODE_ENV=production DATABASE_URL='postgres://realworld_next_user:a@localhost:5432/realworld_next' npm test
+npm run test-pg
 ....
 
 The tests include two broad classes of tests:
