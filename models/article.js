@@ -64,7 +64,7 @@ module.exports = (sequelize) => {
     // this article. We know we can delete those later on.
     const emptyTags = await sequelize.models.Article.findAll({
       attributes: [
-        sequelize.col('Tags.id'),
+        sequelize.col('tags.id'),
         [sequelize.fn('COUNT', sequelize.col('Article.id')), 'count'],
       ],
       raw: true,
@@ -83,7 +83,7 @@ module.exports = (sequelize) => {
           ],
         },
       ],
-      group: ['Tags.id'],
+      group: ['tags.id'],
       order: [[sequelize.col('count'), 'DESC']],
       having: sequelize.where(
         sequelize.fn('COUNT', sequelize.col('Article.id')),
