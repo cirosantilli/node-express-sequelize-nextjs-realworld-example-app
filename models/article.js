@@ -103,7 +103,7 @@ module.exports = (sequelize) => {
     //  }
     //}
     if (emptyTags.length) {
-      sequelize.models.Tag.destroy({
+      await sequelize.models.Tag.destroy({
         where: { id: emptyTags.map((tag) => tag.id) },
         transaction,
       })

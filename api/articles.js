@@ -10,12 +10,16 @@ async function setArticleTags(req, article, tagList, transaction) {
     tagList.map((tag) => {
       return { name: tag }
     }),
-    { ignoreDuplicates: true }
+    {
+      ignoreDuplicates: true,
+      transaction,
+    },
   )
   // IDs may be missing from the above, so we have to do a find.
   // https://github.com/sequelize/sequelize/issues/11223#issuecomment-864185973
   const tags2 = await req.app.get('sequelize').models.Tag.findAll({
     where: { name: tagList },
+    transaction,
   })
   return article.setTags(tags2, { transaction })
 }
