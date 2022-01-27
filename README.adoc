@@ -571,11 +571,15 @@ When running:
 NODE_ENV=test npm run dev
 ....
 
-the server runs on a temporary in-memory database.
+the server runs on a temporary in-memory database when using the default SQLite database.
+
+It has no effect on <<development-run-in-postgresql,PostreSQL>>, as we don't know of any reasonable alternatives unfortunately. We could grant a create database privilege to our PostgreSQL test user... but Sequelize does not seem to support database creation there: https://stackoverflow.com/questions/31294562/sequelize-create-database/32212001[].
+
+One implication of this is that it is not currently possible to run <<test-js>> in parallel mode for PostgreSQL.
 
 === test.js
 
-Oour tests are all located inside link:test.js[].
+Our tests are all located inside link:test.js[].
 
 They can be run with:
 
@@ -595,11 +599,19 @@ Show all queries done in the tests:
 DEBUG='sequelize:sql:*' npm run test
 ....
 
-To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then 
+To run those tests on PostgreSQL intead, first setup as in <<local-run-as-identical-to-deployment-as-possible>>, and then:
 
 ....
 npm run test-pg
 ....
+
+Note that this will erase all data present in the database used. In order to point to a custom database use:
+
+....
+DATABASE_URL_TEST=postgres://realworld_next_user:a@localhost:5432/realworld_next_test npm run test-pg
+....
+
+We don't use `DATABASE_URL` when running tests as a safegard to reduce the likelyhood of accidentaly nuking the production database.
 
 The tests include two broad classes of tests:
 

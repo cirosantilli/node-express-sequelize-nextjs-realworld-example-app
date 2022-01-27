@@ -12,6 +12,14 @@ function testApp(cb) {
   })
 }
 
+beforeEach(async function() {
+  this.currentTest.sequelize = await test_lib.generateDemoData({ empty: true })
+});
+
+afterEach(async function() {
+  return this.currentTest.sequelize.close()
+});
+
 // https://stackoverflow.com/questions/6048504/synchronous-request-in-node-js/53338670#53338670
 function sendJsonHttp(opts) {
   return new Promise((resolve, reject) => {
@@ -65,7 +73,7 @@ function sendJsonHttp(opts) {
   })
 }
 
-it('feed shows articles by followers', async () => {
+it('feed shows articles by followers', async function () {
   //  art0 by user0
   //  art1 by user1
   //  art2 by user2
@@ -86,6 +94,7 @@ it('feed shows articles by followers', async () => {
   // user2 follows user0 and user3
   // user3 follows user0 and user1
   const sequelize = await test_lib.generateDemoData({
+    sequelize: this.test.sequelize,
     nUsers: 4,
     nArticlesPerUser: 3,
     nFollowsPerUser: 2,
@@ -105,13 +114,10 @@ it('feed shows articles by followers', async () => {
   //assert.strictEqual(user0ArticlesByFollowed[4].title, 'My title 1')
   assert.strictEqual(rows.length, 4)
   assert.strictEqual(count, 6)
-
-  await sequelize.close()
 })
 
-it('tags without articles are deleted automatically after their last article is deleted', async () => {
-  const sequelize = models.getSequelize()
-  await sequelize.sync({ force: true })
+it('tags without articles are deleted automatically after their last article is deleted', async function() {
+  const sequelize = this.test.sequelize
   const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
   const article0 = await sequelize.models.Article.create(
     test_lib.makeArticle(0, { authorId: user.id })
@@ -142,12 +148,11 @@ it('tags without articles are deleted automatically after their last article is 
   assert.strictEqual(tags.length, 0)
 })
 
-it('users can be deleted and deletion cascades to all relations', async () => {
+it('users can be deleted and deletion cascades to all relations', async function() {
   // This was failing previously because of cascading madness.
   // It is also interesting to see if article deletion will cascade into the
   // empty tag deletion hooks or not.
-  const sequelize = models.getSequelize()
-  await sequelize.sync({ force: true })
+  const sequelize = this.test.sequelize
   const user = await sequelize.models.User.create(test_lib.makeUser(sequelize))
   const article0 = await sequelize.models.Article.create(
     test_lib.makeArticle(0, { authorId: user.id })
@@ -182,8 +187,8 @@ it('users can be deleted and deletion cascades to all relations', async () => {
   assert.strictEqual(await sequelize.models.Comment.count(), 0)
 })
 
-it('api: create an article and see it on global feed', () => {
-  return testApp(async (server) => {
+it('api: create an article and see it on global feed', async () => {
+  await testApp(async (server) => {
     let res,
       data,
       article
@@ -239,6 +244,7 @@ it('api: create an article and see it on global feed', () => {
 
     // Update article removing one tag and adding another.
     article.tagList = ['tag0', 'tag1']
+    console.error('0');
     ;[res, data] = await sendJsonHttp({
       server,
       method: 'PUT',
@@ -277,7 +283,6 @@ it('api: create an article and see it on global feed', () => {
     assert.strictEqual(res.statusCode, 200)
     data.tags.sort()
     assert.strictEqual(data.tags[0], 'tag0')
-    // TODO
     assert.strictEqual(data.tags[1], 'tag2')
     assert.strictEqual(data.tags.length, 2)
 

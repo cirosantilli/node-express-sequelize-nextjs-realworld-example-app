@@ -12,11 +12,18 @@ if (isProduction) {
   demoMaxObjs = 10
 }
 
+let databaseUrl
+if (process.env.NODE_ENV === 'test') {
+  databaseUrl = process.env.DATABASE_URL_TEST
+} else {
+  databaseUrl = process.env.DATABASE_URL
+}
+
 module.exports = {
   apiPath: '/api',
   appName: 'Conduit',
   articleLimit: 10,
-  databaseUrl: process.env.DATABASE_URL || '',
+  databaseUrl: databaseUrl || '',
   defaultProfileImage: `https://static.productionready.io/images/smiley-cyrus.jpg`,
   demoMaxObjs: demoMaxObjs,
   // If Sequelize were better, we would be able to do much more in individual complex queries.
@@ -55,7 +62,7 @@ module.exports = {
   },
   production: {
     url:
-      process.env.DATABASE_URL ||
+      databaseUrl ||
       'postgres://realworld_next_user:a@localhost:5432/realworld_next',
     dialect: 'postgres',
     dialectOptions: {

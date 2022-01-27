@@ -128,7 +128,12 @@ async function generateDemoData(params) {
 
   const nArticles = nUsers * nArticlesPerUser
 
-  const sequelize = models.getSequelize(directory, basename)
+  let sequelize
+  if (params.sequelize) {
+    sequelize = params.sequelize
+  } else {
+    sequelize = models.getSequelize(directory, basename)
+  }
   await models.sync(sequelize, { force: true })
   if (!params.empty) {
 

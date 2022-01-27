@@ -130,7 +130,10 @@ async function start(port, startNext, cb) {
         throw e
       }
     })
-    server.on('close', resolve)
+    server.on('close', async function () {
+      await sequelize.close()
+      resolve()
+    })
   })
 }
 
