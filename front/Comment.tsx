@@ -26,7 +26,7 @@ const Comment = ({ comment }) => {
             className="comment-author-img"
           />
         </CustomLink>
-        &nbsp
+        &nbsp;
         <CustomLink
           href={routes.userView(comment.author.username)}
           className="comment-author"
