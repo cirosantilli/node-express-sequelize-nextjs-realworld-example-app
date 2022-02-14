@@ -44,6 +44,8 @@ You might also want to generate some test data as mentioned at: <<generate-demo-
 
 The SQLite database is located at `db.sqlite3`.
 
+The Node.js and NPM versions this was tested with are specified at link:package.json[] `engines:` entry, which is what the <<heroku-deployment>> uses https://devcenter.heroku.com/articles/nodejs-support#specifying-a-node-js-version[as mentioned here]. You should of course try to use those exact versions for reproducibility. The best way to install a custom node and NPM version is to use NVM as mentioned here: https://stackoverflow.com/questions/16898001/how-to-install-a-specific-version-of-node-on-ubuntu/47376491#47376491[].
+
 == Local optimized frontend
 
 ....
