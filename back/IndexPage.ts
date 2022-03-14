@@ -1,6 +1,8 @@
 import { GetServerSideProps, GetStaticProps } from 'next'
+import { verify } from 'jsonwebtoken'
 
-import { articleLimit, revalidate } from 'front/config'
+import { getCookieFromReq } from 'front'
+import { articleLimit, revalidate, secret  } from 'front/config'
 import sequelize from 'db'
 import { getIndexTags } from 'lib'
 
@@ -17,10 +19,6 @@ async function getLoggedOutProps() {
     tags: await getIndexTags(sequelize),
   }
 }
-
-import { secret } from 'front/config'
-import { verify } from 'jsonwebtoken'
-import { getCookieFromReq } from 'front'
 
 function getLoggedInUser(req) {
   const authCookie = getCookieFromReq(req, 'auth')
