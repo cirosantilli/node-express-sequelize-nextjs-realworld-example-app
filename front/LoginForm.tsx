@@ -4,7 +4,7 @@ import { mutate } from 'swr'
 
 import ListErrors from 'front/ListErrors'
 import UserAPI from 'front/api/user'
-import { setCookie } from 'front'
+import { AUTH_COOKIE_NAME, AUTH_LOCAL_STORAGE_NAME, setCookie } from 'front'
 import { useCtrlEnterSubmit } from 'front/ts'
 
 const LoginForm = ({ register = false }) => {
@@ -48,9 +48,12 @@ const LoginForm = ({ register = false }) => {
           setErrors(profileData.errors)
         }
         data.user.effectiveImage = profileData.profile.image
-        window.localStorage.setItem('user', JSON.stringify(data.user))
-        setCookie('auth', data.user.token)
-        mutate('user', data.user)
+        window.localStorage.setItem(
+          AUTH_LOCAL_STORAGE_NAME,
+          JSON.stringify(data.user)
+        )
+        setCookie(AUTH_COOKIE_NAME, data.user.token)
+        mutate(AUTH_LOCAL_STORAGE_NAME, data.user)
         Router.push('/')
       }
     } catch (error) {

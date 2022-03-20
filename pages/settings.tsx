@@ -2,6 +2,7 @@ import Router from 'next/router'
 import React from 'react'
 import { mutate, trigger } from 'swr'
 
+import { AUTH_LOCAL_STORAGE_NAME } from 'front'
 import SettingsForm from 'front/SettingsForm'
 import checkLogin from 'front/checkLogin'
 import storage from 'front/localStorageHelper'
@@ -10,12 +11,11 @@ import { deleteCookie } from 'front'
 
 const Settings = () => {
   React.useEffect(() => {
-    storage('user').then((loggedInUser) => {
-      const isLoggedIn = checkLogin(loggedInUser)
-      if (!isLoggedIn) {
-        Router.push(`/`)
-      }
-    })
+    const loggedInUser = storage(AUTH_LOCAL_STORAGE_NAME)
+    const isLoggedIn = checkLogin(loggedInUser)
+    if (!isLoggedIn) {
+      Router.push(`/`)
+    }
   })
   const handleLogout = async (e) => {
     e.preventDefault()

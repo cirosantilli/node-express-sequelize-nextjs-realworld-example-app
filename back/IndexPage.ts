@@ -1,8 +1,8 @@
 import { GetServerSideProps, GetStaticProps } from 'next'
 import { verify } from 'jsonwebtoken'
 
-import { getCookieFromReq } from 'front'
-import { articleLimit, revalidate, secret  } from 'front/config'
+import { getCookieFromReq, AUTH_COOKIE_NAME } from 'front'
+import { articleLimit, revalidate, secret } from 'front/config'
 import sequelize from 'db'
 import { getIndexTags } from 'lib'
 
@@ -20,23 +20,34 @@ async function getLoggedOutProps() {
   }
 }
 
-function getLoggedInUser(req) {
-  const authCookie = getCookieFromReq(req, 'auth')
+export async function getLoggedInUser(req, res) {
+  const authCookie = getCookieFromReq(req, AUTH_COOKIE_NAME)
+  let verifiedUser
   if (authCookie) {
-    return verify(authCookie, secret)
+    try {
+      verifiedUser = verify(authCookie, secret)
+    } catch (e) {
+      return null
+    }
   } else {
     return null
   }
+  const user = await sequelize.models.User.findByPk(verifiedUser.id)
+  if (user === null) {
+    res.clearCookie(AUTH_COOKIE_NAME)
+  }
+  return user
 }
 
-export const getServerSidePropsHoc: GetServerSideProps = async ({ req }) => {
-  const loggedInUser = getLoggedInUser(req)
+export const getServerSidePropsHoc: GetServerSideProps = async ({
+  req,
+  res,
+}) => {
+  const loggedInUser = await getLoggedInUser(req, res)
   let props
   if (loggedInUser) {
     const [articles, tags] = await Promise.all([
-      sequelize.models.User.findByPk(loggedInUser.id).then((user) =>
-        user.findAndCountArticlesByFollowedToJson(0, articleLimit)
-      ),
+      loggedInUser.findAndCountArticlesByFollowedToJson(0, articleLimit),
       getIndexTags(sequelize),
     ])
     props = Object.assign(articles, { tags })
