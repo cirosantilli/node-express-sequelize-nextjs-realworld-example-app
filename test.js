@@ -192,7 +192,7 @@ it('api: create an article and see it on global feed', async () => {
       data,
       article
 
-      // Create user.
+    // Create user.
     ;[res, data] = await sendJsonHttp({
       server,
       method: 'POST',

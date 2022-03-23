@@ -23,7 +23,6 @@ module.exports = {
   apiPath: '/api',
   appName: 'Conduit',
   articleLimit: 10,
-  databaseUrl: databaseUrl || '',
   defaultProfileImage: `https://static.productionready.io/images/smiley-cyrus.jpg`,
   demoMaxObjs: demoMaxObjs,
   // If Sequelize were better, we would be able to do much more in individual complex queries.

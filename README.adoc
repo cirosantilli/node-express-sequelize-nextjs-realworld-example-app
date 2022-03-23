@@ -11,7 +11,7 @@
 
 Got it running on Heroku as of April 2021 at https://cirosantilli-realworld-next.herokuapp.com/
 
-Includes DB migration, DB unit testing, DB seeding, API unit testing and linting setups.
+Includes <<database-migrations>>, <<test-js,DB and API unit testing>>, <<generate-demo-data,DB seeding>>, and <<linting>> setups.
 
 This is a branch of https://github.com/cirosantilli/node-express-sequelize-realworld-example-app rebased on top of the `master` branch of that repository, we show it in a separate GitHub repository just to give it more visibility.
 
