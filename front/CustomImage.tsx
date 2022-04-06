@@ -14,20 +14,16 @@ interface CustomImageProps {
 }
 
 const CustomImage = ({ src, alt, className }: CustomImageProps) => {
-  const props: any = {}
   const classes = ['hide-text']
   if (className) {
     classes.push(className)
   }
-  return (
-    <img
-      src={src}
-      alt={alt}
-      onError={handleBrokenImage}
-      className={classes.join(' ')}
-      {...props}
-    />
-  )
+  return <img {...{
+    alt,
+    src,
+    onError: handleBrokenImage,
+    className: classes.join(' '),
+  }} />
 }
 
 export default CustomImage

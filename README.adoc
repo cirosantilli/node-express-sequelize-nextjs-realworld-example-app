@@ -544,7 +544,7 @@ from <<local-optimized-frontend>>, but it can be good to isolate the command to 
 Run typescript type checks:
 
 ....
-npm run type-check
+npm run tsc
 ....
 
 Run eslint checks:

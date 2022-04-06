@@ -14,53 +14,7 @@ import fetcher from 'front/api'
 import { apiPath } from 'front/config'
 import { AppContext } from 'front/ts'
 import routes from 'front/routes'
-
-export interface ArticleList {
-  articles: ArticleType[]
-}
-
-export interface Article {
-  article: ArticleType
-}
-
-export type ArticleType = {
-  tagList: string[]
-  createdAt: number
-  author: Author
-  description: string
-  title: string
-  body: string
-  slug: string
-  updatedAt: number
-  favoritesCount: number
-  favorited: boolean
-}
-
-export type Author = {
-  username: string
-  bio: string
-  image: string
-  following: boolean
-}
-
-interface ArticlePageProps {
-  article: ArticleType
-  comments: CommentType[]
-  pid: string
-}
-
-export interface Comments {
-  comments: CommentType[]
-}
-
-export type CommentType = {
-  createdAt: number
-  id: string
-  body: string
-  slug: string
-  author: Author
-  updatedAt: number
-}
+import { ArticlePageProps } from 'front/ArticlePage'
 
 const ArticlePage = ({ article, comments }: ArticlePageProps) => {
   const router = useRouter()
@@ -197,7 +151,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
             <div className="col-xs-12 col-md-8 offset-md-2">
               <div>
                 <CommentInput />
-                {comments?.map((comment: CommentType) => (
+                {comments?.map((comment) => (
                   <Comment key={comment.id} comment={comment} />
                 ))}
               </div>

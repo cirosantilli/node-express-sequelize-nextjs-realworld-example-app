@@ -21,7 +21,7 @@
     "test": "NODE_ENV=test mocha test --ignore-leaks test.js",
     "test-api": "./realworld/api/run-api-tests.sh",
     "test-pg": "REALWORLD_PG=true npm test --",
-    "type-check": "tsc"
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",

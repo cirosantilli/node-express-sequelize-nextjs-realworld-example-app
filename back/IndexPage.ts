@@ -1,4 +1,4 @@
-import { GetServerSideProps, GetStaticProps } from 'next'
+import { GetStaticProps, GetServerSideProps } from 'next'
 import { verify } from 'jsonwebtoken'
 
 import { getCookieFromReq, AUTH_COOKIE_NAME } from 'front'

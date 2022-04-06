@@ -1,5 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
+import { ArticlePageProps } from 'front/ArticlePage'
 import { fallback, revalidate, prerenderAll } from 'front/config'
 import sequelize from 'db'
 
@@ -43,17 +44,18 @@ export function getStaticPropsArticle(
         include: [{ model: sequelize.models.User, as: 'author' }],
       })
     }
-    const ret: any = {
-      props: { article: await article.toJson() },
+    const props: ArticlePageProps = { article: await article.toJson() }
+    if (addComments) {
+      props.comments = await Promise.all(
+        comments.map((comment) => comment.toJson())
+      )
+    }
+    const ret: Awaited<ReturnType<GetStaticProps>> = {
+      props
     }
     // We can only add this for getStaticProps, not getServerSideProps.
     if (addRevalidate) {
       ret.revalidate = revalidate
-    }
-    if (addComments) {
-      ret.props.comments = await Promise.all(
-        comments.map((comment) => comment.toJson())
-      )
     }
     return ret
   }
