@@ -4,8 +4,9 @@ const http = require('http')
 const app = require('./app')
 const test_lib = require('./test_lib')
 
-function testApp(cb) {
-  return app.start(0, false, async (server) => {
+function testApp(cb, opts={}) {
+  const canTestNext = opts.canTestNext === undefined ? false : opts.canTestNext
+  return app.start(0, canTestNext && testNext, async (server) => {
     await cb(server)
     server.close()
   })
@@ -18,6 +19,8 @@ beforeEach(async function () {
 afterEach(async function () {
   return this.currentTest.sequelize.close()
 })
+
+const testNext = process.env.REALWORLD_TEST_NEXT === 'true'
 
 // https://stackoverflow.com/questions/6048504/synchronous-request-in-node-js/53338670#53338670
 function sendJsonHttp(opts) {
@@ -224,9 +227,22 @@ it('api: create an article and see it on global feed', async () => {
       path: '/api/articles',
       token,
     })
+    assert.strictEqual(res.statusCode, 200)
     assert.strictEqual(data.articles[0].title, 'My title 0')
     assert.strictEqual(data.articles[0].author.username, 'user0')
     assert.strictEqual(data.articlesCount, 1)
+
+    // Next.js test
+    if (testNext) {
+      // See it on global feed.
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'GET',
+        path: '/ssr',
+        token,
+      })
+      assert.strictEqual(res.statusCode, 200)
+    }
 
     // See the tags on the global feed.
     ;[res, data] = await sendJsonHttp({
@@ -303,5 +319,5 @@ it('api: create an article and see it on global feed', async () => {
     })
     assert.strictEqual(data.articles.length, 0)
     assert.strictEqual(data.articlesCount, 0)
-  })
+  }, { canTestNext: true })
 })

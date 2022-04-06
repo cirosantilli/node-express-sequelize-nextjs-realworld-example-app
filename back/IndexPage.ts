@@ -1,4 +1,5 @@
-import { GetStaticProps, GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
+import { MyGetServerSideProps } from 'front/types'
 import { verify } from 'jsonwebtoken'
 
 import { getCookieFromReq, AUTH_COOKIE_NAME } from 'front'
@@ -39,7 +40,7 @@ export async function getLoggedInUser(req, res) {
   return user
 }
 
-export const getServerSidePropsHoc: GetServerSideProps = async ({
+export const getServerSidePropsHoc: MyGetServerSideProps = async ({
   req,
   res,
 }) => {
@@ -48,7 +49,7 @@ export const getServerSidePropsHoc: GetServerSideProps = async ({
   if (loggedInUser) {
     const [articles, tags] = await Promise.all([
       loggedInUser.findAndCountArticlesByFollowedToJson(0, articleLimit),
-      getIndexTags(sequelize),
+      getIndexTags(req.sequelize),
     ])
     props = Object.assign(articles, { tags })
   } else {

@@ -65,6 +65,11 @@ async function start(port, startNext, cb) {
 
   // Next handles anything outside of /api.
   app.get(new RegExp('^(?!' + config.apiPath + '(/|$))'), function (req, res) {
+    // We pass the sequelize that we have already created and connected to the database
+    // so that the Next.js backend can just use that connection. This is in particular mandatory
+    // if we wish to use SQLite in-memory database, because there is no way to make two separate
+    // connections to the same in-memory database. In memory databases are used by the test system.
+    req.sequelize = sequelize
     return nextHandle(req, res)
   })
   app.use(

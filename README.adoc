@@ -623,6 +623,25 @@ The tests include two broad classes of tests:
 * smaller unit tests that only call certain functions directly
 * TODO: frontend tests: https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/11
 
+==== Next.js tests
+
+By default <<test-js>> does not run any tests on Next.js, only on the API routes, because Next.js would make tests too slow:
+
+* Next.js startup is slow
+* we must run in production mode because development mode is too lenient, e.g. it does not raise 500 errors. Therefore we have to build before every run.
+
+To also run tests that hit Next.js run:
+
+....
+npm run test-next
+....
+
+or for Postgres:
+
+....
+npm run test-pg-next
+....
+
 === Realworld API tests
 
 These tests are part of https://github.com/gothinkster/realworld which we track here as a submodule.
