@@ -26,10 +26,10 @@ const ArticleList = ({
   const { pid } = query
   // The page can be seen up to date from SSR without refetching,
   // so we skip the fetch.
-  let ssrSkipFetch =
+  const ssrSkipFetch =
     page === 0 &&
     ((loggedInUser && what === 'feed') || (!loggedInUser && what === 'global'))
-  let fetchURL = (() => {
+  const fetchURL = (() => {
     if (loggedInUser === undefined || (ssr && ssrSkipFetch)) {
       // This makes SWR not fetch.
       return null

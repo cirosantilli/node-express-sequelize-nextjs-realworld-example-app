@@ -28,7 +28,7 @@ export const getStaticPathsProfile: GetStaticPaths = async () => {
 
 export function getStaticPropsProfile(tab): GetStaticProps {
   return async ({ params: { pid } }) => {
-    let include = []
+    const include = []
     if (tab === 'my-posts') {
       include.push({
         model: sequelize.models.User,

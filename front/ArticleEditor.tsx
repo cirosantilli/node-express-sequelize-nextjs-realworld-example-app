@@ -40,7 +40,7 @@ function editorReducer(state, action) {
   }
 }
 
-export default function ArticleEditorHoc(isnew: boolean = false) {
+export default function ArticleEditorHoc(isnew = false) {
   return function ArticleEditor({ article: initialArticle }) {
     let initialState
     if (initialArticle) {

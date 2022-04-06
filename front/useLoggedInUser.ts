@@ -1,12 +1,10 @@
 import useSWR from 'swr'
-import React from 'react'
 
 import { AUTH_COOKIE_NAME, AUTH_LOCAL_STORAGE_NAME, getCookie } from 'front'
 import checkLogin from 'front/checkLogin'
 import storage from 'front/localStorageHelper'
 
 export default function useLoggedInUser() {
-  React.useEffect(() => {})
   const { data: authCookie } = useSWR('auth/cookie', () => {
     const ret = getCookie(AUTH_COOKIE_NAME)
     if (!ret) {

@@ -16,7 +16,7 @@ export function setCookie(name, value, days?: number, path = '/') {
 }
 
 export function setCookies(cookieDict, days?: number, path = '/') {
-  for (let key in cookieDict) {
+  for (const key in cookieDict) {
     setCookie(key, cookieDict[key], days, path)
   }
 }
