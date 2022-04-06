@@ -4,7 +4,7 @@ const http = require('http')
 const app = require('./app')
 const test_lib = require('./test_lib')
 
-function testApp(cb, opts={}) {
+function testApp(cb, opts = {}) {
   const canTestNext = opts.canTestNext === undefined ? false : opts.canTestNext
   return app.start(0, canTestNext && testNext, async (server) => {
     await cb(server)
@@ -190,134 +190,137 @@ it('users can be deleted and deletion cascades to all relations', async function
 })
 
 it('api: create an article and see it on global feed', async () => {
-  await testApp(async (server) => {
-    let res,
-      data,
-      article
+  await testApp(
+    async (server) => {
+      let res,
+        data,
+        article
 
-    // Create user.
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'POST',
-      path: '/api/users',
-      body: { user: test_lib.makeUser() },
-    })
-    assert.strictEqual(res.statusCode, 200)
-    const token = data.user.token
-    assert.strictEqual(data.user.username, 'user0')
+        // Create user.
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'POST',
+        path: '/api/users',
+        body: { user: test_lib.makeUser() },
+      })
+      assert.strictEqual(res.statusCode, 200)
+      const token = data.user.token
+      assert.strictEqual(data.user.username, 'user0')
 
-    // Create article.
-    article = test_lib.makeArticle(0, { api: true })
-    article.tagList = ['tag0', 'tag1']
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'POST',
-      path: '/api/articles',
-      body: { article },
-      token,
-    })
-    assert.strictEqual(res.statusCode, 200)
-    article = data.article
-    assert.strictEqual(article.title, 'My title 0')
+      // Create article.
+      article = test_lib.makeArticle(0, { api: true })
+      article.tagList = ['tag0', 'tag1']
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'POST',
+        path: '/api/articles',
+        body: { article },
+        token,
+      })
+      assert.strictEqual(res.statusCode, 200)
+      article = data.article
+      assert.strictEqual(article.title, 'My title 0')
 
-    // See it on global feed.
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'GET',
-      path: '/api/articles',
-      token,
-    })
-    assert.strictEqual(res.statusCode, 200)
-    assert.strictEqual(data.articles[0].title, 'My title 0')
-    assert.strictEqual(data.articles[0].author.username, 'user0')
-    assert.strictEqual(data.articlesCount, 1)
-
-    // Next.js test
-    if (testNext) {
       // See it on global feed.
       ;[res, data] = await sendJsonHttp({
         server,
         method: 'GET',
-        path: '/ssr',
+        path: '/api/articles',
         token,
       })
       assert.strictEqual(res.statusCode, 200)
-    }
+      assert.strictEqual(data.articles[0].title, 'My title 0')
+      assert.strictEqual(data.articles[0].author.username, 'user0')
+      assert.strictEqual(data.articlesCount, 1)
 
-    // See the tags on the global feed.
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'GET',
-      path: '/api/tags',
-      token,
-    })
-    assert.strictEqual(res.statusCode, 200)
-    data.tags.sort()
-    assert.strictEqual(data.tags[0], 'tag0')
-    assert.strictEqual(data.tags[1], 'tag1')
-    assert.strictEqual(data.tags.length, 2)
+      // Next.js test
+      if (testNext) {
+        // See it on global feed.
+        ;[res, data] = await sendJsonHttp({
+          server,
+          method: 'GET',
+          path: '/ssr',
+          token,
+        })
+        assert.strictEqual(res.statusCode, 200)
+      }
 
-    // Update article removing one tag and adding another.
-    article.tagList = ['tag0', 'tag1']
-    console.error('0')
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'PUT',
-      path: `/api/articles/${article.slug}`,
-      body: {
-        article: {
-          title: 'My title 0 hacked',
-          tagList: ['tag0', 'tag2'],
+      // See the tags on the global feed.
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'GET',
+        path: '/api/tags',
+        token,
+      })
+      assert.strictEqual(res.statusCode, 200)
+      data.tags.sort()
+      assert.strictEqual(data.tags[0], 'tag0')
+      assert.strictEqual(data.tags[1], 'tag1')
+      assert.strictEqual(data.tags.length, 2)
+
+      // Update article removing one tag and adding another.
+      article.tagList = ['tag0', 'tag1']
+      console.error('0')
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'PUT',
+        path: `/api/articles/${article.slug}`,
+        body: {
+          article: {
+            title: 'My title 0 hacked',
+            tagList: ['tag0', 'tag2'],
+          },
         },
-      },
-      token,
-    })
-    assert.strictEqual(res.statusCode, 200)
-    assert.strictEqual(data.article.title, 'My title 0 hacked')
+        token,
+      })
+      assert.strictEqual(res.statusCode, 200)
+      assert.strictEqual(data.article.title, 'My title 0 hacked')
 
-    // See it on global feed.
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'GET',
-      path: '/api/articles',
-      token,
-    })
-    assert.strictEqual(data.articles[0].title, 'My title 0 hacked')
-    assert.strictEqual(data.articles[0].author.username, 'user0')
-    assert.strictEqual(data.articlesCount, 1)
+      // See it on global feed.
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'GET',
+        path: '/api/articles',
+        token,
+      })
+      assert.strictEqual(data.articles[0].title, 'My title 0 hacked')
+      assert.strictEqual(data.articles[0].author.username, 'user0')
+      assert.strictEqual(data.articlesCount, 1)
 
-    // See the tags on the global feed. tag1 should not exist anymore,
-    // since the article was the only one that contained it, and it was
-    // removed from the article.
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'GET',
-      path: '/api/tags',
-      token,
-    })
-    assert.strictEqual(res.statusCode, 200)
-    data.tags.sort()
-    assert.strictEqual(data.tags[0], 'tag0')
-    assert.strictEqual(data.tags[1], 'tag2')
-    assert.strictEqual(data.tags.length, 2)
+      // See the tags on the global feed. tag1 should not exist anymore,
+      // since the article was the only one that contained it, and it was
+      // removed from the article.
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'GET',
+        path: '/api/tags',
+        token,
+      })
+      assert.strictEqual(res.statusCode, 200)
+      data.tags.sort()
+      assert.strictEqual(data.tags[0], 'tag0')
+      assert.strictEqual(data.tags[1], 'tag2')
+      assert.strictEqual(data.tags.length, 2)
 
-    // Delete article
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'DELETE',
-      path: `/api/articles/${article.slug}`,
-      token,
-    })
-    assert.strictEqual(res.statusCode, 204)
+      // Delete article
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'DELETE',
+        path: `/api/articles/${article.slug}`,
+        token,
+      })
+      assert.strictEqual(res.statusCode, 204)
 
-    // Global feed now empty.
-    ;[res, data] = await sendJsonHttp({
-      server,
-      method: 'GET',
-      path: '/api/articles',
-      token,
-    })
-    assert.strictEqual(data.articles.length, 0)
-    assert.strictEqual(data.articlesCount, 0)
-  }, { canTestNext: true })
+      // Global feed now empty.
+      ;[res, data] = await sendJsonHttp({
+        server,
+        method: 'GET',
+        path: '/api/articles',
+        token,
+      })
+      assert.strictEqual(data.articles.length, 0)
+      assert.strictEqual(data.articlesCount, 0)
+    },
+    { canTestNext: true }
+  )
 })

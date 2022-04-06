@@ -4,4 +4,3 @@ export type UserType = {
   image: string
   following: boolean
 }
-

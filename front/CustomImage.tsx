@@ -18,12 +18,16 @@ const CustomImage = ({ src, alt, className }: CustomImageProps) => {
   if (className) {
     classes.push(className)
   }
-  return <img {...{
-    alt,
-    src,
-    onError: handleBrokenImage,
-    className: classes.join(' '),
-  }} />
+  return (
+    <img
+      {...{
+        alt,
+        src,
+        onError: handleBrokenImage,
+        className: classes.join(' '),
+      }}
+    />
+  )
 }
 
 export default CustomImage

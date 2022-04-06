@@ -51,7 +51,7 @@ export function getStaticPropsArticle(
       )
     }
     const ret: Awaited<ReturnType<GetStaticProps>> = {
-      props
+      props,
     }
     // We can only add this for getStaticProps, not getServerSideProps.
     if (addRevalidate) {
