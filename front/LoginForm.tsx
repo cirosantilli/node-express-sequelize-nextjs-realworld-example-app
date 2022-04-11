@@ -1,10 +1,9 @@
 import Router from 'next/router'
 import React from 'react'
-import { mutate } from 'swr'
 
+import { setupUserLocalStorage } from 'front'
 import ListErrors from 'front/ListErrors'
 import UserAPI from 'front/api/user'
-import { AUTH_COOKIE_NAME, AUTH_LOCAL_STORAGE_NAME, setCookie } from 'front'
 import { useCtrlEnterSubmit } from 'front/ts'
 
 const LoginForm = ({ register = false }) => {
@@ -39,21 +38,7 @@ const LoginForm = ({ register = false }) => {
         setErrors(data.errors)
       }
       if (data?.user) {
-        // We fetch from /profiles/:username again because the return from /users/login above
-        // does not contain the image placeholder.
-        const { data: profileData, status: profileStatus } = await UserAPI.get(
-          data.user.username
-        )
-        if (profileStatus !== 200) {
-          setErrors(profileData.errors)
-        }
-        data.user.effectiveImage = profileData.profile.image
-        window.localStorage.setItem(
-          AUTH_LOCAL_STORAGE_NAME,
-          JSON.stringify(data.user)
-        )
-        setCookie(AUTH_COOKIE_NAME, data.user.token)
-        mutate(AUTH_LOCAL_STORAGE_NAME, data.user)
+        await setupUserLocalStorage(data, setErrors)
         Router.push('/')
       }
     } catch (error) {

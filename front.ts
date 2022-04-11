@@ -1,3 +1,6 @@
+import UserAPI from 'front/api/user'
+import { mutate } from 'swr'
+
 export const AUTH_COOKIE_NAME = 'auth'
 export const AUTH_LOCAL_STORAGE_NAME = 'user'
 
@@ -49,4 +52,22 @@ export function getCookiesFromString(s) {
 
 export function deleteCookie(name, path = '/') {
   setCookie(name, '', -1, path)
+}
+
+export async function setupUserLocalStorage(data, setErrors) {
+  // We fetch from /profiles/:username again because the return from /users/login above
+  // does not contain the image placeholder.
+  const { data: profileData, status: profileStatus } = await UserAPI.get(
+    data.user.username
+  )
+  if (profileStatus !== 200) {
+    setErrors(profileData.errors)
+  }
+  data.user.effectiveImage = profileData.profile.image
+  window.localStorage.setItem(
+    AUTH_LOCAL_STORAGE_NAME,
+    JSON.stringify(data.user)
+  )
+  setCookie(AUTH_COOKIE_NAME, data.user.token)
+  mutate(AUTH_LOCAL_STORAGE_NAME, data.user)
 }

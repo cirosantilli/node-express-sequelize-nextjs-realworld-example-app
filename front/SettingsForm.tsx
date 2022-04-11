@@ -1,12 +1,11 @@
 import axios from 'axios'
 import Router from 'next/router'
 import React from 'react'
-import { mutate } from 'swr'
 
+import { setupUserLocalStorage } from 'front'
 import { apiPath } from 'front/config'
 import ListErrors from 'front/ListErrors'
 import useLoggedInUser from 'front/useLoggedInUser'
-import UserAPI from 'front/api/user'
 import { useCtrlEnterSubmit } from 'front/ts'
 
 const SettingsForm = () => {
@@ -49,15 +48,7 @@ const SettingsForm = () => {
       setErrors(data.errors.body)
     }
     if (data?.user) {
-      const { data: profileData, status: profileStatus } = await UserAPI.get(
-        data.user.username
-      )
-      if (profileStatus !== 200) {
-        setErrors(profileData.errors)
-      }
-      data.user.effectiveImage = profileData.profile.image
-      window.localStorage.setItem('user', JSON.stringify(data.user))
-      mutate('user', data.user)
+      await setupUserLocalStorage(data, setErrors)
       Router.push(`/profile/${user.username}`)
     }
   }
