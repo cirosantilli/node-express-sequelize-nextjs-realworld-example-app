@@ -101,6 +101,7 @@ const SettingsForm = () => {
               placeholder="New Password"
               value={userInfo.password}
               onChange={updateState('password')}
+              autoComplete="new-password"
             />
           </fieldset>
           <button
