@@ -43,7 +43,7 @@ module.exports = {
     process.env.NODE_ENV_NEXT_SERVER_ONLY === undefined
       ? isProduction
       : process.env.NODE_ENV_NEXT_SERVER_ONLY === 'production',
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 80,
   // Makes deployment impossibly slow if there are lots of pages
   // like in a real-world production public website.
   prerenderAll: false,
