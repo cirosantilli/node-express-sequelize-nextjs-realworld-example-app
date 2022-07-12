@@ -43,7 +43,7 @@ module.exports = {
     process.env.NODE_ENV_NEXT_SERVER_ONLY === undefined
       ? isProduction
       : process.env.NODE_ENV_NEXT_SERVER_ONLY === 'production',
-  port: process.env.PORT || 80,
+  port: process.env.PORT || 3000,
   // Makes deployment impossibly slow if there are lots of pages
   // like in a real-world production public website.
   prerenderAll: false,
@@ -68,10 +68,10 @@ module.exports = {
       // https://stackoverflow.com/questions/27687546/cant-connect-to-heroku-postgresql-database-from-local-node-app-with-sequelize
       // https://devcenter.heroku.com/articles/heroku-postgresql#connecting-in-node-js
       // https://stackoverflow.com/questions/58965011/sequelizeconnectionerror-self-signed-certificate
-//       ssl: {
-//         require: true,
-//         rejectUnauthorized: false,
-//       },
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
     logging: true,
   },
