@@ -9,9 +9,14 @@
 :toclevels: 6
 :toc-title:
 
-Got it running on Heroku as of April 2021 at https://cirosantilli-realworld-next.herokuapp.com/
+This is an implementation of https://github.com/gothinkster/realworld
 
-Includes <<database-migrations>>, <<test-js,DB and API unit testing>>, <<generate-demo-data,DB seeding>>, and <<linting>> setups.
+Got it running on Heroku as of April 2021 at https://cirosantilli-realworld-next.herokuapp.com/[]. On August 2022, heroku announced the end of free tiers as of November 28, 2022: https://blog.heroku.com/next-chapter[], so it might go down, I don't think I'll pay 10 dollars/month to keep it going. Here's an archive: https://web.archive.org/web/20220826111459/https://cirosantilli-realworld-next.herokuapp.com/[]. More discussion at:
+
+* https://github.com/cirosantilli/node-express-sequelize-nextjs-realworld-example-app/issues/23
+* https://github.com/gothinkster/realworld/discussions/974
+
+This implementaion includes <<database-migrations>>, <<test-js,DB and API unit testing>>, <<generate-demo-data,DB seeding>>, and <<linting>> setups.
 
 This is a branch of https://github.com/cirosantilli/node-express-sequelize-realworld-example-app rebased on top of the `master` branch of that repository, we show it in a separate GitHub repository just to give it more visibility.
 
@@ -779,3 +784,7 @@ We tried a bit to achieve the following, TODOing where we know we failed:
 ** link:test.js[]: <<test-js>>
 * link:front/[]: files that are safe to import from the frontend, all requires from inside `front/` should also be inside `front/` see: https://stackoverflow.com/questions/64926174/module-not-found-cant-resolve-fs-in-next-js-application/70363153#70363153 As mentioned there, everything that is usable in the frontend is also usable in the backend since we are an SSR setup. But not the other way around. `pages/` can contain a mixture of frontend and backend in each file however when HoCs are not being used and things don't blow up.
 ** link:back/[]: this directory contains the backend corresponding to pages in link:front[], e.g. link:back/ArticlePage[] contains the `getStaticPaths` and `getStaticProps` that correspond to link:front/ArticlePage[]. Other backend-only files are in general placed anywhere outside of the link:front/[] directory.
+
+== Backlinks
+
+A very large source of traffic to the website has been from Ukraine-based Mate Academy: https://uk.mate.academy/ | https://github.com/mate-academy/conduit-node-express-sequelize-nextjs which seems to use it as one of their webdev tutorial examples. Glad it has been of use to someone, hope their war ends soon...
