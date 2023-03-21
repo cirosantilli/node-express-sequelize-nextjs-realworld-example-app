@@ -32,6 +32,7 @@ function MyHead() {
   const realTitle = title === undefined ? '' : title + ' - '
   return (
     <Head>
+      <meta name="robots" content="noindex" />
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
