@@ -45,6 +45,12 @@ const Navbar = () => {
               </NavLink>
             </NavbarItem>
             <NavbarItem>
+              <NavLink href={routes.pandorasBox()}>
+                <i className="ion-gear-a" />
+                &nbsp;Pandora's box
+              </NavLink>
+            </NavbarItem>
+            <NavbarItem>
               <NavLink href={routes.userView(loggedInUser?.username)}>
                 <CustomImage
                   className="user-pic"

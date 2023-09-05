@@ -24,8 +24,8 @@ import '@fontsource/source-sans-pro/600-italic.css'
 import '@fontsource/source-sans-pro/700-italic.css'
 
 // In tree
-import 'demo.productionready.io.main.css'
-import 'style.scss'
+import 'css/demo.productionready.io.main.css'
+import 'css/style.scss'
 
 function MyHead() {
   const { title } = React.useContext(AppContext)
