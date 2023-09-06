@@ -36,7 +36,7 @@ const ToastMessages = () => {
         <fieldset className="form-group">
           {messages.map((val) => {
             return (
-              <li className="row offset-md-1 media-heading">
+              <li className="row offset-md-1 media-heading" key={val.msgType}>
                 <button
                   className="btn btn-lg btn-primary pull-xs-left"
                   onClick={() => {

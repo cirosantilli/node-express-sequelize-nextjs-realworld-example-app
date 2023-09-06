@@ -6,7 +6,7 @@ import { AppContext } from 'front/ts'
 import CalendarWidget from './testingPages/CalendarWidget'
 import TextFieldWidget from './testingPages/TextFieldWidget'
 import ToastMessages from './testingPages/ToastMessages'
-import CheckboxesAndRadioButtons from './testingPages/CheckboxesAndRadioButtons'
+import Checkboxes from './testingPages/Checkboxes'
 
 const TestingPage = () => {
   const title = 'Testing'
@@ -49,11 +49,11 @@ const TestingPage = () => {
         case 'TEST_1':
           return <TextFieldWidget />
         case 'TEST_2':
-          return <CalendarWidget />
+          return <Checkboxes />
         case 'TEST_3':
           return <ToastMessages />
         case 'TEST_4':
-          return <CheckboxesAndRadioButtons />
+          return <CalendarWidget />
         default:
           return (
             <div>
