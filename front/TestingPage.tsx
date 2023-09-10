@@ -8,6 +8,7 @@ import TextFieldWidget from './testingPages/TextFieldWidget'
 import ToastMessages from './testingPages/ToastMessages'
 import Checkboxes from './testingPages/Checkboxes'
 import RadioButton from './testingPages/RadioButtons'
+import DropDown from './testingPages/DropDown'
 
 const TestingPage = () => {
   const title = 'Testing'
@@ -54,8 +55,10 @@ const TestingPage = () => {
         case 'TEST_3':
           return <Checkboxes />
         case 'TEST_4':
-          return <ToastMessages />
+          return <DropDown />
         case 'TEST_5':
+          return <ToastMessages />
+        case 'TEST_6':
           return <CalendarWidget />
         default:
           return (

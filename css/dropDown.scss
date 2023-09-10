@@ -1,0 +1,60 @@
+.dropDownCss {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
+  ul:hover {
+    overflow: visible;
+  }
+  li {
+    position: relative;
+    float: left;
+    background-color: #17b0ff;
+  }
+  li:hover {
+    background-color: #189bdf;
+  }
+  a {
+    display: block;
+    padding: 10px 20px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  /* second level */
+  ul ul {
+    max-height: 0;
+    // transition: max-height 0.1s;
+  }
+  ul li:hover ul {
+    max-height: 999px;
+  }
+  ul ul li {
+    float: none;
+    background-color: #189bdf;
+  }
+  ul ul li:hover {
+    background-color: #1289c7;
+  }
+
+  /* third level */
+  ul ul ul {
+    position: absolute;
+    width: 0;
+    top: 0;
+    left: 100%;
+    // transition: width 0.1s;
+  }
+  ul ul li:hover ul {
+    width: 100%;
+  }
+  ul ul ul li {
+    background-color: #df7f18;
+  }
+  ul ul ul li:hover {
+    background-color: #c77115;
+  }
+}
