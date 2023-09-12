@@ -8,7 +8,7 @@ const DropDown = () => {
   }
 
   const generateHeading = () => {
-    return <h1>{menu}</h1>
+    return <h1 id='resultsHeading'>{menu}</h1>
   }
 
   const generateMenus = () => {
