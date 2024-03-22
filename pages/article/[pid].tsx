@@ -68,7 +68,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
       <div className="article-page">
         <div className="banner">
           <div className="container">
-            <h1>{article.title}</h1>
+            <h1 id="article-title">{article.title}</h1>
             <FavoriteArticleButtonContext.Provider
               value={{
                 favorited,
@@ -91,7 +91,7 @@ const ArticlePage = ({ article, comments }: ArticlePageProps) => {
         <div className="container page">
           <div className="row article-content">
             <div className="col-md-12">
-              <div dangerouslySetInnerHTML={markup} />
+              <div id="article-content" dangerouslySetInnerHTML={markup} />
               <ul className="tag-list">
                 {article.tagList?.map((tag) => (
                   <li className="tag-default tag-pill tag-outline" key={tag}>

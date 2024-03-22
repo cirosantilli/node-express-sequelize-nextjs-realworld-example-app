@@ -1,0 +1,91 @@
+{
+  "TopStockMarkets": [
+    {
+      "MarketName": "New York Stock Exchange (NYSE)",
+      "TopIndustries": [
+        {
+          "IndustryName": "Technology",
+          "TopStocks": [
+            "Apple Inc. (AAPL)",
+            "Microsoft Corporation (MSFT)",
+            "Amazon.com Inc. (AMZN)"
+          ]
+        },
+        {
+          "IndustryName": "Finance",
+          "TopStocks": [
+            "JPMorgan Chase & Co. (JPM)",
+            "Bank of America Corporation (BAC)",
+            "Wells Fargo & Co. (WFC)"
+          ]
+        },
+        {
+          "IndustryName": "Healthcare",
+          "TopStocks": [
+            "Johnson & Johnson (JNJ)",
+            "Pfizer Inc. (PFE)",
+            "Merck & Co. Inc. (MRK)"
+          ]
+        }
+      ]
+    },
+    {
+      "MarketName": "Nasdaq Stock Market",
+      "TopIndustries": [
+        {
+          "IndustryName": "Technology",
+          "TopStocks": [
+            "Apple Inc. (AAPL)",
+            "Microsoft Corporation (MSFT)",
+            "Amazon.com Inc. (AMZN)"
+          ]
+        },
+        {
+          "IndustryName": "Consumer Discretionary",
+          "TopStocks": [
+            "Amazon.com Inc. (AMZN)",
+            "Tesla, Inc. (TSLA)",
+            "Netflix, Inc. (NFLX)"
+          ]
+        },
+        {
+          "IndustryName": "Healthcare",
+          "TopStocks": [
+            "Gilead Sciences, Inc. (GILD)",
+            "Regeneron Pharmaceuticals, Inc. (REGN)",
+            "Amgen Inc. (AMGN)"
+          ]
+        }
+      ]
+    },
+    {
+      "MarketName": "Tokyo Stock Exchange (TSE)",
+      "TopIndustries": [
+        {
+          "IndustryName": "Technology",
+          "TopStocks": [
+            "Sony Corporation (SNE)",
+            "SoftBank Group Corp. (SFTBY)",
+            "Tencent Holdings Limited (TCEHY)"
+          ]
+        },
+        {
+          "IndustryName": "Automotive",
+          "TopStocks": [
+            "Toyota Motor Corporation (TM)",
+            "Honda Motor Co., Ltd. (HMC)",
+            "Nissan Motor Co., Ltd. (NSANY)"
+          ]
+        },
+        {
+          "IndustryName": "Finance",
+          "TopStocks": [
+            "Mitsubishi UFJ Financial Group, Inc. (MUFG)",
+            "Sumitomo Mitsui Financial Group, Inc. (SMFG)",
+            "Nomura Holdings, Inc. (NMR)"
+          ]
+        }
+      ]
+    }
+  ]
+}
